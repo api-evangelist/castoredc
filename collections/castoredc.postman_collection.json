@@ -1,0 +1,318 @@
+{
+  "info": {
+    "name": "Castor EDC / CDMS API",
+    "description": "RESTful API for the Castor EDC / CDMS clinical data capture platform. Base URL: https://data.castoredc.com/api. Authentication is OAuth2 client-credentials: POST /oauth/token with client_id, client_secret, and grant_type=client_credentials to obtain a Bearer token (valid 5 hours). Most IDs are uppercase GUIDs in 8-4-4-4-12 format. Default rate limit ~600 requests / 10 minutes (HTTP 429 when exceeded).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{accessToken}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://data.castoredc.com/api", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" },
+    { "key": "clientId", "value": "", "type": "string" },
+    { "key": "clientSecret", "value": "", "type": "string" },
+    { "key": "study_id", "value": "", "type": "string" },
+    { "key": "participant_id", "value": "", "type": "string" },
+    { "key": "institute_id", "value": "", "type": "string" },
+    { "key": "field_id", "value": "", "type": "string" },
+    { "key": "user_id", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Get access token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "client_id", "value": "{{clientId}}" },
+                { "key": "client_secret", "value": "{{clientSecret}}" },
+                { "key": "grant_type", "value": "client_credentials" }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/oauth/token", "host": ["{{baseUrl}}"], "path": ["oauth", "token"] },
+            "description": "Exchanges an API Client ID and Client Secret for a Bearer access token (valid 5 hours)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Studies",
+      "item": [
+        {
+          "name": "List studies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study", "host": ["{{baseUrl}}"], "path": ["study"] },
+            "description": "Lists all studies the API client can access."
+          }
+        },
+        {
+          "name": "Retrieve a study",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}"] },
+            "description": "Retrieves a single study by GUID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Participants",
+      "item": [
+        {
+          "name": "List participants",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/participant", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "participant"] },
+            "description": "Lists the participants (records) enrolled in a study."
+          }
+        },
+        {
+          "name": "Create a participant",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"institute_id\": \"{{institute_id}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/participant", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "participant"] },
+            "description": "Creates a new participant (record) in a study."
+          }
+        },
+        {
+          "name": "Retrieve a participant",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/participant/{{participant_id}}", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "participant", "{{participant_id}}"] },
+            "description": "Retrieves a single participant by ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Institutes",
+      "item": [
+        {
+          "name": "List institutes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/institute", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "institute"] },
+            "description": "Lists the institutes (sites) participating in a study."
+          }
+        },
+        {
+          "name": "Retrieve an institute",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/institute/{{institute_id}}", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "institute", "{{institute_id}}"] },
+            "description": "Retrieves a single institute by ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/user", "host": ["{{baseUrl}}"], "path": ["user"] },
+            "description": "Lists the users the authenticated account can access."
+          }
+        },
+        {
+          "name": "Retrieve a user",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/user/{{user_id}}", "host": ["{{baseUrl}}"], "path": ["user", "{{user_id}}"] },
+            "description": "Retrieves a single user by ID."
+          }
+        },
+        {
+          "name": "List study users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/user", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "user"] },
+            "description": "Lists the users who are members of a study."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fields",
+      "item": [
+        {
+          "name": "List fields",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/field", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "field"] },
+            "description": "Lists all data-capture fields defined in a study."
+          }
+        },
+        {
+          "name": "Retrieve a field",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/field/{{field_id}}", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "field", "{{field_id}}"] },
+            "description": "Retrieves a single field by ID."
+          }
+        },
+        {
+          "name": "List field dependencies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/field-dependency", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "field-dependency"] },
+            "description": "Lists conditional-logic dependencies between fields."
+          }
+        },
+        {
+          "name": "List field option groups",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/field-optiongroup", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "field-optiongroup"] },
+            "description": "Lists the option groups (answer choices) used by fields."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Study Data Points",
+      "item": [
+        {
+          "name": "List all study data points",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/data-points/study", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "data-points", "study"] },
+            "description": "Retrieves all study-form data points collected across a study."
+          }
+        },
+        {
+          "name": "List a participant's study data points",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/participant/{{participant_id}}/data-points/study", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "participant", "{{participant_id}}", "data-points", "study"] },
+            "description": "Retrieves the study-form data points for a single participant."
+          }
+        },
+        {
+          "name": "Update a participant's study data points",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"data\": [\n    { \"field_id\": \"{{field_id}}\", \"field_value\": \"\" }\n  ]\n}" },
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/participant/{{participant_id}}/data-points/study", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "participant", "{{participant_id}}", "data-points", "study"] },
+            "description": "Creates or updates study-form data points for a participant."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports (Repeating Data)",
+      "item": [
+        {
+          "name": "List reports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/report", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "report"] },
+            "description": "Lists the report / repeating-data definitions in a study."
+          }
+        },
+        {
+          "name": "List a participant's repeating-data instances",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/participant/{{participant_id}}/data-points/repeating-data-instance", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "participant", "{{participant_id}}", "data-points", "repeating-data-instance"] },
+            "description": "Retrieves the repeating-data (report) instances for a participant."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Surveys",
+      "item": [
+        {
+          "name": "List surveys",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/survey", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "survey"] },
+            "description": "Lists the survey / ePRO definitions in a study."
+          }
+        },
+        {
+          "name": "Send a survey package to a participant",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"survey_package_id\": \"\",\n  \"email_address\": \"\"\n}" },
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/participant/{{participant_id}}/data-points/survey-package-instance", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "participant", "{{participant_id}}", "data-points", "survey-package-instance"] },
+            "description": "Creates a survey-package instance, sending surveys to a participant."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Audit Trail",
+      "item": [
+        {
+          "name": "Retrieve the audit trail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/audit-trail", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "audit-trail"] },
+            "description": "Retrieves the immutable audit trail entries for a study."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Data Export",
+      "item": [
+        {
+          "name": "Export study data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/export/data", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "export", "data"] },
+            "description": "Exports the collected data of a study (CSV)."
+          }
+        },
+        {
+          "name": "Export study structure",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/study/{{study_id}}/export/structure", "host": ["{{baseUrl}}"], "path": ["study", "{{study_id}}", "export", "structure"] },
+            "description": "Exports the structure (forms, fields, phases) of a study."
+          }
+        }
+      ]
+    }
+  ]
+}

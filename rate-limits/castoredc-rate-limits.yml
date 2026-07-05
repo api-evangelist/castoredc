@@ -1,0 +1,61 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Castor
+providerId: castoredc
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Clinical Trials
+- Electronic Data Capture
+- EDC
+- Rate Limiting
+- Quotas
+description: >-
+  The Castor EDC / CDMS API applies a default rate limit of roughly 600 requests
+  per 10 minutes per API client. Exceeding the limit returns HTTP 429 Too Many
+  Requests. OAuth2 access tokens obtained via the client-credentials flow are valid
+  for 5 hours, so clients should cache and reuse a token rather than re-authenticate
+  on every call. Large data reads should use the paginated (HAL) collection
+  endpoints or the batch export endpoints rather than tight per-record polling, and
+  bulk analysis is best done through the official R and Python wrapper packages,
+  which handle pagination and throttling.
+notes: >-
+  The 600-requests-per-10-minutes figure is the documented default and may differ
+  by plan, region, or endpoint; verify the current limit and any published
+  rate-limit response headers against the Castor API reference and the "API
+  troubleshooting" helpdesk article during reconciliation.
+sources:
+- https://data.castoredc.com/api
+- https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+- https://helpdesk.castoredc.com/hc/en-us/articles/27223902602909-API-troubleshooting-EDC-CDMS
+- https://helpdesk.castoredc.com/application-programming-interface-api/parameters-used-in-the-api
+responseCodes:
+  throttled: 429
+limits:
+- name: Default API Requests
+  scope: client
+  metric: requests
+  limit: ~600 per 10 minutes
+  notes: Default per-API-client request rate. Exceeding it returns HTTP 429.
+- name: Access Token Lifetime
+  scope: client
+  metric: seconds
+  limit: 18000
+  notes: OAuth2 client-credentials access tokens are valid for 5 hours; cache and reuse them.
+- name: Collection Pagination
+  scope: endpoint
+  metric: items
+  limit: page-based (HAL)
+  notes: List endpoints return paginated HAL collections; iterate pages instead of over-fetching.
+policies:
+- name: Token Reuse
+  description: Reuse the 5-hour access token across requests instead of re-authenticating per call to conserve request budget.
+- name: Backoff Strategy
+  description: On HTTP 429, back off and retry with exponential backoff and jitter before resuming requests.
+- name: Prefer Batch Export
+  description: For large data pulls, use the export endpoints (data / structure / option groups) or the official R / Python wrappers rather than high-frequency per-record requests.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

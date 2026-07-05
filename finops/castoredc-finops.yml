@@ -1,0 +1,100 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Castor
+providerId: castoredc
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Clinical Trials
+- Electronic Data Capture
+- EDC
+- Healthcare
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Castor spend. Castor EDC / CDMS is a subscription SaaS billed per
+  study rather than by API consumption - cost is driven by the number and size of
+  studies, contracted users, study duration, enabled modules (surveys / ePRO,
+  randomization, eConsent), region, and compliance requirements, all negotiated by
+  quote. The REST API is included with a study subscription and carries no
+  per-call charge; it is governed by rate limits rather than metered billing. For
+  cost management, the unit of allocation is the study (and, within a sponsor / CRO
+  portfolio, the set of studies), not tokens or requests.
+notes: >-
+  Castor does not publish list pricing or a usage-metered billing model for the
+  API; there are no per-call meters to reconcile in FOCUS terms. The meters below
+  describe the subscription cost drivers, not API usage charges. Verify contracted
+  terms with Castor sales and the helpdesk "Costs and payment" section.
+sources:
+- https://www.castoredc.com
+- https://helpdesk.castoredc.com/hc/en-us/sections/27224717211805-Costs-and-payment
+- https://helpdesk.castoredc.com/application-programming-interface-api
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Castor
+serviceCategory: Healthcare and Life Sciences
+billingModel:
+  pricingCategory: Subscription
+  billingFrequency: Annual
+  billingCurrency: USD
+  chargeCategories:
+  - Purchase
+  - Usage
+  - Adjustment
+focusColumns:
+  ServiceName: Castor EDC / CDMS
+  ServiceCategory: Healthcare and Life Sciences
+  ProviderName: Castor
+  PublisherName: Castor
+  InvoiceIssuerName: Castor
+  BillingCurrency: USD
+  ChargeCategory: Purchase
+  PricingCategory: Subscription
+meters:
+- name: study_subscription
+  description: Per-study subscription - the primary Castor cost driver, quoted by study size and duration.
+  unit: study
+  aggregation: sum
+  dimensions:
+  - account
+  - study
+  - region
+- name: users
+  description: Contracted users / seats with access to a study, a factor in the study quote.
+  unit: users
+  aggregation: max
+  dimensions:
+  - study
+- name: modules
+  description: Optional modules enabled per study (surveys / ePRO, randomization, eConsent) that add to the subscription.
+  unit: modules
+  aggregation: sum
+  dimensions:
+  - study
+- name: api_requests
+  description: API requests consumed - not billed, but bounded by rate limits; track for capacity, not cost.
+  unit: requests
+  aggregation: sum
+  dimensions:
+  - client
+  - study
+principles:
+- name: Visibility
+  description: Track subscriptions and enabled modules per study and per sponsor / CRO portfolio; API calls are free but should be monitored against rate limits.
+- name: Allocation
+  description: Allocate cost by study (and by sponsor / therapeutic program for portfolios), since billing is per study rather than per API call.
+- name: Optimization
+  description: Right-size the module set and user count per study, retire or archive completed studies, and consolidate integrations to a single API client to stay within rate limits without extra spend.
+- name: Accountability
+  description: Assign a study owner / budget holder per study; review subscription renewals and module usage against actual trial activity.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

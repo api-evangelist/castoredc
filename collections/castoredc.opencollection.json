@@ -1,0 +1,343 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Castor EDC / CDMS API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{accessToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Authentication", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Get access token.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://data.castoredc.com/api/oauth/token",
+            "auth": { "type": "none" },
+            "body": { "type": "urlencoded", "data": "client_id={{clientId}}&client_secret={{clientSecret}}&grant_type=client_credentials" }
+          },
+          "docs": "Exchanges an API Client ID and Client Secret for a Bearer access token (valid 5 hours)."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Studies", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List studies.", "type": "http" },
+          "http": { "method": "GET", "url": "https://data.castoredc.com/api/study" },
+          "docs": "Lists all studies the API client can access."
+        },
+        {
+          "info": { "name": "Retrieve a study.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." }
+            ]
+          },
+          "docs": "Retrieves a single study by GUID."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Participants", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List participants.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/participant",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." }
+            ]
+          },
+          "docs": "Lists the participants (records) enrolled in a study."
+        },
+        {
+          "info": { "name": "Create a participant.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://data.castoredc.com/api/study/:study_id/participant",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." }
+            ],
+            "body": { "type": "json", "data": "{\n  \"institute_id\": \"\"\n}" }
+          },
+          "docs": "Creates a new participant (record) in a study."
+        },
+        {
+          "info": { "name": "Retrieve a participant.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/participant/:participant_id",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." },
+              { "name": "participant_id", "value": "", "type": "path", "description": "The participant ID." }
+            ]
+          },
+          "docs": "Retrieves a single participant by ID."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Institutes", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List institutes.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/institute",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." }
+            ]
+          },
+          "docs": "Lists the institutes (sites) participating in a study."
+        },
+        {
+          "info": { "name": "Retrieve an institute.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/institute/:institute_id",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." },
+              { "name": "institute_id", "value": "", "type": "path", "description": "The institute GUID." }
+            ]
+          },
+          "docs": "Retrieves a single institute by ID."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Users", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List users.", "type": "http" },
+          "http": { "method": "GET", "url": "https://data.castoredc.com/api/user" },
+          "docs": "Lists the users the authenticated account can access."
+        },
+        {
+          "info": { "name": "Retrieve a user.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/user/:user_id",
+            "params": [
+              { "name": "user_id", "value": "", "type": "path", "description": "The user GUID." }
+            ]
+          },
+          "docs": "Retrieves a single user by ID."
+        },
+        {
+          "info": { "name": "List study users.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/user",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." }
+            ]
+          },
+          "docs": "Lists the users who are members of a study."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Fields", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List fields.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/field",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." }
+            ]
+          },
+          "docs": "Lists all data-capture fields defined in a study."
+        },
+        {
+          "info": { "name": "Retrieve a field.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/field/:field_id",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." },
+              { "name": "field_id", "value": "", "type": "path", "description": "The field GUID." }
+            ]
+          },
+          "docs": "Retrieves a single field by ID."
+        },
+        {
+          "info": { "name": "List field dependencies.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/field-dependency",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." }
+            ]
+          },
+          "docs": "Lists conditional-logic dependencies between fields."
+        },
+        {
+          "info": { "name": "List field option groups.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/field-optiongroup",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." }
+            ]
+          },
+          "docs": "Lists the option groups (answer choices) used by fields."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Study Data Points", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List all study data points.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/data-points/study",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." }
+            ]
+          },
+          "docs": "Retrieves all study-form data points collected across a study."
+        },
+        {
+          "info": { "name": "List a participant's study data points.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/participant/:participant_id/data-points/study",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." },
+              { "name": "participant_id", "value": "", "type": "path", "description": "The participant ID." }
+            ]
+          },
+          "docs": "Retrieves the study-form data points for a single participant."
+        },
+        {
+          "info": { "name": "Update a participant's study data points.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://data.castoredc.com/api/study/:study_id/participant/:participant_id/data-points/study",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." },
+              { "name": "participant_id", "value": "", "type": "path", "description": "The participant ID." }
+            ],
+            "body": { "type": "json", "data": "{\n  \"data\": [\n    { \"field_id\": \"\", \"field_value\": \"\" }\n  ]\n}" }
+          },
+          "docs": "Creates or updates study-form data points for a participant."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Reports (Repeating Data)", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List reports.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/report",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." }
+            ]
+          },
+          "docs": "Lists the report / repeating-data definitions in a study."
+        },
+        {
+          "info": { "name": "List a participant's repeating-data instances.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/participant/:participant_id/data-points/repeating-data-instance",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." },
+              { "name": "participant_id", "value": "", "type": "path", "description": "The participant ID." }
+            ]
+          },
+          "docs": "Retrieves the repeating-data (report) instances for a participant."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Surveys", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List surveys.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/survey",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." }
+            ]
+          },
+          "docs": "Lists the survey / ePRO definitions in a study."
+        },
+        {
+          "info": { "name": "Send a survey package to a participant.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://data.castoredc.com/api/study/:study_id/participant/:participant_id/data-points/survey-package-instance",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." },
+              { "name": "participant_id", "value": "", "type": "path", "description": "The participant ID." }
+            ],
+            "body": { "type": "json", "data": "{\n  \"survey_package_id\": \"\",\n  \"email_address\": \"\"\n}" }
+          },
+          "docs": "Creates a survey-package instance, sending surveys to a participant."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Audit Trail", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Retrieve the audit trail.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/audit-trail",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." }
+            ]
+          },
+          "docs": "Retrieves the immutable audit trail entries for a study."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Data Export", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Export study data.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/export/data",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." }
+            ]
+          },
+          "docs": "Exports the collected data of a study (CSV)."
+        },
+        {
+          "info": { "name": "Export study structure.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/export/structure",
+            "params": [
+              { "name": "study_id", "value": "", "type": "path", "description": "The study GUID." }
+            ]
+          },
+          "docs": "Exports the structure (forms, fields, phases) of a study."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

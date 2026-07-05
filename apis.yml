@@ -1,0 +1,259 @@
+aid: castoredc
+url: https://raw.githubusercontent.com/api-evangelist/castoredc/refs/heads/main/apis.yml
+name: Castor
+kind: company
+description: Castor (Castor EDC / CDMS) is a cloud electronic data capture (EDC) and
+  clinical data management platform for clinical trials and real-world research. Its
+  RESTful API at https://data.castoredc.com/api exposes study configuration and
+  collected data - studies, participants (records), institutes (sites), users,
+  fields and field metadata, study data points, repeating data (reports), surveys
+  and survey packages, audit trail, and batch data export - authenticated with
+  OAuth2 client-credentials. The API is used to integrate Castor with external
+  systems, automate data entry and extraction, and support statistical analysis via
+  the official R and Python wrapper packages.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Clinical Trials
+- Electronic Data Capture
+- EDC
+- Clinical Data Management
+- Healthcare
+- Life Sciences
+- Research
+created: '2026-07-05'
+modified: '2026-07-05'
+specificationVersion: '0.19'
+apis:
+- aid: castoredc:castoredc-studies-api
+  name: Castor Studies API
+  tags:
+  - Studies
+  - Metadata
+  - Configuration
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  properties:
+  - url: https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+    type: Documentation
+  - url: https://data.castoredc.com/api
+    type: APIReference
+  - url: openapi/castoredc-openapi.yml
+    type: OpenAPI
+  - url: collections/castoredc.postman_collection.json
+    type: PostmanCollection
+  - url: collections/castoredc.opencollection.json
+    type: OpenCollection
+  description: List the studies your API client can access and retrieve a single
+    study's configuration and metadata. A study is the top-level container in Castor;
+    its GUID (the study_id) is required by nearly every other endpoint.
+- aid: castoredc:castoredc-participants-api
+  name: Castor Participants (Records) API
+  tags:
+  - Participants
+  - Records
+  - Subjects
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://data.castoredc.com/api
+  baseURL: https://data.castoredc.com/api
+  properties:
+  - url: https://data.castoredc.com/api
+    type: APIReference
+  - url: openapi/castoredc-openapi.yml
+    type: OpenAPI
+  - url: collections/castoredc.postman_collection.json
+    type: PostmanCollection
+  - url: collections/castoredc.opencollection.json
+    type: OpenCollection
+  description: Create, list, and retrieve participants (records / subjects) enrolled
+    in a study, including their institute assignment, randomization status, progress,
+    and lifecycle. Participants are the entities that data points are collected
+    against.
+- aid: castoredc:castoredc-institutes-api
+  name: Castor Institutes API
+  tags:
+  - Institutes
+  - Sites
+  - Multi-Center
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://data.castoredc.com/api
+  baseURL: https://data.castoredc.com/api
+  properties:
+  - url: https://data.castoredc.com/api
+    type: APIReference
+  - url: openapi/castoredc-openapi.yml
+    type: OpenAPI
+  - url: collections/castoredc.postman_collection.json
+    type: PostmanCollection
+  - url: collections/castoredc.opencollection.json
+    type: OpenCollection
+  description: List and retrieve the institutes (sites / centers) participating in a
+    study, and create new institutes. Institutes group participants for multi-center
+    trials and drive site-level access control and reporting.
+- aid: castoredc:castoredc-users-api
+  name: Castor Users API
+  tags:
+  - Users
+  - Access
+  - Membership
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://data.castoredc.com/api
+  baseURL: https://data.castoredc.com/api
+  properties:
+  - url: https://data.castoredc.com/api
+    type: APIReference
+  - url: openapi/castoredc-openapi.yml
+    type: OpenAPI
+  - url: collections/castoredc.postman_collection.json
+    type: PostmanCollection
+  - url: collections/castoredc.opencollection.json
+    type: OpenCollection
+  description: List the users the authenticated account can see, retrieve a single
+    user, and list the users who are members of a given study. Used to reconcile
+    study membership and site staff with external identity and CTMS systems.
+- aid: castoredc:castoredc-fields-api
+  name: Castor Fields API
+  tags:
+  - Fields
+  - Field Metadata
+  - Option Groups
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://data.castoredc.com/api
+  baseURL: https://data.castoredc.com/api
+  properties:
+  - url: https://data.castoredc.com/api
+    type: APIReference
+  - url: openapi/castoredc-openapi.yml
+    type: OpenAPI
+  - url: collections/castoredc.postman_collection.json
+    type: PostmanCollection
+  - url: collections/castoredc.opencollection.json
+    type: OpenCollection
+  description: Retrieve the data-capture fields that define a study's forms, plus
+    their supporting metadata - field dependencies (conditional logic), option
+    groups (answer choices), and field validations. This is the schema you need to
+    interpret and write study data points correctly.
+- aid: castoredc:castoredc-study-data-points-api
+  name: Castor Study Data Points API
+  tags:
+  - Data Points
+  - Data Entry
+  - Data Extraction
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://data.castoredc.com/api
+  baseURL: https://data.castoredc.com/api
+  properties:
+  - url: https://data.castoredc.com/api
+    type: APIReference
+  - url: openapi/castoredc-openapi.yml
+    type: OpenAPI
+  - url: collections/castoredc.postman_collection.json
+    type: PostmanCollection
+  - url: collections/castoredc.opencollection.json
+    type: OpenCollection
+  description: Read and write the actual collected values (data points) for the study
+    forms of a participant - retrieve all study data points for a study or a single
+    participant, and create or update participant study data points programmatically.
+- aid: castoredc:castoredc-reports-api
+  name: Castor Reports (Repeating Data) API
+  tags:
+  - Reports
+  - Repeating Data
+  - Instances
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://data.castoredc.com/api
+  baseURL: https://data.castoredc.com/api
+  properties:
+  - url: https://data.castoredc.com/api
+    type: APIReference
+  - url: openapi/castoredc-openapi.yml
+    type: OpenAPI
+  - url: collections/castoredc.postman_collection.json
+    type: PostmanCollection
+  - url: collections/castoredc.opencollection.json
+    type: OpenCollection
+  description: Work with reports (now called repeating data) - unscheduled or
+    repeatable forms such as adverse events or medications. List report definitions,
+    list and create repeating-data instances for a participant, and read or write
+    their data points.
+- aid: castoredc:castoredc-surveys-api
+  name: Castor Surveys API
+  tags:
+  - Surveys
+  - ePRO
+  - Survey Packages
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://data.castoredc.com/api
+  baseURL: https://data.castoredc.com/api
+  properties:
+  - url: https://data.castoredc.com/api
+    type: APIReference
+  - url: openapi/castoredc-openapi.yml
+    type: OpenAPI
+  - url: collections/castoredc.postman_collection.json
+    type: PostmanCollection
+  - url: collections/castoredc.opencollection.json
+    type: OpenCollection
+  description: Manage surveys and electronic patient-reported outcomes (ePRO) - list
+    survey definitions, send survey packages to participants (creating survey-package
+    instances), check survey compliance, and read survey data points and instances.
+- aid: castoredc:castoredc-audit-trail-api
+  name: Castor Audit Trail API
+  tags:
+  - Audit Trail
+  - Compliance
+  - GCP
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://data.castoredc.com/api
+  baseURL: https://data.castoredc.com/api
+  properties:
+  - url: https://data.castoredc.com/api
+    type: APIReference
+  - url: openapi/castoredc-openapi.yml
+    type: OpenAPI
+  - url: collections/castoredc.postman_collection.json
+    type: PostmanCollection
+  - url: collections/castoredc.opencollection.json
+    type: OpenCollection
+  description: Retrieve the immutable audit trail for a study - the who, what, and
+    when of every data and configuration change - to support GCP/21 CFR Part 11
+    compliance, monitoring, and reconciliation with external quality systems.
+- aid: castoredc:castoredc-data-export-api
+  name: Castor Data Export API
+  tags:
+  - Export
+  - Bulk Data
+  - Structure
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://data.castoredc.com/api
+  baseURL: https://data.castoredc.com/api
+  properties:
+  - url: https://data.castoredc.com/api
+    type: APIReference
+  - url: openapi/castoredc-openapi.yml
+    type: OpenAPI
+  - url: collections/castoredc.postman_collection.json
+    type: PostmanCollection
+  - url: collections/castoredc.opencollection.json
+    type: OpenCollection
+  description: Request and download bulk exports of a study - the collected data, the
+    study structure, and the option groups - for downstream statistical analysis,
+    archiving, and data warehousing.
+common:
+- type: LinkedIn
+  url: https://www.linkedin.com/company/castoredc
+- type: Website
+  url: https://www.castoredc.com
+- type: Documentation
+  url: https://helpdesk.castoredc.com/application-programming-interface-api
+- type: Plans
+  url: plans/castoredc-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/castoredc-rate-limits.yml
+- type: FinOps
+  url: finops/castoredc-finops.yml
+- url: https://www.castoredc.com/blog/
+  type: Blog
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

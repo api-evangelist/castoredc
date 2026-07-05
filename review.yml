@@ -1,0 +1,126 @@
+aid: castoredc
+name: Castor
+review:
+  question: Does Castor expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-05'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Castor's public interface (the Castor EDC /
+    CDMS API at https://data.castoredc.com/api) is request/response REST over HTTPS
+    with OAuth2 client-credentials auth. There is no server-push transport
+    (WebSocket or SSE) documented on Castor's API to model. Castor delivers data
+    changes to consumers by polling the REST data-point and audit-trail endpoints
+    or by requesting batch exports - not through a realtime bidirectional channel.
+findings:
+  summary: |
+    Castor does not publish a documented public WebSocket API. Castor (Castor EDC /
+    CDMS) is a cloud electronic data capture and clinical data management platform.
+    Its public API is a RESTful HTTP API at base URL https://data.castoredc.com/api
+    (with a US region at https://us.castoredc.com/api), authenticated with OAuth2
+    using the Client Credentials flow: clients POST client_id, client_secret, and
+    grant_type=client_credentials to /oauth/token to obtain a Bearer access token
+    valid for 5 hours. All resources - studies, participants (records), institutes,
+    users, fields (and field dependencies, option groups, validations), study data
+    points, reports / repeating data, surveys and survey packages, audit trail, and
+    batch data export - are exposed as pure request/response REST, returning
+    paginated HAL JSON collections. Integration and analysis are commonly done via
+    the official R (castoRedc) and Python (castoredc-api) wrapper packages. No
+    realtime, bidirectional, or streaming WebSocket (ws:// or wss://) endpoint is
+    documented anywhere in Castor's API reference or helpdesk as of the review date.
+  openSource: |
+    The Castor EDC / CDMS platform itself is proprietary, closed-source SaaS. The
+    client tooling around the API is open source: the official Python wrapper
+    (github.com/reiniervlinschoten/castoredc_api, published on PyPI as
+    castoredc-api and described in the Journal of Open Research Software) and an R
+    package are community/vendor maintained and interact with the documented REST
+    endpoints. There is no self-hostable server component.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://data.castoredc.com/api
+      documented: true
+      note: Full EDC / CDMS API. OAuth2 client-credentials Bearer auth. US region at https://us.castoredc.com/api.
+    - protocol: OAuth2 Token
+      scheme: https
+      documented: true
+      note: POST /oauth/token with grant_type=client_credentials returns a Bearer token valid 5 hours.
+    - protocol: Batch Export
+      scheme: https
+      documented: true
+      note: GET /study/{study_id}/export/data|structure|optiongroups returns CSV bulk exports. HTTP request/response, not streaming.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in Castor's API reference or helpdesk as of the review date.
+  endpointsConfirmed:
+    - POST   https://data.castoredc.com/api/oauth/token
+    - GET    https://data.castoredc.com/api/study
+    - GET    https://data.castoredc.com/api/study/{study_id}
+    - GET    https://data.castoredc.com/api/study/{study_id}/participant
+    - POST   https://data.castoredc.com/api/study/{study_id}/participant
+    - GET    https://data.castoredc.com/api/study/{study_id}/participant/{participant_id}
+    - GET    https://data.castoredc.com/api/study/{study_id}/institute
+    - GET    https://data.castoredc.com/api/study/{study_id}/institute/{institute_id}
+    - GET    https://data.castoredc.com/api/study/{study_id}/field
+    - GET    https://data.castoredc.com/api/study/{study_id}/field/{field_id}
+    - GET    https://data.castoredc.com/api/study/{study_id}/field-dependency
+    - GET    https://data.castoredc.com/api/study/{study_id}/field-optiongroup
+    - GET    https://data.castoredc.com/api/study/{study_id}/data-points/study
+    - GET    https://data.castoredc.com/api/study/{study_id}/participant/{participant_id}/data-points/study
+    - POST   https://data.castoredc.com/api/study/{study_id}/participant/{participant_id}/data-points/study
+    - GET    https://data.castoredc.com/api/study/{study_id}/participant/{participant_id}/data-points/repeating-data-instance
+    - POST   https://data.castoredc.com/api/study/{study_id}/participant/{participant_id}/data-points/repeating-data-instance/{repeating_data_instance_id}
+    - GET    https://data.castoredc.com/api/study/{study_id}/participant/{participant_id}/data-points/survey-instance
+    - POST   https://data.castoredc.com/api/study/{study_id}/participant/{participant_id}/data-points/survey-package-instance
+    - POST   https://data.castoredc.com/api/study/{study_id}/compliance
+    - GET    https://data.castoredc.com/api/study/{study_id}/audit-trail
+    - GET    https://data.castoredc.com/api/study/{study_id}/export/data
+    - GET    https://data.castoredc.com/api/study/{study_id}/export/structure
+    - GET    https://data.castoredc.com/api/study/{study_id}/export/optiongroups
+    - GET    https://data.castoredc.com/api/country
+    - GET    https://data.castoredc.com/api/country/{country_id}
+  endpointsModeled:
+    - GET    https://data.castoredc.com/api/study/{study_id}/survey
+    - GET    https://data.castoredc.com/api/study/{study_id}/report
+    - GET    https://data.castoredc.com/api/study/{study_id}/report/{report_id}
+    - GET    https://data.castoredc.com/api/study/{study_id}/field-validation
+    - POST   https://data.castoredc.com/api/study/{study_id}/institute
+    - GET    https://data.castoredc.com/api/user
+    - GET    https://data.castoredc.com/api/user/{user_id}
+    - GET    https://data.castoredc.com/api/study/{study_id}/user
+  modeledNote: |
+    endpointsModeled entries follow Castor's documented resource model and the
+    coverage of the official R and Python wrapper packages, but the exact path or
+    shape was inferred and should be verified against https://data.castoredc.com/api
+    during reconciliation. The user, survey, and report resources are documented as
+    supported by the wrappers; the precise REST paths above are the modeled form.
+sources:
+  - url: https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+    type: Documentation
+    note: Confirms REST API, base URL https://data.castoredc.com/api, and OAuth2 Client Credentials flow. No WebSocket mentioned.
+  - url: https://data.castoredc.com/api
+    type: APIReference
+    note: Interactive API reference (Swagger) listing study, participant, institute, field, data-points, audit-trail, export, country endpoints.
+  - url: https://helpdesk.castoredc.com/application-programming-interface-api/parameters-used-in-the-api
+    type: Documentation
+    note: GUID (8-4-4-4-12) ID format for study/field/instance IDs; participant ID is the exception.
+  - url: https://helpdesk.castoredc.com/hc/en-us/articles/27223902602909-API-troubleshooting-EDC-CDMS
+    type: Documentation
+    note: API troubleshooting, including the default 600-requests-per-10-minutes rate limit and 429 responses.
+  - url: https://github.com/reiniervlinschoten/castoredc_api
+    type: SourceCode
+    note: Open-source Python wrapper covering study, participant, institute, user, field, report, survey, audit-trail, and metadata endpoints.
+  - url: https://openresearchsoftware.metajnl.com/articles/10.5334/jors.436
+    type: Reference
+    note: Journal of Open Research Software paper describing the CastorEDC API Python package and endpoint coverage.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. Castor's public API is request/response
+    REST over HTTPS with OAuth2 client-credentials auth, returning paginated HAL
+    JSON, plus batch CSV export endpoints. No AsyncAPI document was created because
+    there is no server-push transport (WebSocket or SSE) on Castor's own API to
+    model.

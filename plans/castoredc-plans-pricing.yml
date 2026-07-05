@@ -1,0 +1,115 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Castor
+providerId: castoredc
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Clinical Trials
+- Electronic Data Capture
+- EDC
+- Healthcare
+- Plans
+description: >-
+  Castor does not publish transparent, self-service list pricing for the platform
+  or the API. Castor EDC / CDMS is sold on a per-study subscription basis, quoted
+  by sales based on study size, number of users, duration, modules (surveys / ePRO,
+  randomization, eConsent), region, and compliance needs. Third-party software
+  directories report entry points in the low hundreds of dollars per month for the
+  smallest studies, with mid-market and enterprise multi-center trials priced by
+  custom quote. Academic, non-profit, and grant-funded pricing is available. The
+  API is not a separately metered product - it is included with a study
+  subscription and consumed under the platform's rate limits at no additional
+  per-call charge.
+notes: >-
+  Dollar figures below are indicative ranges gathered from third-party software
+  directories (ITQlick, Capterra, GoodFirms) and are NOT official Castor list
+  prices. Contact Castor sales for a quote. Reconcile against the official
+  castoredc.com pricing / contact-sales flow and the helpdesk "Costs and payment"
+  section.
+sources:
+- https://www.castoredc.com
+- https://helpdesk.castoredc.com/hc/en-us/sections/27224717211805-Costs-and-payment
+- https://helpdesk.castoredc.com/application-programming-interface-api
+- https://www.itqlick.com/castor-edc/pricing
+- https://www.capterra.com/p/143532/Castor-EDC/pricing/
+plans:
+- id: castoredc-academic
+  name: Academic / Non-Profit
+  type: subscription
+  description: >-
+    Discounted per-study subscription for academic, non-profit, and grant-funded
+    investigator-initiated research. Includes EDC data capture and full API access.
+    Priced by quote.
+  entries:
+  - label: Per-Study Subscription (Academic)
+    name: academic_study
+    type: flat
+    metric: study
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: discounted quote (contact sales)
+    userMultiplied: false
+  elements:
+  - name: Electronic Data Capture
+  - name: REST API Access
+  - name: Audit Trail
+  - name: Data Export
+- id: castoredc-standard
+  name: Standard (Per Study)
+  type: subscription
+  description: >-
+    Per-study commercial subscription for a single clinical study. Includes EDC,
+    the REST API, audit trail, and data export; optional modules such as surveys /
+    ePRO, randomization, and eConsent are added per study. Reported entry points
+    start in the low hundreds of USD per month for the smallest studies.
+  entries:
+  - label: Per-Study Subscription
+    name: standard_study
+    type: flat
+    metric: study
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: from ~$199/month (indicative; contact sales)
+    userMultiplied: false
+  elements:
+  - name: Electronic Data Capture
+  - name: REST API Access
+  - name: Audit Trail
+  - name: Data Export
+  - name: Surveys / ePRO (optional module)
+  - name: Randomization (optional module)
+- id: castoredc-enterprise
+  name: Enterprise / Sponsor / CRO
+  type: enterprise
+  description: >-
+    Custom agreements for sponsors, CROs, and organizations running multiple or
+    large multi-center global trials. Adds volume study licensing, dedicated
+    support, validation and compliance documentation (GCP, 21 CFR Part 11, HIPAA,
+    GDPR), SSO, and negotiated SLAs. Priced by quote.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Volume Study Licensing
+  - name: Dedicated Support
+  - name: Validation and Compliance Documentation
+  - name: SSO and Advanced Security
+  - name: SLAs
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
