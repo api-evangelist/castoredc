@@ -240,6 +240,12 @@ apis:
     study structure, and the option groups - for downstream statistical analysis,
     archiving, and data warehousing.
 common:
+- type: VulnerabilityDisclosure
+  url: security/castoredc-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/castoredc-domain-security.yml
+- type: Authentication
+  url: authentication/castoredc-authentication.yml
 - type: OAuthScopes
   url: scopes/castoredc-scopes.yml
 - type: LinkedIn

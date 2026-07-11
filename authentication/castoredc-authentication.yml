@@ -1,0 +1,17 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/castoredc-openapi.yml
+summary:
+  types:
+  - oauth2
+  oauth2_flows:
+  - clientCredentials
+schemes:
+- name: oauth2ClientCredentials
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://data.castoredc.com/api/oauth/token
+    scopes: 0
+  sources:
+  - openapi/castoredc-openapi.yml
