@@ -240,6 +240,8 @@ apis:
     study structure, and the option groups - for downstream statistical analysis,
     archiving, and data warehousing.
 common:
+- type: OAuthScopes
+  url: scopes/castoredc-scopes.yml
 - type: LinkedIn
   url: https://www.linkedin.com/company/castoredc
 - type: Website

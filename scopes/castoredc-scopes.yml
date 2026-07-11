@@ -1,0 +1,27 @@
+generated: '2026-07-11'
+method: searched
+source: openapi/castoredc-openapi.yml
+docs: https://data.castoredc.com/api
+schemes:
+- name: oauth2ClientCredentials
+  source: openapi/castoredc-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://data.castoredc.com/api/oauth/token
+scopes:
+- scope: default
+  description: Grants access to everything (allows access to all endpoints).
+  sources:
+  - https://data.castoredc.com/api
+  - https://data.castoredc.com/api/swagger?format=json
+- scope: study_statistics
+  description: Grants access to a study's statistics.
+  sources:
+  - https://data.castoredc.com/api
+  - https://data.castoredc.com/api/swagger?format=json
+- scope: record
+  description: Grants access to the data for a single participant; intended for use
+    by study subjects.
+  sources:
+  - https://data.castoredc.com/api
+  - https://data.castoredc.com/api/swagger?format=json
