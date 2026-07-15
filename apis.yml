@@ -240,6 +240,8 @@ apis:
     study structure, and the option groups - for downstream statistical analysis,
     archiving, and data warehousing.
 common:
+- type: AgenticAccess
+  url: agentic-access/castoredc-agentic-access.yml
 - type: VulnerabilityDisclosure
   url: security/castoredc-vulnerability-disclosure.yml
 - type: DomainSecurity
