@@ -1,0 +1,164 @@
+openapi: 3.0.3
+info:
+  title: Castor EDC / CDMS Audit Trail Participants API
+  description: 'The Castor EDC / CDMS API is a RESTful interface to Castor''s cloud electronic data capture (EDC) and clinical data management platform. It exposes study configuration and collected data - studies, participants (records), institutes (sites), users, fields and field metadata, study data points, repeating data (reports), surveys and survey packages, the audit trail, and batch data export. Authentication is OAuth2 with the Client Credentials flow: request an access token from POST /oauth/token using an API Client ID and Client Secret generated in Castor User Settings, then send it as a Bearer token. Access tokens are valid for 5 hours. Most identifiers (study, field, report / repeating-data instance, survey package instance) are uppercase GUIDs in 8-4-4-4-12 format; the participant ID is the exception.
+
+
+    Endpoint status: paths that this document marks with `x-endpoint-status: confirmed` were observed directly in Castor''s published API reference and helpdesk documentation. Paths marked `x-endpoint-status: modeled` reflect the documented resource model and the coverage of the official R and Python wrapper packages, but the exact path or shape was inferred and should be verified against https://data.castoredc.com/api during reconciliation.'
+  version: '1.0'
+  contact:
+    name: Castor
+    url: https://www.castoredc.com
+  license:
+    name: Proprietary
+    url: https://www.castoredc.com/legal/
+servers:
+- url: https://data.castoredc.com/api
+  description: Castor EU (default)
+- url: https://us.castoredc.com/api
+  description: Castor US region
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Participants
+  description: Participants (records / subjects) enrolled in a study.
+paths:
+  /study/{study_id}/participant:
+    get:
+      operationId: listParticipants
+      tags:
+      - Participants
+      summary: List participants
+      description: Lists the participants (records) enrolled in a study.
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A paginated list of participants.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantCollection'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createParticipant
+      tags:
+      - Participants
+      summary: Create a participant
+      description: Creates a new participant (record) in a study.
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParticipantInput'
+      responses:
+        '201':
+          description: The created participant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Participant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /study/{study_id}/participant/{participant_id}:
+    get:
+      operationId: getParticipant
+      tags:
+      - Participants
+      summary: Retrieve a participant
+      description: Retrieves a single participant by ID.
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      - $ref: '#/components/parameters/ParticipantId'
+      responses:
+        '200':
+          description: A participant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Participant'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    ParticipantInput:
+      type: object
+      properties:
+        participant_id:
+          type: string
+        institute_id:
+          type: string
+          format: uuid
+        email_address:
+          type: string
+    Participant:
+      allOf:
+      - $ref: '#/components/schemas/ParticipantInput'
+      - type: object
+        properties:
+          status:
+            type: string
+          randomized_id:
+            type: string
+          progress:
+            type: integer
+          created_on:
+            type: string
+            format: date-time
+    ParticipantCollection:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            participants:
+              type: array
+              items:
+                $ref: '#/components/schemas/Participant'
+        page_count:
+          type: integer
+        total_items:
+          type: integer
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      description: Page number for paginated (HAL) collections.
+      schema:
+        type: integer
+        minimum: 1
+    ParticipantId:
+      name: participant_id
+      in: path
+      required: true
+      description: The participant (record) ID.
+      schema:
+        type: string
+    StudyId:
+      name: study_id
+      in: path
+      required: true
+      description: The study GUID (uppercase, 8-4-4-4-12 format).
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+    Unauthorized:
+      description: Missing or invalid access token.
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://data.castoredc.com/api/oauth/token
+          scopes: {}

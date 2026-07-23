@@ -1,0 +1,92 @@
+openapi: 3.0.3
+info:
+  title: Castor EDC / CDMS Audit Trail Data Export API
+  description: 'The Castor EDC / CDMS API is a RESTful interface to Castor''s cloud electronic data capture (EDC) and clinical data management platform. It exposes study configuration and collected data - studies, participants (records), institutes (sites), users, fields and field metadata, study data points, repeating data (reports), surveys and survey packages, the audit trail, and batch data export. Authentication is OAuth2 with the Client Credentials flow: request an access token from POST /oauth/token using an API Client ID and Client Secret generated in Castor User Settings, then send it as a Bearer token. Access tokens are valid for 5 hours. Most identifiers (study, field, report / repeating-data instance, survey package instance) are uppercase GUIDs in 8-4-4-4-12 format; the participant ID is the exception.
+
+
+    Endpoint status: paths that this document marks with `x-endpoint-status: confirmed` were observed directly in Castor''s published API reference and helpdesk documentation. Paths marked `x-endpoint-status: modeled` reflect the documented resource model and the coverage of the official R and Python wrapper packages, but the exact path or shape was inferred and should be verified against https://data.castoredc.com/api during reconciliation.'
+  version: '1.0'
+  contact:
+    name: Castor
+    url: https://www.castoredc.com
+  license:
+    name: Proprietary
+    url: https://www.castoredc.com/legal/
+servers:
+- url: https://data.castoredc.com/api
+  description: Castor EU (default)
+- url: https://us.castoredc.com/api
+  description: Castor US region
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Data Export
+  description: Bulk export of study data, structure, and option groups.
+paths:
+  /study/{study_id}/export/data:
+    get:
+      operationId: exportStudyData
+      tags:
+      - Data Export
+      summary: Export study data
+      description: Exports the collected data of a study (CSV).
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      responses:
+        '200':
+          description: The exported study data.
+          content:
+            text/csv:
+              schema:
+                type: string
+  /study/{study_id}/export/structure:
+    get:
+      operationId: exportStudyStructure
+      tags:
+      - Data Export
+      summary: Export study structure
+      description: Exports the structure (forms, fields, phases) of a study.
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      responses:
+        '200':
+          description: The exported study structure.
+          content:
+            text/csv:
+              schema:
+                type: string
+  /study/{study_id}/export/optiongroups:
+    get:
+      operationId: exportOptionGroups
+      tags:
+      - Data Export
+      summary: Export option groups
+      description: Exports the option groups (answer choices) of a study.
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      responses:
+        '200':
+          description: The exported option groups.
+          content:
+            text/csv:
+              schema:
+                type: string
+components:
+  parameters:
+    StudyId:
+      name: study_id
+      in: path
+      required: true
+      description: The study GUID (uppercase, 8-4-4-4-12 format).
+      schema:
+        type: string
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://data.castoredc.com/api/oauth/token
+          scopes: {}

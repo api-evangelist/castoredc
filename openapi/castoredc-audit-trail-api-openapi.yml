@@ -1,0 +1,77 @@
+openapi: 3.0.3
+info:
+  title: Castor EDC / CDMS Audit Trail API
+  description: 'The Castor EDC / CDMS API is a RESTful interface to Castor''s cloud electronic data capture (EDC) and clinical data management platform. It exposes study configuration and collected data - studies, participants (records), institutes (sites), users, fields and field metadata, study data points, repeating data (reports), surveys and survey packages, the audit trail, and batch data export. Authentication is OAuth2 with the Client Credentials flow: request an access token from POST /oauth/token using an API Client ID and Client Secret generated in Castor User Settings, then send it as a Bearer token. Access tokens are valid for 5 hours. Most identifiers (study, field, report / repeating-data instance, survey package instance) are uppercase GUIDs in 8-4-4-4-12 format; the participant ID is the exception.
+
+
+    Endpoint status: paths that this document marks with `x-endpoint-status: confirmed` were observed directly in Castor''s published API reference and helpdesk documentation. Paths marked `x-endpoint-status: modeled` reflect the documented resource model and the coverage of the official R and Python wrapper packages, but the exact path or shape was inferred and should be verified against https://data.castoredc.com/api during reconciliation.'
+  version: '1.0'
+  contact:
+    name: Castor
+    url: https://www.castoredc.com
+  license:
+    name: Proprietary
+    url: https://www.castoredc.com/legal/
+servers:
+- url: https://data.castoredc.com/api
+  description: Castor EU (default)
+- url: https://us.castoredc.com/api
+  description: Castor US region
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Audit Trail
+  description: Immutable audit trail of study changes.
+paths:
+  /study/{study_id}/audit-trail:
+    get:
+      operationId: getAuditTrail
+      tags:
+      - Audit Trail
+      summary: Retrieve the audit trail
+      description: Retrieves audit trail entries for a study - every data and configuration change, with actor and timestamp. Supports date range filtering.
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      - name: date_from
+        in: query
+        schema:
+          type: string
+          format: date
+      - name: date_to
+        in: query
+        schema:
+          type: string
+          format: date
+      - $ref: '#/components/parameters/Page'
+      responses:
+        '200':
+          description: A paginated list of audit trail entries.
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      description: Page number for paginated (HAL) collections.
+      schema:
+        type: integer
+        minimum: 1
+    StudyId:
+      name: study_id
+      in: path
+      required: true
+      description: The study GUID (uppercase, 8-4-4-4-12 format).
+      schema:
+        type: string
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://data.castoredc.com/api/oauth/token
+          scopes: {}

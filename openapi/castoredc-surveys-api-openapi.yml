@@ -1,0 +1,129 @@
+openapi: 3.0.3
+info:
+  title: Castor EDC / CDMS Audit Trail Surveys API
+  description: 'The Castor EDC / CDMS API is a RESTful interface to Castor''s cloud electronic data capture (EDC) and clinical data management platform. It exposes study configuration and collected data - studies, participants (records), institutes (sites), users, fields and field metadata, study data points, repeating data (reports), surveys and survey packages, the audit trail, and batch data export. Authentication is OAuth2 with the Client Credentials flow: request an access token from POST /oauth/token using an API Client ID and Client Secret generated in Castor User Settings, then send it as a Bearer token. Access tokens are valid for 5 hours. Most identifiers (study, field, report / repeating-data instance, survey package instance) are uppercase GUIDs in 8-4-4-4-12 format; the participant ID is the exception.
+
+
+    Endpoint status: paths that this document marks with `x-endpoint-status: confirmed` were observed directly in Castor''s published API reference and helpdesk documentation. Paths marked `x-endpoint-status: modeled` reflect the documented resource model and the coverage of the official R and Python wrapper packages, but the exact path or shape was inferred and should be verified against https://data.castoredc.com/api during reconciliation.'
+  version: '1.0'
+  contact:
+    name: Castor
+    url: https://www.castoredc.com
+  license:
+    name: Proprietary
+    url: https://www.castoredc.com/legal/
+servers:
+- url: https://data.castoredc.com/api
+  description: Castor EU (default)
+- url: https://us.castoredc.com/api
+  description: Castor US region
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Surveys
+  description: Surveys, survey packages, and ePRO.
+paths:
+  /study/{study_id}/survey:
+    get:
+      operationId: listSurveys
+      tags:
+      - Surveys
+      summary: List surveys
+      description: Lists the survey and ePRO definitions configured in a study.
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      responses:
+        '200':
+          description: A list of surveys.
+          content:
+            application/json:
+              schema:
+                type: object
+  /study/{study_id}/participant/{participant_id}/data-points/survey-instance:
+    get:
+      operationId: listSurveyInstances
+      tags:
+      - Surveys
+      summary: List a participant's survey instances
+      description: Retrieves the survey instances (and their data points) for a participant.
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      - $ref: '#/components/parameters/ParticipantId'
+      responses:
+        '200':
+          description: A list of survey instances.
+          content:
+            application/json:
+              schema:
+                type: object
+  /study/{study_id}/participant/{participant_id}/data-points/survey-package-instance:
+    post:
+      operationId: createSurveyPackageInstance
+      tags:
+      - Surveys
+      summary: Send a survey package to a participant
+      description: Creates a survey-package instance, sending one or more surveys to a participant (for example, by email invitation).
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      - $ref: '#/components/parameters/ParticipantId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                survey_package_id:
+                  type: string
+                email_address:
+                  type: string
+      responses:
+        '201':
+          description: The created survey-package instance.
+          content:
+            application/json:
+              schema:
+                type: object
+  /study/{study_id}/compliance:
+    post:
+      operationId: getSurveyCompliance
+      tags:
+      - Surveys
+      summary: Retrieve participant survey compliance
+      description: Returns survey compliance information for participants in a study.
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      responses:
+        '200':
+          description: Survey compliance information.
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  parameters:
+    ParticipantId:
+      name: participant_id
+      in: path
+      required: true
+      description: The participant (record) ID.
+      schema:
+        type: string
+    StudyId:
+      name: study_id
+      in: path
+      required: true
+      description: The study GUID (uppercase, 8-4-4-4-12 format).
+      schema:
+        type: string
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://data.castoredc.com/api/oauth/token
+          scopes: {}

@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  title: Castor EDC / CDMS Audit Trail Institutes API
+  description: 'The Castor EDC / CDMS API is a RESTful interface to Castor''s cloud electronic data capture (EDC) and clinical data management platform. It exposes study configuration and collected data - studies, participants (records), institutes (sites), users, fields and field metadata, study data points, repeating data (reports), surveys and survey packages, the audit trail, and batch data export. Authentication is OAuth2 with the Client Credentials flow: request an access token from POST /oauth/token using an API Client ID and Client Secret generated in Castor User Settings, then send it as a Bearer token. Access tokens are valid for 5 hours. Most identifiers (study, field, report / repeating-data instance, survey package instance) are uppercase GUIDs in 8-4-4-4-12 format; the participant ID is the exception.
+
+
+    Endpoint status: paths that this document marks with `x-endpoint-status: confirmed` were observed directly in Castor''s published API reference and helpdesk documentation. Paths marked `x-endpoint-status: modeled` reflect the documented resource model and the coverage of the official R and Python wrapper packages, but the exact path or shape was inferred and should be verified against https://data.castoredc.com/api during reconciliation.'
+  version: '1.0'
+  contact:
+    name: Castor
+    url: https://www.castoredc.com
+  license:
+    name: Proprietary
+    url: https://www.castoredc.com/legal/
+servers:
+- url: https://data.castoredc.com/api
+  description: Castor EU (default)
+- url: https://us.castoredc.com/api
+  description: Castor US region
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Institutes
+  description: Institutes (sites / centers) participating in a study.
+paths:
+  /study/{study_id}/institute:
+    get:
+      operationId: listInstitutes
+      tags:
+      - Institutes
+      summary: List institutes
+      description: Lists the institutes (sites) participating in a study.
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      responses:
+        '200':
+          description: A list of institutes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstituteCollection'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createInstitute
+      tags:
+      - Institutes
+      summary: Create an institute
+      description: Creates a new institute (site) in a study.
+      x-endpoint-status: modeled
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstituteInput'
+      responses:
+        '201':
+          description: The created institute.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institute'
+  /study/{study_id}/institute/{institute_id}:
+    get:
+      operationId: getInstitute
+      tags:
+      - Institutes
+      summary: Retrieve an institute
+      description: Retrieves a single institute by ID.
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      - $ref: '#/components/parameters/InstituteId'
+      responses:
+        '200':
+          description: An institute.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institute'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    Institute:
+      allOf:
+      - $ref: '#/components/schemas/InstituteInput'
+      - type: object
+        properties:
+          institute_id:
+            type: string
+            format: uuid
+          code:
+            type: string
+    InstituteCollection:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            institutes:
+              type: array
+              items:
+                $ref: '#/components/schemas/Institute'
+    InstituteInput:
+      type: object
+      properties:
+        name:
+          type: string
+        abbreviation:
+          type: string
+        country_id:
+          type: integer
+  parameters:
+    InstituteId:
+      name: institute_id
+      in: path
+      required: true
+      description: The institute GUID.
+      schema:
+        type: string
+    StudyId:
+      name: study_id
+      in: path
+      required: true
+      description: The study GUID (uppercase, 8-4-4-4-12 format).
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+    Unauthorized:
+      description: Missing or invalid access token.
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://data.castoredc.com/api/oauth/token
+          scopes: {}

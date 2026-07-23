@@ -1,0 +1,182 @@
+openapi: 3.0.3
+info:
+  title: Castor EDC / CDMS Audit Trail Reports API
+  description: 'The Castor EDC / CDMS API is a RESTful interface to Castor''s cloud electronic data capture (EDC) and clinical data management platform. It exposes study configuration and collected data - studies, participants (records), institutes (sites), users, fields and field metadata, study data points, repeating data (reports), surveys and survey packages, the audit trail, and batch data export. Authentication is OAuth2 with the Client Credentials flow: request an access token from POST /oauth/token using an API Client ID and Client Secret generated in Castor User Settings, then send it as a Bearer token. Access tokens are valid for 5 hours. Most identifiers (study, field, report / repeating-data instance, survey package instance) are uppercase GUIDs in 8-4-4-4-12 format; the participant ID is the exception.
+
+
+    Endpoint status: paths that this document marks with `x-endpoint-status: confirmed` were observed directly in Castor''s published API reference and helpdesk documentation. Paths marked `x-endpoint-status: modeled` reflect the documented resource model and the coverage of the official R and Python wrapper packages, but the exact path or shape was inferred and should be verified against https://data.castoredc.com/api during reconciliation.'
+  version: '1.0'
+  contact:
+    name: Castor
+    url: https://www.castoredc.com
+  license:
+    name: Proprietary
+    url: https://www.castoredc.com/legal/
+servers:
+- url: https://data.castoredc.com/api
+  description: Castor EU (default)
+- url: https://us.castoredc.com/api
+  description: Castor US region
+security:
+- oauth2ClientCredentials: []
+tags:
+- name: Reports
+  description: Reports / repeating data and their instances.
+paths:
+  /study/{study_id}/report:
+    get:
+      operationId: listReports
+      tags:
+      - Reports
+      summary: List reports (repeating data)
+      description: Lists the report / repeating-data definitions configured in a study.
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      responses:
+        '200':
+          description: A list of reports.
+          content:
+            application/json:
+              schema:
+                type: object
+  /study/{study_id}/report/{report_id}:
+    get:
+      operationId: getReport
+      tags:
+      - Reports
+      summary: Retrieve a report
+      description: Retrieves a single report / repeating-data definition by ID.
+      x-endpoint-status: modeled
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      - name: report_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A report.
+          content:
+            application/json:
+              schema:
+                type: object
+  /study/{study_id}/participant/{participant_id}/data-points/repeating-data-instance:
+    get:
+      operationId: listRepeatingDataInstances
+      tags:
+      - Reports
+      summary: List a participant's repeating-data instances
+      description: Retrieves the repeating-data (report) instances for a participant.
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      - $ref: '#/components/parameters/ParticipantId'
+      responses:
+        '200':
+          description: A list of repeating-data instances.
+          content:
+            application/json:
+              schema:
+                type: object
+  /study/{study_id}/participant/{participant_id}/data-points/repeating-data-instance/{repeating_data_instance_id}:
+    post:
+      operationId: updateRepeatingDataInstance
+      tags:
+      - Reports
+      summary: Update a repeating-data instance's data points
+      description: Creates or updates the data points of a repeating-data instance.
+      x-endpoint-status: confirmed
+      parameters:
+      - $ref: '#/components/parameters/StudyId'
+      - $ref: '#/components/parameters/ParticipantId'
+      - name: repeating_data_instance_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataPointWriteRequest'
+      responses:
+        '200':
+          description: The updated data points.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataPointCollection'
+components:
+  schemas:
+    DataPointWriteRequest:
+      type: object
+      required:
+      - data
+      properties:
+        common:
+          type: object
+          properties:
+            change_reason:
+              type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              field_id:
+                type: string
+                format: uuid
+              field_value:
+                type: string
+    DataPointCollection:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/DataPoint'
+        page_count:
+          type: integer
+        total_items:
+          type: integer
+    DataPoint:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: uuid
+        field_value:
+          type: string
+        participant_id:
+          type: string
+        updated_on:
+          type: string
+          format: date-time
+  parameters:
+    ParticipantId:
+      name: participant_id
+      in: path
+      required: true
+      description: The participant (record) ID.
+      schema:
+        type: string
+    StudyId:
+      name: study_id
+      in: path
+      required: true
+      description: The study GUID (uppercase, 8-4-4-4-12 format).
+      schema:
+        type: string
+  securitySchemes:
+    oauth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://data.castoredc.com/api/oauth/token
+          scopes: {}
