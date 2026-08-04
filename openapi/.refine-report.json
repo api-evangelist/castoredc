@@ -1,0 +1,34 @@
+{
+  "provider": "castoredc",
+  "sources": [
+    "castoredc-audit-trail-api-openapi.yml",
+    "castoredc-data-export-api-openapi.yml",
+    "castoredc-fields-api-openapi.yml",
+    "castoredc-institutes-api-openapi.yml",
+    "castoredc-metadata-api-openapi.yml",
+    "castoredc-participants-api-openapi.yml",
+    "castoredc-reports-api-openapi.yml",
+    "castoredc-studies-api-openapi.yml",
+    "castoredc-study-data-points-api-openapi.yml",
+    "castoredc-surveys-api-openapi.yml",
+    "castoredc-users-api-openapi.yml"
+  ],
+  "outputs": [
+    "castoredc-audit-trail-api-openapi.yml",
+    "castoredc-data-export-api-openapi.yml",
+    "castoredc-fields-api-openapi.yml",
+    "castoredc-institutes-api-openapi.yml",
+    "castoredc-metadata-api-openapi.yml",
+    "castoredc-participants-api-openapi.yml",
+    "castoredc-reports-api-openapi.yml",
+    "castoredc-studies-api-openapi.yml",
+    "castoredc-study-data-points-api-openapi.yml",
+    "castoredc-surveys-api-openapi.yml",
+    "castoredc-users-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
