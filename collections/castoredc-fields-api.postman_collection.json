@@ -1,0 +1,674 @@
+{
+  "item": [
+    {
+      "id": "546a96cc-3057-4529-a065-8fe7f068727e",
+      "name": "Fields",
+      "description": {
+        "content": "Study fields and their metadata (dependencies, option groups, validations).",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "6ec98cbe-eaf8-4a14-aefd-49fcce577a28",
+          "name": "List fields",
+          "request": {
+            "name": "List fields",
+            "description": {
+              "content": "Lists all data-capture fields defined in a study.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "study",
+                ":study_id",
+                "field"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "Page number for paginated (HAL) collections."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "study_id",
+                  "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "61d5c925-b872-4dc1-ad9e-bc6c042c39e8",
+              "name": "A paginated list of fields.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "study",
+                    ":study_id",
+                    "field"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "study_id",
+                      "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"_embedded\": {\n    \"fields\": [\n      {\n        \"id\": \"b49b9414-7701-c3a0-becc-d63402652e80\",\n        \"field_id\": \"fbe4472f-cbde-4394-9364-2358be2b0264\",\n        \"field_variable_name\": \"string\",\n        \"field_label\": \"string\",\n        \"field_type\": \"string\",\n        \"field_required\": false,\n        \"option_group\": \"string\"\n      },\n      {\n        \"id\": \"befd7d36-61dc-a494-c73d-70e47e8cb4f8\",\n        \"field_id\": \"44a03c4f-88dd-016e-6e65-f09ba99f4441\",\n        \"field_variable_name\": \"string\",\n        \"field_label\": \"string\",\n        \"field_type\": \"string\",\n        \"field_required\": true,\n        \"option_group\": \"string\"\n      }\n    ]\n  },\n  \"page_count\": 7697,\n  \"total_items\": 3958\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7e11de8e-b45c-4a24-a9df-c3c88ca1d1c6",
+              "name": "Missing or invalid access token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "study",
+                    ":study_id",
+                    "field"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "study_id",
+                      "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9336e3f4-0a40-418a-971e-49ed1556f97f",
+          "name": "Retrieve a field",
+          "request": {
+            "name": "Retrieve a field",
+            "description": {
+              "content": "Retrieves a single field by ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "study",
+                ":study_id",
+                "field",
+                ":field_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "study_id",
+                  "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "field_id",
+                  "description": "(Required) The field GUID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "bd2ac674-c693-45cb-abcf-492461403d68",
+              "name": "A field.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "study",
+                    ":study_id",
+                    "field",
+                    ":field_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "study_id",
+                      "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "field_id",
+                      "description": "(Required) The field GUID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"1dc2dd03-63a1-26a0-d3a4-d36e2259b1c8\",\n  \"field_id\": \"eb91e57f-35e2-1f1e-7302-90214d00c689\",\n  \"field_variable_name\": \"string\",\n  \"field_label\": \"string\",\n  \"field_type\": \"string\",\n  \"field_required\": false,\n  \"option_group\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4762762e-91e9-4b7c-af62-c40cec658210",
+              "name": "The requested resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "study",
+                    ":study_id",
+                    "field",
+                    ":field_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "study_id",
+                      "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "field_id",
+                      "description": "(Required) The field GUID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9f682f72-f876-45d8-96c0-786d5aa86706",
+          "name": "List field dependencies",
+          "request": {
+            "name": "List field dependencies",
+            "description": {
+              "content": "Lists conditional-logic dependencies between fields in a study.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "study",
+                ":study_id",
+                "field-dependency"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "study_id",
+                  "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e9aaa2f0-6738-423a-8115-ca213cc75d49",
+              "name": "A list of field dependencies.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "study",
+                    ":study_id",
+                    "field-dependency"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "study_id",
+                      "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "74b33b39-7101-4e74-9d0e-3881a686d0dd",
+          "name": "List field option groups",
+          "request": {
+            "name": "List field option groups",
+            "description": {
+              "content": "Lists the option groups (answer choices) used by fields in a study.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "study",
+                ":study_id",
+                "field-optiongroup"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "study_id",
+                  "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e2039716-405d-4cdc-9338-ff0716e0dd78",
+              "name": "A list of option groups.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "study",
+                    ":study_id",
+                    "field-optiongroup"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "study_id",
+                      "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cc30be92-520f-4e76-9dbf-05f06346217b",
+          "name": "List field validations",
+          "request": {
+            "name": "List field validations",
+            "description": {
+              "content": "Lists validation rules attached to fields in a study.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "study",
+                ":study_id",
+                "field-validation"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "study_id",
+                  "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "411974b9-c1e8-4fa0-834c-cdab3451b6da",
+              "name": "A list of field validations.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "study",
+                    ":study_id",
+                    "field-validation"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "study_id",
+                      "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://data.castoredc.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "accessTokenUrl",
+        "value": "https://data.castoredc.com/api/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "238d6b9f-2388-48fa-a90a-8eec80b2e651",
+    "name": "Castor EDC / CDMS Audit Trail Fields API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Castor EDC / CDMS API is a RESTful interface to Castor's cloud electronic data capture (EDC) and clinical data management platform. It exposes study configuration and collected data - studies, participants (records), institutes (sites), users, fields and field metadata, study data points, repeating data (reports), surveys and survey packages, the audit trail, and batch data export. Authentication is OAuth2 with the Client Credentials flow: request an access token from POST /oauth/token using an API Client ID and Client Secret generated in Castor User Settings, then send it as a Bearer token. Access tokens are valid for 5 hours. Most identifiers (study, field, report / repeating-data instance, survey package instance) are uppercase GUIDs in 8-4-4-4-12 format; the participant ID is the exception.\n\nEndpoint status: paths that this document marks with `x-endpoint-status: confirmed` were observed directly in Castor's published API reference and helpdesk documentation. Paths marked `x-endpoint-status: modeled` reflect the documented resource model and the coverage of the official R and Python wrapper packages, but the exact path or shape was inferred and should be verified against https://data.castoredc.com/api during reconciliation.\n\nContact Support:\n Name: Castor",
+      "type": "text/plain"
+    }
+  }
+}

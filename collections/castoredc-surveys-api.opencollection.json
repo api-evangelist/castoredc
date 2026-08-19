@@ -1,0 +1,121 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Castor EDC / CDMS Audit Trail Surveys API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://data.castoredc.com/api/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Surveys",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List surveys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/survey",
+            "params": [
+              {
+                "name": "study_id",
+                "value": "",
+                "type": "path",
+                "description": "The study GUID (uppercase, 8-4-4-4-12 format)."
+              }
+            ]
+          },
+          "docs": "Lists the survey and ePRO definitions configured in a study."
+        },
+        {
+          "info": {
+            "name": "List a participant's survey instances",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/participant/:participant_id/data-points/survey-instance",
+            "params": [
+              {
+                "name": "study_id",
+                "value": "",
+                "type": "path",
+                "description": "The study GUID (uppercase, 8-4-4-4-12 format)."
+              },
+              {
+                "name": "participant_id",
+                "value": "",
+                "type": "path",
+                "description": "The participant (record) ID."
+              }
+            ]
+          },
+          "docs": "Retrieves the survey instances (and their data points) for a participant."
+        },
+        {
+          "info": {
+            "name": "Send a survey package to a participant",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://data.castoredc.com/api/study/:study_id/participant/:participant_id/data-points/survey-package-instance",
+            "params": [
+              {
+                "name": "study_id",
+                "value": "",
+                "type": "path",
+                "description": "The study GUID (uppercase, 8-4-4-4-12 format)."
+              },
+              {
+                "name": "participant_id",
+                "value": "",
+                "type": "path",
+                "description": "The participant (record) ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a survey-package instance, sending one or more surveys to a participant (for example, by email invitation)."
+        },
+        {
+          "info": {
+            "name": "Retrieve participant survey compliance",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://data.castoredc.com/api/study/:study_id/compliance",
+            "params": [
+              {
+                "name": "study_id",
+                "value": "",
+                "type": "path",
+                "description": "The study GUID (uppercase, 8-4-4-4-12 format)."
+              }
+            ]
+          },
+          "docs": "Returns survey compliance information for participants in a study."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

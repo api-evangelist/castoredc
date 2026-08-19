@@ -1,0 +1,96 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Castor EDC / CDMS Audit Trail Institutes API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://data.castoredc.com/api/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Institutes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List institutes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/institute",
+            "params": [
+              {
+                "name": "study_id",
+                "value": "",
+                "type": "path",
+                "description": "The study GUID (uppercase, 8-4-4-4-12 format)."
+              }
+            ]
+          },
+          "docs": "Lists the institutes (sites) participating in a study."
+        },
+        {
+          "info": {
+            "name": "Create an institute",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://data.castoredc.com/api/study/:study_id/institute",
+            "params": [
+              {
+                "name": "study_id",
+                "value": "",
+                "type": "path",
+                "description": "The study GUID (uppercase, 8-4-4-4-12 format)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new institute (site) in a study."
+        },
+        {
+          "info": {
+            "name": "Retrieve an institute",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/institute/:institute_id",
+            "params": [
+              {
+                "name": "study_id",
+                "value": "",
+                "type": "path",
+                "description": "The study GUID (uppercase, 8-4-4-4-12 format)."
+              },
+              {
+                "name": "institute_id",
+                "value": "",
+                "type": "path",
+                "description": "The institute GUID."
+              }
+            ]
+          },
+          "docs": "Retrieves a single institute by ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

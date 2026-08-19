@@ -1,0 +1,530 @@
+{
+  "item": [
+    {
+      "id": "b5bb2b05-fa75-4b48-9792-74b981c3d090",
+      "name": "Reports",
+      "description": {
+        "content": "Reports / repeating data and their instances.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "6e0088b7-5825-4d47-869e-55ae803fba14",
+          "name": "List reports (repeating data)",
+          "request": {
+            "name": "List reports (repeating data)",
+            "description": {
+              "content": "Lists the report / repeating-data definitions configured in a study.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "study",
+                ":study_id",
+                "report"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "study_id",
+                  "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "028d5fee-f859-4f8a-9b5e-af3821b8d4e9",
+              "name": "A list of reports.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "study",
+                    ":study_id",
+                    "report"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "study_id",
+                      "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "273d915b-4f3b-4c21-83bc-22dd61a77a1d",
+          "name": "Retrieve a report",
+          "request": {
+            "name": "Retrieve a report",
+            "description": {
+              "content": "Retrieves a single report / repeating-data definition by ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "study",
+                ":study_id",
+                "report",
+                ":report_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "study_id",
+                  "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "report_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "23c6f700-2f72-4a44-8620-fb91a93d6428",
+              "name": "A report.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "study",
+                    ":study_id",
+                    "report",
+                    ":report_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "study_id",
+                      "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "report_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c53b6a5e-513a-4924-94b6-3b3c09cb9953",
+          "name": "List a participant's repeating-data instances",
+          "request": {
+            "name": "List a participant's repeating-data instances",
+            "description": {
+              "content": "Retrieves the repeating-data (report) instances for a participant.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "study",
+                ":study_id",
+                "participant",
+                ":participant_id",
+                "data-points",
+                "repeating-data-instance"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "study_id",
+                  "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "participant_id",
+                  "description": "(Required) The participant (record) ID."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ff6b7f40-3ab8-4473-88d6-a02db25a9799",
+              "name": "A list of repeating-data instances.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "study",
+                    ":study_id",
+                    "participant",
+                    ":participant_id",
+                    "data-points",
+                    "repeating-data-instance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "study_id",
+                      "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "participant_id",
+                      "description": "(Required) The participant (record) ID."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d6c24424-6343-4682-8284-1211dd47046a",
+          "name": "Update a repeating-data instance's data points",
+          "request": {
+            "name": "Update a repeating-data instance's data points",
+            "description": {
+              "content": "Creates or updates the data points of a repeating-data instance.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "study",
+                ":study_id",
+                "participant",
+                ":participant_id",
+                "data-points",
+                "repeating-data-instance",
+                ":repeating_data_instance_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "study_id",
+                  "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "participant_id",
+                  "description": "(Required) The participant (record) ID."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "repeating_data_instance_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": [\n    {\n      \"field_id\": \"<uuid>\",\n      \"field_value\": \"<string>\"\n    },\n    {\n      \"field_id\": \"<uuid>\",\n      \"field_value\": \"<string>\"\n    }\n  ],\n  \"common\": {\n    \"change_reason\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "be464330-2ef6-4df2-ab2d-21454c9c2178",
+              "name": "The updated data points.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "study",
+                    ":study_id",
+                    "participant",
+                    ":participant_id",
+                    "data-points",
+                    "repeating-data-instance",
+                    ":repeating_data_instance_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "study_id",
+                      "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "participant_id",
+                      "description": "(Required) The participant (record) ID."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "repeating_data_instance_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"data\": [\n    {\n      \"field_id\": \"<uuid>\",\n      \"field_value\": \"<string>\"\n    },\n    {\n      \"field_id\": \"<uuid>\",\n      \"field_value\": \"<string>\"\n    }\n  ],\n  \"common\": {\n    \"change_reason\": \"<string>\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"_embedded\": {\n    \"items\": [\n      {\n        \"field_id\": \"74ffc23a-dbaf-f68d-3efb-25b5737fabf7\",\n        \"field_value\": \"string\",\n        \"participant_id\": \"string\",\n        \"updated_on\": \"2003-10-30T10:30:27.183Z\"\n      },\n      {\n        \"field_id\": \"c641c3d4-85d9-06b9-967e-e8cb096fb568\",\n        \"field_value\": \"string\",\n        \"participant_id\": \"string\",\n        \"updated_on\": \"1951-03-10T09:50:05.439Z\"\n      }\n    ]\n  },\n  \"page_count\": 8141,\n  \"total_items\": 6594\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://data.castoredc.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "accessTokenUrl",
+        "value": "https://data.castoredc.com/api/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "9e0c0f72-8d23-4315-ab36-8784d14f0889",
+    "name": "Castor EDC / CDMS Audit Trail Reports API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Castor EDC / CDMS API is a RESTful interface to Castor's cloud electronic data capture (EDC) and clinical data management platform. It exposes study configuration and collected data - studies, participants (records), institutes (sites), users, fields and field metadata, study data points, repeating data (reports), surveys and survey packages, the audit trail, and batch data export. Authentication is OAuth2 with the Client Credentials flow: request an access token from POST /oauth/token using an API Client ID and Client Secret generated in Castor User Settings, then send it as a Bearer token. Access tokens are valid for 5 hours. Most identifiers (study, field, report / repeating-data instance, survey package instance) are uppercase GUIDs in 8-4-4-4-12 format; the participant ID is the exception.\n\nEndpoint status: paths that this document marks with `x-endpoint-status: confirmed` were observed directly in Castor's published API reference and helpdesk documentation. Paths marked `x-endpoint-status: modeled` reflect the documented resource model and the coverage of the official R and Python wrapper packages, but the exact path or shape was inferred and should be verified against https://data.castoredc.com/api during reconciliation.\n\nContact Support:\n Name: Castor",
+      "type": "text/plain"
+    }
+  }
+}

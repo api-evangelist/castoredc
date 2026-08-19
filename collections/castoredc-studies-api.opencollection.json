@@ -1,0 +1,95 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Castor EDC / CDMS Audit Trail Studies API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://data.castoredc.com/api/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Studies",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Obtain an OAuth2 access token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://data.castoredc.com/api/oauth/token",
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "client_id",
+                  "value": ""
+                },
+                {
+                  "name": "client_secret",
+                  "value": ""
+                },
+                {
+                  "name": "grant_type",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Exchange an API Client ID and Client Secret for a Bearer access token using the client_credentials grant. The returned token is valid for 5 hours."
+        },
+        {
+          "info": {
+            "name": "List studies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated (HAL) collections."
+              }
+            ]
+          },
+          "docs": "Lists all studies the authenticated API client has access to."
+        },
+        {
+          "info": {
+            "name": "Retrieve a study",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id",
+            "params": [
+              {
+                "name": "study_id",
+                "value": "",
+                "type": "path",
+                "description": "The study GUID (uppercase, 8-4-4-4-12 format)."
+              }
+            ]
+          },
+          "docs": "Retrieves a single study by its GUID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

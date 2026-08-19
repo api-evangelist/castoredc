@@ -1,0 +1,345 @@
+{
+  "item": [
+    {
+      "id": "4d8d0140-0bf8-45b1-bac0-d7cf120d7382",
+      "name": "Data Export",
+      "description": {
+        "content": "Bulk export of study data, structure, and option groups.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "19c77dea-5f58-4fb5-aa3c-37c1b13abb8f",
+          "name": "Export study data",
+          "request": {
+            "name": "Export study data",
+            "description": {
+              "content": "Exports the collected data of a study (CSV).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "study",
+                ":study_id",
+                "export",
+                "data"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "study_id",
+                  "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/csv"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "506f0e8c-6ceb-44ff-80c9-4b0bf51f7ef6",
+              "name": "The exported study data.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "study",
+                    ":study_id",
+                    "export",
+                    "data"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "study_id",
+                      "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/csv"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/csv"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d25c546a-9816-418d-b46b-3c000d3d8109",
+          "name": "Export study structure",
+          "request": {
+            "name": "Export study structure",
+            "description": {
+              "content": "Exports the structure (forms, fields, phases) of a study.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "study",
+                ":study_id",
+                "export",
+                "structure"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "study_id",
+                  "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/csv"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "79e76809-3c71-4e6f-9a7f-b97ebd889079",
+              "name": "The exported study structure.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "study",
+                    ":study_id",
+                    "export",
+                    "structure"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "study_id",
+                      "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/csv"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/csv"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6acfa1e5-07c0-4996-9c64-391ccacd5255",
+          "name": "Export option groups",
+          "request": {
+            "name": "Export option groups",
+            "description": {
+              "content": "Exports the option groups (answer choices) of a study.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "study",
+                ":study_id",
+                "export",
+                "optiongroups"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "study_id",
+                  "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/csv"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a52ca457-f944-46e9-ad53-c9d98b416f11",
+              "name": "The exported option groups.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "study",
+                    ":study_id",
+                    "export",
+                    "optiongroups"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "study_id",
+                      "description": "(Required) The study GUID (uppercase, 8-4-4-4-12 format)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/csv"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/csv"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://data.castoredc.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "accessTokenUrl",
+        "value": "https://data.castoredc.com/api/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "7cd3e760-cd93-4fd0-9ff8-739fa1373896",
+    "name": "Castor EDC / CDMS Audit Trail Data Export API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The Castor EDC / CDMS API is a RESTful interface to Castor's cloud electronic data capture (EDC) and clinical data management platform. It exposes study configuration and collected data - studies, participants (records), institutes (sites), users, fields and field metadata, study data points, repeating data (reports), surveys and survey packages, the audit trail, and batch data export. Authentication is OAuth2 with the Client Credentials flow: request an access token from POST /oauth/token using an API Client ID and Client Secret generated in Castor User Settings, then send it as a Bearer token. Access tokens are valid for 5 hours. Most identifiers (study, field, report / repeating-data instance, survey package instance) are uppercase GUIDs in 8-4-4-4-12 format; the participant ID is the exception.\n\nEndpoint status: paths that this document marks with `x-endpoint-status: confirmed` were observed directly in Castor's published API reference and helpdesk documentation. Paths marked `x-endpoint-status: modeled` reflect the documented resource model and the coverage of the official R and Python wrapper packages, but the exact path or shape was inferred and should be verified against https://data.castoredc.com/api during reconciliation.\n\nContact Support:\n Name: Castor",
+      "type": "text/plain"
+    }
+  }
+}

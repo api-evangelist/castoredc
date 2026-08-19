@@ -1,0 +1,136 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Castor EDC / CDMS Audit Trail Fields API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://data.castoredc.com/api/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Fields",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List fields",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/field",
+            "params": [
+              {
+                "name": "study_id",
+                "value": "",
+                "type": "path",
+                "description": "The study GUID (uppercase, 8-4-4-4-12 format)."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for paginated (HAL) collections."
+              }
+            ]
+          },
+          "docs": "Lists all data-capture fields defined in a study."
+        },
+        {
+          "info": {
+            "name": "Retrieve a field",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/field/:field_id",
+            "params": [
+              {
+                "name": "study_id",
+                "value": "",
+                "type": "path",
+                "description": "The study GUID (uppercase, 8-4-4-4-12 format)."
+              },
+              {
+                "name": "field_id",
+                "value": "",
+                "type": "path",
+                "description": "The field GUID."
+              }
+            ]
+          },
+          "docs": "Retrieves a single field by ID."
+        },
+        {
+          "info": {
+            "name": "List field dependencies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/field-dependency",
+            "params": [
+              {
+                "name": "study_id",
+                "value": "",
+                "type": "path",
+                "description": "The study GUID (uppercase, 8-4-4-4-12 format)."
+              }
+            ]
+          },
+          "docs": "Lists conditional-logic dependencies between fields in a study."
+        },
+        {
+          "info": {
+            "name": "List field option groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/field-optiongroup",
+            "params": [
+              {
+                "name": "study_id",
+                "value": "",
+                "type": "path",
+                "description": "The study GUID (uppercase, 8-4-4-4-12 format)."
+              }
+            ]
+          },
+          "docs": "Lists the option groups (answer choices) used by fields in a study."
+        },
+        {
+          "info": {
+            "name": "List field validations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://data.castoredc.com/api/study/:study_id/field-validation",
+            "params": [
+              {
+                "name": "study_id",
+                "value": "",
+                "type": "path",
+                "description": "The study GUID (uppercase, 8-4-4-4-12 format)."
+              }
+            ]
+          },
+          "docs": "Lists validation rules attached to fields in a study."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
