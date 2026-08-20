@@ -244,6 +244,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
