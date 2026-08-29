@@ -272,6 +272,9 @@ apis:
   - type: OpenCollection
     url: collections/castoredc.opencollection.json
 common:
+- type: CapabilityMap
+  url: capabilities/castoredc-capability-edges.yml
+  name: Castor Business Capability Map
 - type: AgenticAccess
   url: agentic-access/castoredc-agentic-access.yml
 - type: VulnerabilityDisclosure

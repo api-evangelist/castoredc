@@ -1,0 +1,97 @@
+slug: castoredc
+provider: Castor
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Pharmaceuticals & Life Sciences
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 8
+edges:
+- tag: Study Data Points
+  spec_file: castoredc-study-data-points-api-openapi.yml
+  capability_id: BC-1520.40
+  capability_id_l1: BC-1520
+  capability_name: Clinical Data Management
+  confidence: 0.92
+  evidence: GET /study/{study_id}/data-points/study listStudyDataPoints; POST .../participant/{participant_id}/data-points/study
+    'Create or update a participant's study data points' — 'cloud electronic data capture (EDC) and clinical
+    data management platform'
+  reason: Operations read and write collected study data points per participant in an EDC platform — this
+    is clinical data capture/management (EDC) for trials, not generic data management.
+- tag: Participants
+  spec_file: castoredc-participants-api-openapi.yml
+  capability_id: BC-1520.30
+  capability_id_l1: BC-1520
+  capability_name: Clinical Trial Subject Management
+  confidence: 0.85
+  evidence: 'POST /study/{study_id}/participant  createParticipant; vendor: ''participants (records)'''
+  reason: Creating and retrieving study participants (trial subjects/records) within a study is clinical
+    trial subject enrolment and management in an EDC system.
+- tag: Fields
+  spec_file: castoredc-fields-api-openapi.yml
+  capability_id: BC-1520.40
+  capability_id_l1: BC-1520
+  capability_name: Clinical Data Management
+  confidence: 0.8
+  evidence: GET /study/{study_id}/field  listFields; GET /study/{study_id}/field-validation  listFieldValidations
+  reason: Fields, field dependencies, option groups and validations are the CRF/eCRF metadata of an EDC
+    study — core electronic data capture configuration, i.e. clinical data management. 'Fields' is generic
+    as a word but the context is unambiguously a clinical EDC study.
+- tag: Institutes
+  spec_file: castoredc-institutes-api-openapi.yml
+  capability_id: BC-1520.20
+  capability_id_l1: BC-1520
+  capability_name: Clinical Trial Site Management
+  confidence: 0.8
+  evidence: 'POST /study/{study_id}/institute  createInstitute  Create an institute; vendor: ''institutes
+    (sites)'''
+  reason: Institutes are explicitly the participating study sites in Castor; creating and listing them
+    under a study is clinical trial site setup/administration. Mapped to Clinical Trial Site Management.
+- tag: Data Export
+  spec_file: castoredc-data-export-api-openapi.yml
+  capability_id: BC-1520.40
+  capability_id_l1: BC-1520
+  capability_name: Clinical Data Management
+  confidence: 0.75
+  evidence: exportStudyData  Export study data; exportStudyStructure  Export study structure
+  reason: Batch extraction of collected study data and CRF structure from an EDC platform is a clinical
+    data management activity (data capture, export, database lock). Some risk this is read as generic
+    data export tooling, hence 0.75.
+- tag: Reports
+  spec_file: castoredc-reports-api-openapi.yml
+  capability_id: BC-1520.40
+  capability_id_l1: BC-1520
+  capability_name: Clinical Data Management
+  confidence: 0.75
+  evidence: listReports  List reports (repeating data); updateRepeatingDataInstance  Update a repeating-data
+    instance's data points; schemas DataPointWriteRequest, DataPoint
+  reason: Despite the tag reading like business reporting, the operations write and read participant data
+    points for repeating-data instances — i.e. clinical data capture, not analytics. Classic homograph
+    resolved by the operations and schemas.
+- tag: Surveys
+  spec_file: castoredc-surveys-api-openapi.yml
+  capability_id: BC-1520.40
+  capability_id_l1: BC-1520
+  capability_name: Clinical Data Management
+  confidence: 0.72
+  evidence: POST /study/{study_id}/participant/{participant_id}/data-points/survey-package-instance 'Send
+    a survey package to a participant'; 'Retrieve participant survey compliance'
+  reason: Surveys here are participant-facing data-collection instruments (ePRO) whose instances live
+    under data-points; clearly clinical trials management, with data capture the best-fitting sub-capability
+    though subject management is a plausible alternative.
+- tag: Studies
+  spec_file: castoredc-studies-api-openapi.yml
+  capability_id: BC-1520
+  capability_id_l1: BC-1520
+  capability_name: Clinical Trials Management
+  confidence: 0.7
+  evidence: GET /study  listStudies; GET /study/{study_id}  getStudy
+  reason: Study objects are the top-level container for clinical trials in this EDC platform, so the surface
+    belongs to Clinical Trials Management; the endpoints are only list/retrieve of study configuration
+    (plus an OAuth token call), too thin to pick a specific L2.
