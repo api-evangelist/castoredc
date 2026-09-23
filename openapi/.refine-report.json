@@ -1,17 +1,7 @@
 {
   "provider": "castoredc",
   "sources": [
-    "castoredc-audit-trail-api-openapi.yml",
-    "castoredc-data-export-api-openapi.yml",
-    "castoredc-fields-api-openapi.yml",
-    "castoredc-institutes-api-openapi.yml",
-    "castoredc-metadata-api-openapi.yml",
-    "castoredc-participants-api-openapi.yml",
-    "castoredc-reports-api-openapi.yml",
-    "castoredc-studies-api-openapi.yml",
-    "castoredc-study-data-points-api-openapi.yml",
-    "castoredc-surveys-api-openapi.yml",
-    "castoredc-users-api-openapi.yml"
+    "_original/castoredc-openapi.yml"
   ],
   "outputs": [
     "castoredc-audit-trail-api-openapi.yml",
@@ -29,6 +19,22 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "castoredc-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "castoredc-audit-trail-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "castoredc-data-export-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "castoredc-fields-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "castoredc-institutes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "castoredc-metadata-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "castoredc-participants-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "castoredc-reports-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "castoredc-studies-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "castoredc-study-data-points-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "castoredc-surveys-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "castoredc-users-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
