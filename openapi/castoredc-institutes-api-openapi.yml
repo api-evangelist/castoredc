@@ -83,16 +83,15 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    Institute:
-      allOf:
-      - $ref: '#/components/schemas/InstituteInput'
-      - type: object
-        properties:
-          institute_id:
-            type: string
-            format: uuid
-          code:
-            type: string
+    InstituteInput:
+      type: object
+      properties:
+        name:
+          type: string
+        abbreviation:
+          type: string
+        country_id:
+          type: integer
     InstituteCollection:
       type: object
       properties:
@@ -103,28 +102,29 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Institute'
-    InstituteInput:
-      type: object
-      properties:
-        name:
-          type: string
-        abbreviation:
-          type: string
-        country_id:
-          type: integer
+    Institute:
+      allOf:
+      - $ref: '#/components/schemas/InstituteInput'
+      - type: object
+        properties:
+          institute_id:
+            type: string
+            format: uuid
+          code:
+            type: string
   parameters:
-    InstituteId:
-      name: institute_id
-      in: path
-      required: true
-      description: The institute GUID.
-      schema:
-        type: string
     StudyId:
       name: study_id
       in: path
       required: true
       description: The study GUID (uppercase, 8-4-4-4-12 format).
+      schema:
+        type: string
+    InstituteId:
+      name: institute_id
+      in: path
+      required: true
+      description: The institute GUID.
       schema:
         type: string
   responses:

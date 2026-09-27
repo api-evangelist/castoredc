@@ -113,18 +113,18 @@ paths:
                 type: object
 components:
   parameters:
-    FieldId:
-      name: field_id
-      in: path
-      required: true
-      description: The field GUID.
-      schema:
-        type: string
     StudyId:
       name: study_id
       in: path
       required: true
       description: The study GUID (uppercase, 8-4-4-4-12 format).
+      schema:
+        type: string
+    FieldId:
+      name: field_id
+      in: path
+      required: true
+      description: The field GUID.
       schema:
         type: string
     Page:
@@ -136,11 +136,25 @@ components:
         type: integer
         minimum: 1
   responses:
-    NotFound:
-      description: The requested resource was not found.
     Unauthorized:
       description: Missing or invalid access token.
+    NotFound:
+      description: The requested resource was not found.
   schemas:
+    FieldCollection:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            fields:
+              type: array
+              items:
+                $ref: '#/components/schemas/Field'
+        page_count:
+          type: integer
+        total_items:
+          type: integer
     Field:
       type: object
       properties:
@@ -160,20 +174,6 @@ components:
           type: boolean
         option_group:
           type: string
-    FieldCollection:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            fields:
-              type: array
-              items:
-                $ref: '#/components/schemas/Field'
-        page_count:
-          type: integer
-        total_items:
-          type: integer
   securitySchemes:
     oauth2ClientCredentials:
       type: oauth2

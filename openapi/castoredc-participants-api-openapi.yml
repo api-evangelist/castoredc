@@ -85,53 +85,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  schemas:
-    ParticipantInput:
-      type: object
-      properties:
-        participant_id:
-          type: string
-        institute_id:
-          type: string
-          format: uuid
-        email_address:
-          type: string
-    Participant:
-      allOf:
-      - $ref: '#/components/schemas/ParticipantInput'
-      - type: object
-        properties:
-          status:
-            type: string
-          randomized_id:
-            type: string
-          progress:
-            type: integer
-          created_on:
-            type: string
-            format: date-time
-    ParticipantCollection:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            participants:
-              type: array
-              items:
-                $ref: '#/components/schemas/Participant'
-        page_count:
-          type: integer
-        total_items:
-          type: integer
   parameters:
-    ParticipantId:
-      name: participant_id
-      in: path
-      required: true
-      description: The participant (record) ID.
-      schema:
-        type: string
     StudyId:
       name: study_id
       in: path
@@ -147,11 +101,57 @@ components:
       schema:
         type: integer
         minimum: 1
+    ParticipantId:
+      name: participant_id
+      in: path
+      required: true
+      description: The participant (record) ID.
+      schema:
+        type: string
+  schemas:
+    Participant:
+      allOf:
+      - $ref: '#/components/schemas/ParticipantInput'
+      - type: object
+        properties:
+          status:
+            type: string
+          randomized_id:
+            type: string
+          progress:
+            type: integer
+          created_on:
+            type: string
+            format: date-time
+    ParticipantInput:
+      type: object
+      properties:
+        participant_id:
+          type: string
+        institute_id:
+          type: string
+          format: uuid
+        email_address:
+          type: string
+    ParticipantCollection:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            participants:
+              type: array
+              items:
+                $ref: '#/components/schemas/Participant'
+        page_count:
+          type: integer
+        total_items:
+          type: integer
   responses:
-    NotFound:
-      description: The requested resource was not found.
     Unauthorized:
       description: Missing or invalid access token.
+    NotFound:
+      description: The requested resource was not found.
   securitySchemes:
     oauth2ClientCredentials:
       type: oauth2
