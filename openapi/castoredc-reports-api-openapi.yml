@@ -123,20 +123,19 @@ components:
       schema:
         type: string
   schemas:
-    DataPointCollection:
+    DataPoint:
       type: object
       properties:
-        _embedded:
-          type: object
-          properties:
-            items:
-              type: array
-              items:
-                $ref: '#/components/schemas/DataPoint'
-        page_count:
-          type: integer
-        total_items:
-          type: integer
+        field_id:
+          type: string
+          format: uuid
+        field_value:
+          type: string
+        participant_id:
+          type: string
+        updated_on:
+          type: string
+          format: date-time
     DataPointWriteRequest:
       type: object
       required:
@@ -157,19 +156,20 @@ components:
                 format: uuid
               field_value:
                 type: string
-    DataPoint:
+    DataPointCollection:
       type: object
       properties:
-        field_id:
-          type: string
-          format: uuid
-        field_value:
-          type: string
-        participant_id:
-          type: string
-        updated_on:
-          type: string
-          format: date-time
+        _embedded:
+          type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/DataPoint'
+        page_count:
+          type: integer
+        total_items:
+          type: integer
   securitySchemes:
     oauth2ClientCredentials:
       type: oauth2

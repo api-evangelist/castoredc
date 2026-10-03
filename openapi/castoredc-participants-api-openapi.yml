@@ -85,54 +85,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  parameters:
-    StudyId:
-      name: study_id
-      in: path
-      required: true
-      description: The study GUID (uppercase, 8-4-4-4-12 format).
-      schema:
-        type: string
-    Page:
-      name: page
-      in: query
-      required: false
-      description: Page number for paginated (HAL) collections.
-      schema:
-        type: integer
-        minimum: 1
-    ParticipantId:
-      name: participant_id
-      in: path
-      required: true
-      description: The participant (record) ID.
-      schema:
-        type: string
   schemas:
-    Participant:
-      allOf:
-      - $ref: '#/components/schemas/ParticipantInput'
-      - type: object
-        properties:
-          status:
-            type: string
-          randomized_id:
-            type: string
-          progress:
-            type: integer
-          created_on:
-            type: string
-            format: date-time
-    ParticipantInput:
-      type: object
-      properties:
-        participant_id:
-          type: string
-        institute_id:
-          type: string
-          format: uuid
-        email_address:
-          type: string
     ParticipantCollection:
       type: object
       properties:
@@ -147,11 +100,58 @@ components:
           type: integer
         total_items:
           type: integer
+    ParticipantInput:
+      type: object
+      properties:
+        participant_id:
+          type: string
+        institute_id:
+          type: string
+          format: uuid
+        email_address:
+          type: string
+    Participant:
+      allOf:
+      - $ref: '#/components/schemas/ParticipantInput'
+      - type: object
+        properties:
+          status:
+            type: string
+          randomized_id:
+            type: string
+          progress:
+            type: integer
+          created_on:
+            type: string
+            format: date-time
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      description: Page number for paginated (HAL) collections.
+      schema:
+        type: integer
+        minimum: 1
+    StudyId:
+      name: study_id
+      in: path
+      required: true
+      description: The study GUID (uppercase, 8-4-4-4-12 format).
+      schema:
+        type: string
+    ParticipantId:
+      name: participant_id
+      in: path
+      required: true
+      description: The participant (record) ID.
+      schema:
+        type: string
   responses:
-    Unauthorized:
-      description: Missing or invalid access token.
     NotFound:
       description: The requested resource was not found.
+    Unauthorized:
+      description: Missing or invalid access token.
   securitySchemes:
     oauth2ClientCredentials:
       type: oauth2

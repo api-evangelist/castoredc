@@ -113,6 +113,14 @@ paths:
                 type: object
 components:
   parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      description: Page number for paginated (HAL) collections.
+      schema:
+        type: integer
+        minimum: 1
     StudyId:
       name: study_id
       in: path
@@ -127,34 +135,7 @@ components:
       description: The field GUID.
       schema:
         type: string
-    Page:
-      name: page
-      in: query
-      required: false
-      description: Page number for paginated (HAL) collections.
-      schema:
-        type: integer
-        minimum: 1
-  responses:
-    Unauthorized:
-      description: Missing or invalid access token.
-    NotFound:
-      description: The requested resource was not found.
   schemas:
-    FieldCollection:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            fields:
-              type: array
-              items:
-                $ref: '#/components/schemas/Field'
-        page_count:
-          type: integer
-        total_items:
-          type: integer
     Field:
       type: object
       properties:
@@ -174,6 +155,25 @@ components:
           type: boolean
         option_group:
           type: string
+    FieldCollection:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            fields:
+              type: array
+              items:
+                $ref: '#/components/schemas/Field'
+        page_count:
+          type: integer
+        total_items:
+          type: integer
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+    Unauthorized:
+      description: Missing or invalid access token.
   securitySchemes:
     oauth2ClientCredentials:
       type: oauth2

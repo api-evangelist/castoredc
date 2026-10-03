@@ -74,6 +74,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserCollection'
 components:
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+    Unauthorized:
+      description: Missing or invalid access token.
   parameters:
     StudyId:
       name: study_id
@@ -112,11 +117,6 @@ components:
           type: string
         institute:
           type: string
-  responses:
-    Unauthorized:
-      description: Missing or invalid access token.
-    NotFound:
-      description: The requested resource was not found.
   securitySchemes:
     oauth2ClientCredentials:
       type: oauth2
