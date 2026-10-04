@@ -86,20 +86,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    ParticipantCollection:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            participants:
-              type: array
-              items:
-                $ref: '#/components/schemas/Participant'
-        page_count:
-          type: integer
-        total_items:
-          type: integer
     ParticipantInput:
       type: object
       properties:
@@ -124,6 +110,25 @@ components:
           created_on:
             type: string
             format: date-time
+    ParticipantCollection:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            participants:
+              type: array
+              items:
+                $ref: '#/components/schemas/Participant'
+        page_count:
+          type: integer
+        total_items:
+          type: integer
+  responses:
+    Unauthorized:
+      description: Missing or invalid access token.
+    NotFound:
+      description: The requested resource was not found.
   parameters:
     Page:
       name: page
@@ -147,11 +152,6 @@ components:
       description: The participant (record) ID.
       schema:
         type: string
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-    Unauthorized:
-      description: Missing or invalid access token.
   securitySchemes:
     oauth2ClientCredentials:
       type: oauth2
