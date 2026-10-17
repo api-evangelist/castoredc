@@ -89,6 +89,11 @@ components:
       description: The study GUID (uppercase, 8-4-4-4-12 format).
       schema:
         type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+    Unauthorized:
+      description: Missing or invalid access token.
   schemas:
     User:
       type: object
@@ -112,11 +117,6 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/User'
-  responses:
-    Unauthorized:
-      description: Missing or invalid access token.
-    NotFound:
-      description: The requested resource was not found.
   securitySchemes:
     oauth2ClientCredentials:
       type: oauth2

@@ -107,7 +107,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/DataPointCollection'
 components:
+  parameters:
+    StudyId:
+      name: study_id
+      in: path
+      required: true
+      description: The study GUID (uppercase, 8-4-4-4-12 format).
+      schema:
+        type: string
+    ParticipantId:
+      name: participant_id
+      in: path
+      required: true
+      description: The participant (record) ID.
+      schema:
+        type: string
   schemas:
+    DataPoint:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: uuid
+        field_value:
+          type: string
+        participant_id:
+          type: string
+        updated_on:
+          type: string
+          format: date-time
     DataPointCollection:
       type: object
       properties:
@@ -142,34 +170,6 @@ components:
                 format: uuid
               field_value:
                 type: string
-    DataPoint:
-      type: object
-      properties:
-        field_id:
-          type: string
-          format: uuid
-        field_value:
-          type: string
-        participant_id:
-          type: string
-        updated_on:
-          type: string
-          format: date-time
-  parameters:
-    StudyId:
-      name: study_id
-      in: path
-      required: true
-      description: The study GUID (uppercase, 8-4-4-4-12 format).
-      schema:
-        type: string
-    ParticipantId:
-      name: participant_id
-      in: path
-      required: true
-      description: The participant (record) ID.
-      schema:
-        type: string
   securitySchemes:
     oauth2ClientCredentials:
       type: oauth2

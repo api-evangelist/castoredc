@@ -103,18 +103,18 @@ paths:
                 type: object
 components:
   parameters:
-    ParticipantId:
-      name: participant_id
-      in: path
-      required: true
-      description: The participant (record) ID.
-      schema:
-        type: string
     StudyId:
       name: study_id
       in: path
       required: true
       description: The study GUID (uppercase, 8-4-4-4-12 format).
+      schema:
+        type: string
+    ParticipantId:
+      name: participant_id
+      in: path
+      required: true
+      description: The participant (record) ID.
       schema:
         type: string
   securitySchemes:

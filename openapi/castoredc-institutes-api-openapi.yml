@@ -82,11 +82,6 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid access token.
-    NotFound:
-      description: The requested resource was not found.
   parameters:
     StudyId:
       name: study_id
@@ -102,17 +97,21 @@ components:
       description: The institute GUID.
       schema:
         type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+    Unauthorized:
+      description: Missing or invalid access token.
   schemas:
-    InstituteCollection:
+    InstituteInput:
       type: object
       properties:
-        _embedded:
-          type: object
-          properties:
-            institutes:
-              type: array
-              items:
-                $ref: '#/components/schemas/Institute'
+        name:
+          type: string
+        abbreviation:
+          type: string
+        country_id:
+          type: integer
     Institute:
       allOf:
       - $ref: '#/components/schemas/InstituteInput'
@@ -123,15 +122,16 @@ components:
             format: uuid
           code:
             type: string
-    InstituteInput:
+    InstituteCollection:
       type: object
       properties:
-        name:
-          type: string
-        abbreviation:
-          type: string
-        country_id:
-          type: integer
+        _embedded:
+          type: object
+          properties:
+            institutes:
+              type: array
+              items:
+                $ref: '#/components/schemas/Institute'
   securitySchemes:
     oauth2ClientCredentials:
       type: oauth2
