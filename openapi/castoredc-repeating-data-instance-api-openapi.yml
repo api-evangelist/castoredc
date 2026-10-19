@@ -1,0 +1,744 @@
+openapi: 3.2.0
+info:
+  version: 2026.1.6.1
+  title: Castor EDC API Documentation Repeating Data Instance API
+  description: '### Overview
+
+    This document provides the specifications of the Castor EDC API, describing the currently available
+
+    API endpoints and methods. We aim to provide a fully functional RESTful API to communicate with
+
+    Castor EDC and these are endpoints currently available.
+
+
+    The formal OpenAPI 2 specification by which this page is rendered is also available in the following formats:
+
+    * YAML
+
+    * JSON
+
+    * JSON (pretty print)
+
+
+    ### Authentication & Authorization with OAuth 2
+
+    Authentication and authorization are arranged through OAuth2. We currently provide full support for the Client
+
+    Credentials flow. The Authorization Code flow is supported, but we ask you to contact us if you want to use this flow.
+
+
+    To use the Client Credentials flow go to your
+
+    Castor EDC profile and generate
+
+    a Client ID and Client Secret. Use the Client ID and Client Secret to retrieve an access token by making a request to
+
+    the ''/oauth/token'' endpoint with your client_id and client_secret as parameters and grant_type=client_credentials.
+
+
+    PHP Example:
+
+    ```php
+
+    include __DIR__.''/vendor/autoload.php'';
+
+    use Guzzle\Http\Client;
+
+
+    // Create the HTTP Client.
+
+    $httpClient = new Client(
+
+    ''https://data.castoredc.com'',
+
+    [
+
+    ''request.options'' => [
+
+    ''exceptions'' => false,
+
+    ]
+
+    ]
+
+    );
+
+
+    // Build the request
+
+    $request = $httpClient->post(
+
+    ''/oauth/token'',
+
+    null,
+
+    [
+
+    ''client_id'' => ''YourCastorClientId'',
+
+    ''client_secret'' => ''YourCastorClientSecret'',
+
+    ''grant_type'' => ''client_credentials'',
+
+    ]
+
+    );
+
+
+    // Send the request
+
+    $response = $request->send();
+
+    $responseBody = $response->getBody(true);
+
+    $responseArr = json_decode($responseBody, true);
+
+    $accessToken = $responseArr[''access_token''];
+
+    ```
+
+
+    In your subsequent requests you can use the `$accessToken` as a Bearer token in the Authorization header, i.e:
+
+    ```php
+
+    $request = $httpClient->get(''/api/user'');
+
+    $request->addHeader(''Authorization'', ''Bearer ''. $accessToken);
+
+    $response = $request->send();
+
+    echo $response->getBody();
+
+    ```
+
+
+    ### OAuth2 Scopes
+
+
+    There are 3 scopes that endpoints may support.
+
+    * **default**: allows access to all endpoints
+
+    * **study_statistics**: allows access to study statistics
+
+    * **record**: allows access to data for a single participant
+
+
+    Due to a bug in the OpenAPI UI, all three scopes are listed for all endpoints.
+
+
+    If the endpoint supports something other than the default scope, the summary will have a 🔭 emoji and the scope will be
+
+    listed in the description as well as under the `security:` key in the specification.
+
+
+    ### Rate Limits
+
+    Unless specified in the resource, endpoints are rate-limited to 600 requests in 10 minutes.
+
+
+    ### Legacy (Basic HTTP Authentication)
+
+    **Please note: Basic HTTP Authentication has been removed on 2019 August 13**
+
+
+    ### Changelog
+
+    API changes can be viewed here'
+  contact:
+    name: support@castoredc.com
+servers:
+- url: https://data.castoredc.com/api/
+security:
+- OAuth2ClientCredentials:
+  - default
+  - study_statistics
+  - record
+tags:
+- name: repeating-data-instance
+paths:
+  /study/{study_id}/participant/{participant_id}/repeating-data-instance:
+    get:
+      tags:
+      - repeating-data-instance
+      summary: Retrieve list of available repeating data instances
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Gets `RepeatingDataPackageInstance` objects, which are ''instantiations'' of Repeating Data.
+
+        The Repeating Data Instance is the entity to which the data gets saved.
+
+        Always requires a study_id to be given. Can be paged.
+
+        Returns HalJson responses (with _links for paging and to single objects).'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: participant_id
+        in: path
+        description: The ID of the participant to retrieve repeating data instances for
+        required: true
+        schema:
+          type: string
+      - name: archived
+        in: query
+        description: Extract only archived repeating data or only unarchived repeating data. Accepted values are 0,1. Default value is 0.
+        required: false
+        schema:
+          type: integer
+      responses:
+        200:
+          description: List of all repeating data instances of the Study
+          content:
+            application/hal+json:
+              schema:
+                title: Repeating Data Instance HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      repeatingDataInstances:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/RepeatingDataInstance'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdParticipantByParticipantIdRepeatingDataInstance
+      x-operation-id-source: derived
+    post:
+      tags:
+      - repeating-data-instance
+      summary: Creates a repeating data instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Creates an instance of Repeating Data for a specific Participant. Repeating Data Instances are the objects on which data points are
+
+        stored and are required to be created before that happens. They can have a custom name that has to be unique within
+
+        a given participant.
+
+
+        Repeating Data Instances can have a parent defined to create a tree-like structure of parent/child information elements. Parents
+
+        can be either a visit or another repeating data instance and have to be defined with parent_type and parent_id.
+
+
+        To store data on repeated measures repeating data, the parent_type and parent_id should always point to the visit or
+
+        repeating data instance on which the repeated measure field is present.'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study to create a repeating data instance for
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: participant_id
+        in: path
+        description: The ID of the participant to create a repeating data instance for
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: Repeating Data Instance successfully created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepeatingDataInstance'
+        400:
+          description: Could not create the repeating data instance due to a domain error. See the errors/detail property for additional information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: No permissions to create the repeating data instance or the repeating data is blinded. See the errors/detail property for additional information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Participant or repeating data not found. See the errors/detail property for additional information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newRepeatingDataInstance'
+        description: Repeating Data Instance details to create the object.
+        required: true
+      operationId: postStudyByStudyIdParticipantByParticipantIdRepeatingDataInstance
+      x-operation-id-source: derived
+  /study/{study_id}/participant/{participant_id}/repeating-data-instance/{repeating_data_instance_id}:
+    get:
+      tags:
+      - repeating-data-instance
+      summary: Retrieve a single repeating data instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: participant_id
+        in: path
+        description: The ID of the participant
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: repeating_data_instance_id
+        in: path
+        description: Repeating Data Instance ID to fetch
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Single RepeatingDataInstance
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepeatingDataInstance'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdParticipantByParticipantIdRepeatingDataInstanceByRepeatingDataInstanceId
+      x-operation-id-source: derived
+  /study/{study_id}/repeating-data-instance:
+    get:
+      tags:
+      - repeating-data-instance
+      summary: Retrieve list of available repeating data instances
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Gets `RepeatingDataPackageInstance` objects, which are ''instantiations'' of Repeating Data.
+
+        The Repeating Data Instance is the entity to which the data gets saved.
+
+        Always requires a study_id to be given. Can be paged.
+
+        Returns HalJson responses (with _links for paging and to single objects).'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: archived
+        in: query
+        description: Extract only archived repeating data or only unarchived repeating data. Accepted values are 0,1. Default value is 0.
+        required: false
+        schema:
+          type: integer
+      responses:
+        200:
+          description: List of all repeating data instances of the Study
+          content:
+            application/hal+json:
+              schema:
+                title: Repeating Data Instance HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      repeatingDataInstances:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/RepeatingDataInstance'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdRepeatingDataInstance
+      x-operation-id-source: derived
+  /study/{study_id}/repeating-data-instance/{repeating_data_instance_id}:
+    get:
+      tags:
+      - repeating-data-instance
+      summary: Retrieve a single repeating data instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: repeating_data_instance_id
+        in: path
+        description: Repeating Data Instance ID to fetch
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Single RepeatingDataInstance
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepeatingDataInstance'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdRepeatingDataInstanceByRepeatingDataInstanceId
+      x-operation-id-source: derived
+  /study/{study_id}/participant/{participant_id}/repeating-data-instance-collection:
+    post:
+      tags:
+      - repeating-data-instance
+      summary: Creates a collection of repeating data instances
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Creates a collection of repeating data instances for a specific participant. Repeating data instances are the objects on which data points are
+
+        stored and are required to be created before that happens. They can have a custom name that has to be unique within
+
+        a given participant.
+
+
+        Repeating data instances can have a parent defined to create a tree-like structure of parent/child information elements. Parents
+
+        can be either a visit or another repeating data instance and have to be defined with parent_type and parent_id.
+
+
+        To store data on repeated measures repeating data, the parent_type and parent_id should always point to the visit or
+
+        repeating data instance on which the repeated measure field is present.'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study to create the repeating data instances for
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: participant_id
+        in: path
+        description: The ID of the participant to create the repeating data instances for
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: Repeating data instances successfully created.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepeatingDataInstanceCollection'
+        400:
+          description: Could not create the repeating data instances due to a domain error. See the errors/detail property for additional information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: No permissions to create the repeating data instances or the repeating data instances are blinded. See the errors/detail property for additional information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        422:
+          description: Duplicate name for repeating data instance
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newRepeatingDataInstanceCollection'
+        description: Repeating data instance collection data with the details to create them.
+        required: true
+      operationId: postStudyByStudyIdParticipantByParticipantIdRepeatingDataInstanceCollection
+      x-operation-id-source: derived
+components:
+  schemas:
+    newRepeatingDataInstanceCollection:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/newRepeatingDataInstance'
+      required:
+      - data
+    newRepeatingDataInstance:
+      type: object
+      properties:
+        repeating_data_id:
+          type: string
+          format: uuid
+          description: The identifier of the repeating data that should be instantiated in this repeating data instance
+        repeating_data_name_custom:
+          type: string
+          description: The name of the repeating data instance. Must be unique within the given participant.
+        parent_id:
+          type: string
+          format: uuid
+          description: Identifier of the visit or repeating data instance to attach the new repeating data instance to.
+      required:
+      - repeating_data_id
+      - repeating_data_name_custom
+    RepeatingData:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Repeating Data (same as repeating_data_id)
+        repeating_data_id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Repeating Data(same as id)
+        name:
+          type: string
+          description: Name of the Repeating Data
+        description:
+          type: string
+          description: Description of the Repeating Data
+        type:
+          type: string
+          description: The repeating data type (event, medication, repeated_measure or other)
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    RepeatingDataInstance:
+      type: object
+      description: 'The repeating data instance is an instantiation of repeating data,
+
+        a real copy of repeating data to which the data points get saved.'
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique id of the repeating data instance.
+        name:
+          type: string
+          description: Name of the repeating data instance.
+        repeating data_name:
+          type: string
+          description: Name of the repeating data.
+        status:
+          type: string
+          description: The status.
+        parent_id:
+          type: string
+          format: UUID
+          description: The parent id.
+        parent_type:
+          type: string
+          description: The parent type.
+        participant_id:
+          type: string
+          description: The participant it belongs to.
+        created_on:
+          type: string
+          format: dateTime
+          description: the date the repeating data instance was created.
+        created_by:
+          type: string
+          format: UUID
+          description: ID of the user who created the repeating data instance.
+        archived:
+          type: boolean
+          description: Is the repeating data instance archived?
+        _embedded:
+          type: object
+          properties:
+            repeating_data:
+              $ref: '#/components/schemas/RepeatingData'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    LinksCollection:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+        first:
+          type: object
+          properties:
+            href:
+              type: string
+        last:
+          type: object
+          properties:
+            href:
+              type: string
+        next:
+          type: object
+          properties:
+            href:
+              type: string
+    LinksSingle:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: The HTTP return code.
+        title:
+          type: string
+          description: The short error description belonging to the status code
+        detail:
+          type: string
+          description: The detailed explanation of the failure
+        type:
+          type: string
+          description: URL to RFC explaining this statuscode
+        errors:
+          type: object
+          description: Optional list of all errors that occurred during the request
+        validation_messages:
+          type: object
+          description: Optional list of validation failure message
+    RepeatingDataInstanceCreationFailed:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
+        participant_id:
+          type: string
+        repeating_data_id:
+          type: string
+          format: UUID
+        repeating_data_name_custom:
+          type: string
+    RepeatingDataInstanceCollection:
+      type: object
+      description: 'Allows the creation of multiple repeating data instances at once.
+
+        Always requires a study_id to be given.'
+      properties:
+        success:
+          type: array
+          items:
+            $ref: '#/components/schemas/RepeatingDataInstance'
+        failed:
+          type: array
+          items:
+            $ref: '#/components/schemas/RepeatingDataInstanceCreationFailed'
+        total_processed:
+          type: number
+        total_success:
+          type: number
+        total_failed:
+          type: number
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            default: Grants access to everything
+            study_statistics: Grants access to a study's statistics
+            record: Grants access to the data for a single participant; intended for use by study subjects
+          tokenUrl: https://data.castoredc.com/oauth/token

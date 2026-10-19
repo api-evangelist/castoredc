@@ -1,0 +1,1621 @@
+openapi: 3.2.0
+info:
+  version: 2026.1.6.1
+  title: Castor EDC API Documentation Data Point Collection API
+  description: '### Overview
+
+    This document provides the specifications of the Castor EDC API, describing the currently available
+
+    API endpoints and methods. We aim to provide a fully functional RESTful API to communicate with
+
+    Castor EDC and these are endpoints currently available.
+
+
+    The formal OpenAPI 2 specification by which this page is rendered is also available in the following formats:
+
+    * YAML
+
+    * JSON
+
+    * JSON (pretty print)
+
+
+    ### Authentication & Authorization with OAuth 2
+
+    Authentication and authorization are arranged through OAuth2. We currently provide full support for the Client
+
+    Credentials flow. The Authorization Code flow is supported, but we ask you to contact us if you want to use this flow.
+
+
+    To use the Client Credentials flow go to your
+
+    Castor EDC profile and generate
+
+    a Client ID and Client Secret. Use the Client ID and Client Secret to retrieve an access token by making a request to
+
+    the ''/oauth/token'' endpoint with your client_id and client_secret as parameters and grant_type=client_credentials.
+
+
+    PHP Example:
+
+    ```php
+
+    include __DIR__.''/vendor/autoload.php'';
+
+    use Guzzle\Http\Client;
+
+
+    // Create the HTTP Client.
+
+    $httpClient = new Client(
+
+    ''https://data.castoredc.com'',
+
+    [
+
+    ''request.options'' => [
+
+    ''exceptions'' => false,
+
+    ]
+
+    ]
+
+    );
+
+
+    // Build the request
+
+    $request = $httpClient->post(
+
+    ''/oauth/token'',
+
+    null,
+
+    [
+
+    ''client_id'' => ''YourCastorClientId'',
+
+    ''client_secret'' => ''YourCastorClientSecret'',
+
+    ''grant_type'' => ''client_credentials'',
+
+    ]
+
+    );
+
+
+    // Send the request
+
+    $response = $request->send();
+
+    $responseBody = $response->getBody(true);
+
+    $responseArr = json_decode($responseBody, true);
+
+    $accessToken = $responseArr[''access_token''];
+
+    ```
+
+
+    In your subsequent requests you can use the `$accessToken` as a Bearer token in the Authorization header, i.e:
+
+    ```php
+
+    $request = $httpClient->get(''/api/user'');
+
+    $request->addHeader(''Authorization'', ''Bearer ''. $accessToken);
+
+    $response = $request->send();
+
+    echo $response->getBody();
+
+    ```
+
+
+    ### OAuth2 Scopes
+
+
+    There are 3 scopes that endpoints may support.
+
+    * **default**: allows access to all endpoints
+
+    * **study_statistics**: allows access to study statistics
+
+    * **record**: allows access to data for a single participant
+
+
+    Due to a bug in the OpenAPI UI, all three scopes are listed for all endpoints.
+
+
+    If the endpoint supports something other than the default scope, the summary will have a 🔭 emoji and the scope will be
+
+    listed in the description as well as under the `security:` key in the specification.
+
+
+    ### Rate Limits
+
+    Unless specified in the resource, endpoints are rate-limited to 600 requests in 10 minutes.
+
+
+    ### Legacy (Basic HTTP Authentication)
+
+    **Please note: Basic HTTP Authentication has been removed on 2019 August 13**
+
+
+    ### Changelog
+
+    API changes can be viewed here'
+  contact:
+    name: support@castoredc.com
+servers:
+- url: https://data.castoredc.com/api/
+security:
+- OAuth2ClientCredentials:
+  - default
+  - study_statistics
+  - record
+tags:
+- name: data-point-collection
+paths:
+  /study/{study_id}/record/{record_id}/data-point-collection/study:
+    get:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Retrieves a list of all study data collected for this record
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns an array of objects. Unpaged (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record for which this call should be made
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: List of all the data points
+          content:
+            application/hal+json:
+              schema:
+                title: StudyFieldResultCollectionOldNaming
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksSingle'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/StudyFieldResultCollectionOldNaming'
+                  total_items:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdRecordByRecordIdDataPointCollectionStudy
+      x-operation-id-source: derived
+    post:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Create/update a collection of field values for a study
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Create/update a collection of field values for a study (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record for which this call should be made
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: Field value successfully created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/StudyDataPointFieldResultCollectionOldNaming'
+        404:
+          description: The given Record or Field does not exist.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          description: Invalid input
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyDataPointCollectionBody'
+        description: "Parameters common to all data points that will be changed\n                                            change_reason is required when changing an existing data point\n                                            for a study with Good Clinical Practice functionality enabled.\n                                            confirmed_changes and change_reason are required when updating\n                                            a signed or verified step."
+        required: true
+      operationId: postStudyByStudyIdRecordByRecordIdDataPointCollectionStudy
+      x-operation-id-source: derived
+  /study/{study_id}/record/{record_id}/data-point-collection/report-instance:
+    get:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Retrieves a list of all report data collected for this record
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns an array of objects. Unpaged (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record for which this call should be made
+        required: true
+        schema:
+          type: string
+      - name: enable_pagination
+        in: query
+        description: If pagination should be used or not
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: The size of pages
+        required: false
+        schema:
+          type: integer
+      responses:
+        200:
+          description: List of all the data points
+          content:
+            application/hal+json:
+              schema:
+                title: ReportFieldResultCollection
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksSingle'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ReportFieldResultCollection'
+                  total_items:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdRecordByRecordIdDataPointCollectionReportInstance
+      x-operation-id-source: derived
+  /study/{study_id}/record/{record_id}/data-point-collection/report-instance/{report_instance_id}:
+    get:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Retrieves a list of all report data collected for this report instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns an array of objects. Unpaged (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record for which this call should be made
+        required: true
+        schema:
+          type: string
+      - name: report_instance_id
+        in: path
+        description: The ID of the report instance to retrieve all data-points from
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: List of all the data points
+          content:
+            application/hal+json:
+              schema:
+                title: ReportFieldResultCollection
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksSingle'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ReportFieldResultCollection'
+                  total_items:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdRecordByRecordIdDataPointCollectionReportInstanceByReportInstanceId
+      x-operation-id-source: derived
+    post:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Create/update a collection of field values for a report instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Create/update a collection of field values for a report instance (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record for which this call should be made
+        required: true
+        schema:
+          type: string
+      - name: report_instance_id
+        in: path
+        description: The ID of the report instance to save the data-points on.
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: Field value successfully created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ReportDataPointFieldResultCollection'
+        404:
+          description: The given Record or Field does not exist.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          description: Invalid input
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportDataPointCollectionBody'
+        description: "Parameters common to all data points that will be changed\n                                            change_reason is required when changing an existing data point\n                                            for a study with Good Clinical Practice functionality enabled.\n                                            confirmed_changes and change_reason are required when updating\n                                            a signed or verified step."
+        required: true
+      operationId: postStudyByStudyIdRecordByRecordIdDataPointCollectionReportInstanceByReportInstanceId
+      x-operation-id-source: derived
+  /study/{study_id}/record/{record_id}/data-point-collection/survey-instance:
+    get:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Retrieves a list of all survey data collected for this record
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns an array of objects. Unpaged (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record for which this call should be made
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: List of all the data points
+          content:
+            application/hal+json:
+              schema:
+                title: SurveyFieldResultCollectionOldNaming
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksSingle'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyFieldResultCollectionOldNaming'
+                  total_items:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdRecordByRecordIdDataPointCollectionSurveyInstance
+      x-operation-id-source: derived
+  /study/{study_id}/record/{record_id}/data-point-collection/survey-instance/{survey_instance_id}:
+    get:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Retrieves a list of all survey data collected for this survey instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns an array of objects. Unpaged (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record for which this call should be made
+        required: true
+        schema:
+          type: string
+      - name: survey_instance_id
+        in: path
+        description: The ID of the survey instance to retrieve all data-points from
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: List of all the data points
+          content:
+            application/hal+json:
+              schema:
+                title: SurveyFieldResultCollectionOldNaming
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksSingle'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyFieldResultCollectionOldNaming'
+                  total_items:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdRecordByRecordIdDataPointCollectionSurveyInstanceBySurveyInstanceId
+      x-operation-id-source: derived
+    post:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Create/update a collection of field values for a survey instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Create/update a collection of field values for a survey instance (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record for which this call should be made
+        required: true
+        schema:
+          type: string
+      - name: survey_instance_id
+        in: path
+        description: The ID of the survey instance to save all data-points to.
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: Field value successfully created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/SurveyDataPointFieldResultCollectionOldNaming'
+        404:
+          description: The given Record or Field does not exist.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          description: Invalid input
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SurveyDataPointCollectionBody'
+        description: Parameters common to all data points that will be changed.
+        required: true
+      operationId: postStudyByStudyIdRecordByRecordIdDataPointCollectionSurveyInstanceBySurveyInstanceId
+      x-operation-id-source: derived
+  /study/{study_id}/record/{record_id}/data-point-collection/survey-package-instance:
+    post:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Create a new repeatable survey package instance and a collection of field…
+      security:
+      - OAuth2ClientCredentials:
+        - record
+        - default
+      description: Create a new repeatable survey package instance and a collection of field values for it (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record for which this call should be made
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: Field value successfully created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepeatableSPIDataPointFieldResultCollectionOldNaming'
+        404:
+          description: The given Record or Field does not exist.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          description: Invalid input
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepeatableSurveyPackageDataPointCollectionBody'
+        description: Parameters common to all data points that will be created.You can provide an additional "all_fields_filled_on" parameter to mark the actual time the Survey Package Instance has been completed
+        required: true
+      operationId: postStudyByStudyIdRecordByRecordIdDataPointCollectionSurveyPackageInstance
+      x-operation-id-source: derived
+  /study/{study_id}/record/{record_id}/data-point-collection/survey-package-instance/{survey_package_instance_id}:
+    get:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Retrieves a list of all survey data collected for this survey package instance 🔭
+      security:
+      - OAuth2ClientCredentials:
+        - record
+        - default
+      description: Returns an array of objects. Unpaged (Deprecated, use "data-points" instead) Supports the `record` scope. (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record for which this call should be made
+        required: true
+        schema:
+          type: string
+      - name: survey_package_instance_id
+        in: path
+        description: The ID of the survey package instance to retrieve all data-points from.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: List of all the data points
+          content:
+            application/hal+json:
+              schema:
+                title: SurveyPackageFieldResultCollectionOldNaming
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksSingle'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyPackageFieldResultCollectionOldNaming'
+                  total_items:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdRecordByRecordIdDataPointCollectionSurveyPackageInstanceBySurveyPackageInstanceId
+      x-operation-id-source: derived
+    post:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Create/update a collection of field values for a survey package instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Create/update a collection of field values for a survey package instance (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record for which this call should be made
+        required: true
+        schema:
+          type: string
+      - name: survey_package_instance_id
+        in: path
+        description: The ID of the survey package instance to save all data-points to.
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: Field value successfully created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/SPIDataPointFieldResultCollectionOldNaming'
+        404:
+          description: The given Record or Field does not exist.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          description: Invalid input
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SurveyPackageDataPointCollectionBody'
+        description: Parameters common to all data points that will be changed.You can provide an additional "all_fields_filled_on" parameter to mark the actual time the Survey Package Instance has been completed
+        required: true
+      operationId: postStudyByStudyIdRecordByRecordIdDataPointCollectionSurveyPackageInstanceBySurveyPackageInstanceId
+      x-operation-id-source: derived
+  /study/{study_id}/data-point-collection/study:
+    get:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Retrieves a list of all study data collected for all records
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns an array of objects. Unpaged (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: List of all the data points
+          content:
+            application/hal+json:
+              schema:
+                title: Fields HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/StudyFieldResultCollectionOldNaming'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdDataPointCollectionStudy
+      x-operation-id-source: derived
+  /study/{study_id}/data-point-collection/report-instance:
+    get:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Retrieves a list of all report data collected for all records
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns an array of objects. Unpaged (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: List of all the data points
+          content:
+            application/hal+json:
+              schema:
+                title: Fields HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ReportFieldResultCollection'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdDataPointCollectionReportInstance
+      x-operation-id-source: derived
+  /study/{study_id}/data-point-collection/report-instance/{report_instance_id}:
+    get:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Retrieves a list of all report data collected for this report instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns an array of objects. Unpaged (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: report_instance_id
+        in: path
+        description: The ID of the report instance to retrieve all data-points from
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: List of all the data points
+          content:
+            application/hal+json:
+              schema:
+                title: Fields HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ReportFieldResultCollection'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdDataPointCollectionReportInstanceByReportInstanceId
+      x-operation-id-source: derived
+  /study/{study_id}/data-point-collection/survey-instance:
+    get:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Retrieves a list of all survey data collected for all records
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns an array of objects. Unpaged (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: List of all the data points
+          content:
+            application/hal+json:
+              schema:
+                title: Fields HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyFieldResultCollectionOldNaming'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdDataPointCollectionSurveyInstance
+      x-operation-id-source: derived
+  /study/{study_id}/data-point-collection/survey-instance/{survey_instance_id}:
+    get:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Retrieves a list of all survey data collected for this survey instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns an array of objects. Unpaged (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: survey_instance_id
+        in: path
+        description: The ID of the survey instance to retrieve all data-points from
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: List of all the data points
+          content:
+            application/hal+json:
+              schema:
+                title: Fields HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyFieldResultCollectionOldNaming'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdDataPointCollectionSurveyInstanceBySurveyInstanceId
+      x-operation-id-source: derived
+  /study/{study_id}/data-point-collection/survey-package-instance/{survey_package_instance_id}:
+    get:
+      deprecated: true
+      tags:
+      - data-point-collection
+      summary: Retrieves a list of all survey data collected for this survey package instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns an array of objects. Unpaged (Deprecated, use "data-points" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: survey_package_instance_id
+        in: path
+        description: The ID of the survey package instance to retrieve all data-points from.
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: List of all the data points
+          content:
+            application/hal+json:
+              schema:
+                title: Fields HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyPackageFieldResultCollectionOldNaming'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdDataPointCollectionSurveyPackageInstanceBySurveyPackageInstanceId
+      x-operation-id-source: derived
+components:
+  schemas:
+    LinksCollection:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+        first:
+          type: object
+          properties:
+            href:
+              type: string
+        last:
+          type: object
+          properties:
+            href:
+              type: string
+        next:
+          type: object
+          properties:
+            href:
+              type: string
+    LinksSingle:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+    DataPointFailedFieldResultCollection:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: string
+        field_id:
+          type: string
+          format: UUID
+    SPIDataPointFieldResultCollectionOldNaming:
+      type: object
+      properties:
+        success:
+          type: array
+          items:
+            type: object
+            properties:
+              field_id:
+                type: string
+                format: UUID
+              field_value:
+                type: string
+              record_id:
+                type: string
+              updated_on:
+                type: string
+                description: 'Will return UNIX epoch (1970-01-01) if updated_on is not available. '
+              survey_instance_id:
+                type: string
+                format: UUID
+        failed:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataPointFailedFieldResultCollection'
+        total_processed:
+          type: number
+        total_success:
+          type: number
+        total_failed:
+          type: number
+    StudyFieldResultCollectionOldNaming:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: UUID
+        field_value:
+          type: string
+        record_id:
+          type: string
+        updated_on:
+          type: string
+          description: 'Will return UNIX epoch (1970-01-01) if updated_on is not available. '
+    ReportFieldResultCollection:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: UUID
+        report_instance_id:
+          type: string
+          format: UUID
+        report_instance_name:
+          type: string
+        field_value:
+          type: string
+        record_id:
+          type: string
+        updated_on:
+          type: string
+          description: 'Will return UNIX epoch (1970-01-01) if updated_on is not available. '
+    SurveyPackageDataPointCollectionBody:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SurveyDataPointCollectionFieldValueParameter'
+        all_fields_filled_on:
+          type: string
+          format: dateTime
+          description: The UTC date and time the Survey Package Instance has been completed and all its fields have been filled
+    RepeatableSurveyPackageDataPointCollectionBody:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RepeatableSurveyDataPointCollectionFieldValueParameter'
+        survey_package_id:
+          type: string
+          format: UUID
+          description: The ID of the repeatable survey package for which a new survey package instance should be created.
+        all_fields_filled_on:
+          type: string
+          format: dateTime
+          description: The UTC date and time the Survey Package Instance has been completed and all its fields have been filled
+    RepeatableSurveyDataPointCollectionFieldValueParameter:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: UUID
+          description: The field identifier
+        survey_id:
+          type: string
+          format: UUID
+          description: The SurveyId to save the data-points for
+        field_value:
+          type: string
+          description: The value
+      required:
+      - field_id
+      - survey_id
+      - field_value
+    StudyDataPointFieldResultCollectionOldNaming:
+      type: object
+      properties:
+        success:
+          type: array
+          items:
+            type: object
+            properties:
+              field_id:
+                type: string
+                format: UUID
+              field_value:
+                type: string
+              record_id:
+                type: string
+              updated_on:
+                type: string
+                description: 'Will return UNIX epoch (1970-01-01) if updated_on is not available. '
+        failed:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataPointFailedFieldResultCollection'
+        total_processed:
+          type: number
+        total_success:
+          type: number
+        total_failed:
+          type: number
+    DataPointCollectionCommonParameters:
+      type: object
+      properties:
+        change_reason:
+          type: string
+          description: The reason for changing an existing data-point (required if Good Clinical Practice functionality is enabled for the given Study)
+        confirmed_changes:
+          type: boolean
+          description: User confirmed consequent changes after this field value update (i.e. automatic dependency clearing, signature drops, verification drops).
+    SurveyDataPointCollectionFieldValueParameter:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: UUID
+          description: The field identifier
+        instance_id:
+          type: string
+          format: UUID
+          description: The Survey(Package)InstanceId to save the data-points for
+        field_value:
+          type: string
+          description: The value
+      required:
+      - field_id
+      - instance_id
+      - field_value
+    ReportDataPointFieldResultCollection:
+      type: object
+      properties:
+        success:
+          type: array
+          items:
+            type: object
+            properties:
+              field_id:
+                type: string
+                format: UUID
+              field_value:
+                type: string
+              record_id:
+                type: string
+              updated_on:
+                type: string
+                description: 'Will return UNIX epoch (1970-01-01) if updated_on is not available. '
+              report_instance_id:
+                type: string
+                format: UUID
+              report_instance_name:
+                type: string
+        failed:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataPointFailedFieldResultCollection'
+        total_processed:
+          type: number
+        total_success:
+          type: number
+        total_failed:
+          type: number
+    RepeatableSPIDataPointFieldResultCollectionOldNaming:
+      type: object
+      properties:
+        survey_package_instance_id:
+          type: string
+          format: UUID
+        success:
+          type: array
+          items:
+            type: object
+            properties:
+              field_id:
+                type: string
+                format: UUID
+              field_value:
+                type: string
+              record_id:
+                type: string
+              updated_on:
+                type: string
+                description: 'Will return UNIX epoch (1970-01-01) if updated_on is not available. '
+              survey_instance_id:
+                type: string
+                format: UUID
+        failed:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataPointFailedFieldResultCollection'
+        total_processed:
+          type: number
+        total_success:
+          type: number
+        total_failed:
+          type: number
+    SurveyDataPointCollectionBody:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SurveyDataPointCollectionFieldValueParameter'
+    SurveyDataPointFieldResultCollectionOldNaming:
+      type: object
+      properties:
+        success:
+          type: array
+          items:
+            type: object
+            properties:
+              field_id:
+                type: string
+                format: UUID
+              field_value:
+                type: string
+              record_id:
+                type: string
+              updated_on:
+                type: string
+                description: 'Will return UNIX epoch (1970-01-01) if updated_on is not available. '
+              survey_instance_id:
+                type: string
+                format: UUID
+              survey_name:
+                type: string
+        failed:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataPointFailedFieldResultCollection'
+        total_processed:
+          type: number
+        total_success:
+          type: number
+        total_failed:
+          type: number
+    ReportDataPointCollectionFieldValueParameter:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: UUID
+          description: The field identifier
+        instance_id:
+          type: string
+          format: UUID
+          description: The Report Instance identifier of the ReportInstance to save the data-points on.
+        field_value:
+          type: string
+          description: The value
+        change_reason:
+          type: string
+          description: The reason for changing an existing data-point (required if Good Clinical Practice functionality is enabled for the given Study)
+        confirmed_changes:
+          type: boolean
+          description: User confirmed consequent changes after this field value update
+      required:
+      - field_id
+      - instance_id
+      - field_value
+    ReportDataPointCollectionBody:
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/DataPointCollectionCommonParameters'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportDataPointCollectionFieldValueParameter'
+    SurveyFieldResultCollectionOldNaming:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: UUID
+        survey_instance_id:
+          type: string
+          format: UUID
+        survey_name:
+          type: string
+        field_value:
+          type: string
+        record_id:
+          type: string
+        updated_on:
+          type: string
+          description: 'Will return UNIX epoch (1970-01-01) if updated_on is not available. '
+    SurveyPackageFieldResultCollectionOldNaming:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: UUID
+        survey_instance_id:
+          type: string
+          format: UUID
+        survey_package_instance_id:
+          type: string
+          format: UUID
+        field_value:
+          type: string
+        record_id:
+          type: string
+        updated_on:
+          type: string
+          description: 'Will return UNIX epoch (1970-01-01) if updated_on is not available. '
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: The HTTP return code.
+        title:
+          type: string
+          description: The short error description belonging to the status code
+        detail:
+          type: string
+          description: The detailed explanation of the failure
+        type:
+          type: string
+          description: URL to RFC explaining this statuscode
+        errors:
+          type: object
+          description: Optional list of all errors that occurred during the request
+        validation_messages:
+          type: object
+          description: Optional list of validation failure message
+    StudyDataPointCollectionFieldValueParameter:
+      type: object
+      properties:
+        field_id:
+          type: string
+          format: UUID
+          description: The field identifier
+        field_value:
+          type: string
+          description: The value
+        change_reason:
+          type: string
+          description: The reason for changing an existing data-point (required if Good Clinical Practice functionality is enabled for the given Study)
+        confirmed_changes:
+          type: boolean
+          description: User confirmed consequent changes after this field value update
+      required:
+      - field_id
+      - field_value
+    StudyDataPointCollectionBody:
+      type: object
+      properties:
+        common:
+          $ref: '#/components/schemas/DataPointCollectionCommonParameters'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudyDataPointCollectionFieldValueParameter'
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            default: Grants access to everything
+            study_statistics: Grants access to a study's statistics
+            record: Grants access to the data for a single participant; intended for use by study subjects
+          tokenUrl: https://data.castoredc.com/oauth/token

@@ -1,0 +1,640 @@
+openapi: 3.2.0
+info:
+  version: 2026.1.6.1
+  title: Castor EDC API Documentation Export API
+  description: '### Overview
+
+    This document provides the specifications of the Castor EDC API, describing the currently available
+
+    API endpoints and methods. We aim to provide a fully functional RESTful API to communicate with
+
+    Castor EDC and these are endpoints currently available.
+
+
+    The formal OpenAPI 2 specification by which this page is rendered is also available in the following formats:
+
+    * YAML
+
+    * JSON
+
+    * JSON (pretty print)
+
+
+    ### Authentication & Authorization with OAuth 2
+
+    Authentication and authorization are arranged through OAuth2. We currently provide full support for the Client
+
+    Credentials flow. The Authorization Code flow is supported, but we ask you to contact us if you want to use this flow.
+
+
+    To use the Client Credentials flow go to your
+
+    Castor EDC profile and generate
+
+    a Client ID and Client Secret. Use the Client ID and Client Secret to retrieve an access token by making a request to
+
+    the ''/oauth/token'' endpoint with your client_id and client_secret as parameters and grant_type=client_credentials.
+
+
+    PHP Example:
+
+    ```php
+
+    include __DIR__.''/vendor/autoload.php'';
+
+    use Guzzle\Http\Client;
+
+
+    // Create the HTTP Client.
+
+    $httpClient = new Client(
+
+    ''https://data.castoredc.com'',
+
+    [
+
+    ''request.options'' => [
+
+    ''exceptions'' => false,
+
+    ]
+
+    ]
+
+    );
+
+
+    // Build the request
+
+    $request = $httpClient->post(
+
+    ''/oauth/token'',
+
+    null,
+
+    [
+
+    ''client_id'' => ''YourCastorClientId'',
+
+    ''client_secret'' => ''YourCastorClientSecret'',
+
+    ''grant_type'' => ''client_credentials'',
+
+    ]
+
+    );
+
+
+    // Send the request
+
+    $response = $request->send();
+
+    $responseBody = $response->getBody(true);
+
+    $responseArr = json_decode($responseBody, true);
+
+    $accessToken = $responseArr[''access_token''];
+
+    ```
+
+
+    In your subsequent requests you can use the `$accessToken` as a Bearer token in the Authorization header, i.e:
+
+    ```php
+
+    $request = $httpClient->get(''/api/user'');
+
+    $request->addHeader(''Authorization'', ''Bearer ''. $accessToken);
+
+    $response = $request->send();
+
+    echo $response->getBody();
+
+    ```
+
+
+    ### OAuth2 Scopes
+
+
+    There are 3 scopes that endpoints may support.
+
+    * **default**: allows access to all endpoints
+
+    * **study_statistics**: allows access to study statistics
+
+    * **record**: allows access to data for a single participant
+
+
+    Due to a bug in the OpenAPI UI, all three scopes are listed for all endpoints.
+
+
+    If the endpoint supports something other than the default scope, the summary will have a 🔭 emoji and the scope will be
+
+    listed in the description as well as under the `security:` key in the specification.
+
+
+    ### Rate Limits
+
+    Unless specified in the resource, endpoints are rate-limited to 600 requests in 10 minutes.
+
+
+    ### Legacy (Basic HTTP Authentication)
+
+    **Please note: Basic HTTP Authentication has been removed on 2019 August 13**
+
+
+    ### Changelog
+
+    API changes can be viewed here'
+  contact:
+    name: support@castoredc.com
+servers:
+- url: https://data.castoredc.com/api/
+security:
+- OAuth2ClientCredentials:
+  - default
+  - study_statistics
+  - record
+tags:
+- name: Export
+paths:
+  /study/{study_id}/export/data:
+    get:
+      tags:
+      - Export
+      summary: Export the study's data
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: The data export will export all datapoints of a study in a unified, flat CSV format. Blinding rules are taken into account when exporting the data.
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: exclude_empty_surveys
+        in: query
+        description: Exclude Survey Instances without data points
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: exclude_empty_reports
+        in: query
+        description: Exclude Report Instances without data points
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: archived
+        in: query
+        description: Include archived data.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        200:
+          description: Data for the study with a header and content.
+          content:
+            text/csv:
+              schema:
+                title: Data representation
+                type: string
+                $ref: '#/components/schemas/Data'
+        403:
+          description: Forbidden
+          content:
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Error'
+        406:
+          description: Not Acceptable
+          content:
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Not_Acceptable'
+        default:
+          description: Unexpected error
+          content:
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdExportData
+      x-operation-id-source: derived
+  /study/{study_id}/export/structure:
+    get:
+      tags:
+      - Export
+      summary: Export the study's structure (all forms and fields) in a unified, flat CSV…
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns a string with the study's structure in a CSV file.
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: The study's structure with the header and content.
+          content:
+            text/csv:
+              schema:
+                title: Structure representation
+                type: string
+                $ref: '#/components/schemas/Structure'
+        403:
+          description: Forbidden
+          content:
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Error'
+        406:
+          description: Not Acceptable
+          content:
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Not_Acceptable'
+        default:
+          description: Unexpected error
+          content:
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdExportStructure
+      x-operation-id-source: derived
+  /study/{study_id}/export/optiongroups:
+    get:
+      tags:
+      - Export
+      summary: Export the study's option groups with all option details
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns a string with the study's option groups and options in unified, flat CSV format.
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: The study's option groups with the header and content.
+          content:
+            text/csv:
+              schema:
+                title: Option Groups flat export representation
+                type: string
+                $ref: '#/components/schemas/OptionGroups'
+        403:
+          description: Forbidden
+          content:
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Error'
+        406:
+          description: Not Acceptable
+          content:
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Not_Acceptable'
+        default:
+          description: Unexpected error
+          content:
+            text/csv:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdExportOptiongroups
+      x-operation-id-source: derived
+  /study/{study_id}/export:
+    get:
+      tags:
+      - Export
+      summary: Shows the status of previously requested exports
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: ''
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: The size of pages
+        required: false
+        schema:
+          type: integer
+      responses:
+        200:
+          description: List of all exports
+          content:
+            application/json:
+              schema:
+                title: Export entry
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Export'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdExport
+      x-operation-id-source: derived
+  /study/{study_id}/export/{id}/download:
+    get:
+      tags:
+      - Export
+      summary: File download. Endpoint responds with binary stream
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: ''
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: id
+        in: path
+        description: The ID of the Export to download
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: Binary data stream
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: The given Record or Field does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        429:
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdExportByIdDownload
+      x-operation-id-source: derived
+components:
+  schemas:
+    Structure:
+      properties:
+        Study ID:
+          type: string
+          format: UUID
+          description: Unique identifier of the Study
+        Form Type:
+          type: string
+          description: Form type (Study, Report or Survey)
+        Form Collection ID:
+          type: string
+          format: UUID
+          description: Unique identifier of the Form Collection (Phase ID, Report ID or Survey ID)
+        Form Collection Name:
+          type: string
+          description: The Form Collection name
+        Form Collection Order:
+          type: integer
+          description: The form collection order. This is only applicable for phases, reports and surveys will always have order 1 set.
+        Form ID:
+          type: string
+          format: UUID
+          description: Unique identifier of the Form (Step ID, ReportStep ID or SurveyStep ID)
+        Form Name:
+          type: string
+          description: The Form name
+        Form Order:
+          type: integer
+          description: The Form order. Please note that Steps will be numbered consecutively over the entire study, report steps and survey steps are always ordered within their own report or survey.
+        Field ID:
+          type: string
+          format: UUID
+          description: Unique identifier of the Field
+        Field Variable Name:
+          type: string
+          description: The Field variable name
+        Field Label:
+          type: string
+          description: The Field Label
+        Field Type:
+          type: string
+          description: The Field Type (see https://castoredc.link/manual/form-builder/creating-fields for a list of all available field types)
+        Field Order:
+          type: integer
+          description: The Field order within the form
+        Field Required:
+          type: boolean
+          description: If a Field is required or not
+        Calculation Template:
+          type: string
+          description: The Calculation Template, used to calculate values during data entry
+        Field Option Group:
+          type: string
+          format: UUID
+          description: Unique identifier of the Field Option Group
+    Export:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - queued
+          - in_progress
+          - completed
+          - failed
+        created_on:
+          type: string
+          format: date-time
+          example: 2024-01-01 11:11
+        completed_on:
+          type: string
+          format: date-time
+          example: 2024-01-01 11:11
+        expires_on:
+          type: string
+          format: date-time
+          example: 2024-01-01 11:11
+        created_by:
+          type: string
+          example: John Doe
+        export_name:
+          type: string
+        export_type:
+          type: string
+          enum:
+          - audit_trail
+          - participant_casebook
+          - participant_data
+          - domain_mapping
+          - empty_crf
+          - form_structure
+          - queries
+          - sites
+          - survey_compliance
+          - uploaded_files
+          - validations
+        file_name:
+          type: string
+          example: export.zip
+        file_size:
+          type: integer
+          example: 123456
+    OptionGroups:
+      properties:
+        Study ID:
+          type: string
+          format: UUID
+          description: Unique identifier of the Study
+        Option Group ID:
+          type: string
+          format: UUID
+          description: Unique identifier of the Option Group
+        Option Group Name:
+          type: string
+          description: The Option Group name
+        Option ID:
+          type: string
+          format: UUID
+          description: Unique identifier of the Option
+        Option Name:
+          type: string
+          description: Option Name
+        Option Value:
+          type: string
+          description: Option Value
+    Data:
+      properties:
+        Study ID:
+          type: string
+          format: UUID
+          description: Unique identifier of the Study
+        Record ID:
+          type: string
+          format: UUID
+          description: Unique identifier of the Record
+        Form Type:
+          type: string
+          description: Form type (Study, Report or Survey)
+        Form Instance ID:
+          type: string
+          format: UUID
+          description: Unique identifier of the Form Instance
+        Form Instance Name:
+          type: string
+          description: The Form Instance name (only applicable for Reports and Surveys)
+        Field ID:
+          type: string
+          format: UUID
+          description: Unique identifier of the Field
+        Value:
+          type: string
+          description: Current Field value
+        Date:
+          type: string
+          description: Date when the Field was last updated
+        User ID:
+          type: string
+          format: UUID
+          description: Unique identifier of the User who updated the field
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: The HTTP return code.
+        title:
+          type: string
+          description: The short error description belonging to the status code
+        detail:
+          type: string
+          description: The detailed explanation of the failure
+        type:
+          type: string
+          description: URL to RFC explaining this statuscode
+        errors:
+          type: object
+          description: Optional list of all errors that occurred during the request
+        validation_messages:
+          type: object
+          description: Optional list of validation failure message
+    Not_Acceptable:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: The HTTP return code.
+        type:
+          type: string
+          description: URL to RFC explaining this statuscode
+        title:
+          type: string
+          description: The short error description belonging to the status code
+        detail:
+          type: string
+          description: The detailed explanation of the failure
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            default: Grants access to everything
+            study_statistics: Grants access to a study's statistics
+            record: Grants access to the data for a single participant; intended for use by study subjects
+          tokenUrl: https://data.castoredc.com/oauth/token

@@ -1,0 +1,301 @@
+openapi: 3.2.0
+info:
+  version: 2026.1.6.1
+  title: Castor EDC API Documentation User API
+  description: '### Overview
+
+    This document provides the specifications of the Castor EDC API, describing the currently available
+
+    API endpoints and methods. We aim to provide a fully functional RESTful API to communicate with
+
+    Castor EDC and these are endpoints currently available.
+
+
+    The formal OpenAPI 2 specification by which this page is rendered is also available in the following formats:
+
+    * YAML
+
+    * JSON
+
+    * JSON (pretty print)
+
+
+    ### Authentication & Authorization with OAuth 2
+
+    Authentication and authorization are arranged through OAuth2. We currently provide full support for the Client
+
+    Credentials flow. The Authorization Code flow is supported, but we ask you to contact us if you want to use this flow.
+
+
+    To use the Client Credentials flow go to your
+
+    Castor EDC profile and generate
+
+    a Client ID and Client Secret. Use the Client ID and Client Secret to retrieve an access token by making a request to
+
+    the ''/oauth/token'' endpoint with your client_id and client_secret as parameters and grant_type=client_credentials.
+
+
+    PHP Example:
+
+    ```php
+
+    include __DIR__.''/vendor/autoload.php'';
+
+    use Guzzle\Http\Client;
+
+
+    // Create the HTTP Client.
+
+    $httpClient = new Client(
+
+    ''https://data.castoredc.com'',
+
+    [
+
+    ''request.options'' => [
+
+    ''exceptions'' => false,
+
+    ]
+
+    ]
+
+    );
+
+
+    // Build the request
+
+    $request = $httpClient->post(
+
+    ''/oauth/token'',
+
+    null,
+
+    [
+
+    ''client_id'' => ''YourCastorClientId'',
+
+    ''client_secret'' => ''YourCastorClientSecret'',
+
+    ''grant_type'' => ''client_credentials'',
+
+    ]
+
+    );
+
+
+    // Send the request
+
+    $response = $request->send();
+
+    $responseBody = $response->getBody(true);
+
+    $responseArr = json_decode($responseBody, true);
+
+    $accessToken = $responseArr[''access_token''];
+
+    ```
+
+
+    In your subsequent requests you can use the `$accessToken` as a Bearer token in the Authorization header, i.e:
+
+    ```php
+
+    $request = $httpClient->get(''/api/user'');
+
+    $request->addHeader(''Authorization'', ''Bearer ''. $accessToken);
+
+    $response = $request->send();
+
+    echo $response->getBody();
+
+    ```
+
+
+    ### OAuth2 Scopes
+
+
+    There are 3 scopes that endpoints may support.
+
+    * **default**: allows access to all endpoints
+
+    * **study_statistics**: allows access to study statistics
+
+    * **record**: allows access to data for a single participant
+
+
+    Due to a bug in the OpenAPI UI, all three scopes are listed for all endpoints.
+
+
+    If the endpoint supports something other than the default scope, the summary will have a 🔭 emoji and the scope will be
+
+    listed in the description as well as under the `security:` key in the specification.
+
+
+    ### Rate Limits
+
+    Unless specified in the resource, endpoints are rate-limited to 600 requests in 10 minutes.
+
+
+    ### Legacy (Basic HTTP Authentication)
+
+    **Please note: Basic HTTP Authentication has been removed on 2019 August 13**
+
+
+    ### Changelog
+
+    API changes can be viewed here'
+  contact:
+    name: support@castoredc.com
+servers:
+- url: https://data.castoredc.com/api/
+security:
+- OAuth2ClientCredentials:
+  - default
+  - study_statistics
+  - record
+tags:
+- name: User
+paths:
+  /user:
+    get:
+      tags:
+      - User
+      summary: Retrieve a list of users the currently authenticated user is authorized to see.
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links).
+      responses:
+        200:
+          description: List of all users you have access to.
+          content:
+            application/hal+json:
+              schema:
+                title: Users
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getUser
+      x-operation-id-source: derived
+  /user/{user_id}:
+    get:
+      tags:
+      - User
+      summary: Retrieve a single User
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links)
+      parameters:
+      - name: user_id
+        in: path
+        description: The ID of the user to retrieve
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: Single User
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getUserByUserId
+      x-operation-id-source: derived
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: The HTTP return code.
+        title:
+          type: string
+          description: The short error description belonging to the status code
+        detail:
+          type: string
+          description: The detailed explanation of the failure
+        type:
+          type: string
+          description: URL to RFC explaining this statuscode
+        errors:
+          type: object
+          description: Optional list of all errors that occurred during the request
+        validation_messages:
+          type: object
+          description: Optional list of validation failure message
+    LinksSingle:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+        user_id:
+          type: string
+          format: UUID
+        entity_id:
+          type: string
+          format: UUID
+        full_name:
+          type: string
+        name_first:
+          type: string
+        name_middle:
+          type: string
+        name_last:
+          type: string
+        email_address:
+          type: string
+        institute:
+          type: string
+        department:
+          type: string
+        last_login:
+          type: object
+          properties:
+            date:
+              type: string
+              format: dateTime
+            timezone_type:
+              type: number
+            timezone:
+              type: string
+        default_site_role:
+          type: integer
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            default: Grants access to everything
+            study_statistics: Grants access to a study's statistics
+            record: Grants access to the data for a single participant; intended for use by study subjects
+          tokenUrl: https://data.castoredc.com/oauth/token

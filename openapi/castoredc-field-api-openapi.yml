@@ -1,0 +1,593 @@
+openapi: 3.2.0
+info:
+  version: 2026.1.6.1
+  title: Castor EDC API Documentation Field API
+  description: '### Overview
+
+    This document provides the specifications of the Castor EDC API, describing the currently available
+
+    API endpoints and methods. We aim to provide a fully functional RESTful API to communicate with
+
+    Castor EDC and these are endpoints currently available.
+
+
+    The formal OpenAPI 2 specification by which this page is rendered is also available in the following formats:
+
+    * YAML
+
+    * JSON
+
+    * JSON (pretty print)
+
+
+    ### Authentication & Authorization with OAuth 2
+
+    Authentication and authorization are arranged through OAuth2. We currently provide full support for the Client
+
+    Credentials flow. The Authorization Code flow is supported, but we ask you to contact us if you want to use this flow.
+
+
+    To use the Client Credentials flow go to your
+
+    Castor EDC profile and generate
+
+    a Client ID and Client Secret. Use the Client ID and Client Secret to retrieve an access token by making a request to
+
+    the ''/oauth/token'' endpoint with your client_id and client_secret as parameters and grant_type=client_credentials.
+
+
+    PHP Example:
+
+    ```php
+
+    include __DIR__.''/vendor/autoload.php'';
+
+    use Guzzle\Http\Client;
+
+
+    // Create the HTTP Client.
+
+    $httpClient = new Client(
+
+    ''https://data.castoredc.com'',
+
+    [
+
+    ''request.options'' => [
+
+    ''exceptions'' => false,
+
+    ]
+
+    ]
+
+    );
+
+
+    // Build the request
+
+    $request = $httpClient->post(
+
+    ''/oauth/token'',
+
+    null,
+
+    [
+
+    ''client_id'' => ''YourCastorClientId'',
+
+    ''client_secret'' => ''YourCastorClientSecret'',
+
+    ''grant_type'' => ''client_credentials'',
+
+    ]
+
+    );
+
+
+    // Send the request
+
+    $response = $request->send();
+
+    $responseBody = $response->getBody(true);
+
+    $responseArr = json_decode($responseBody, true);
+
+    $accessToken = $responseArr[''access_token''];
+
+    ```
+
+
+    In your subsequent requests you can use the `$accessToken` as a Bearer token in the Authorization header, i.e:
+
+    ```php
+
+    $request = $httpClient->get(''/api/user'');
+
+    $request->addHeader(''Authorization'', ''Bearer ''. $accessToken);
+
+    $response = $request->send();
+
+    echo $response->getBody();
+
+    ```
+
+
+    ### OAuth2 Scopes
+
+
+    There are 3 scopes that endpoints may support.
+
+    * **default**: allows access to all endpoints
+
+    * **study_statistics**: allows access to study statistics
+
+    * **record**: allows access to data for a single participant
+
+
+    Due to a bug in the OpenAPI UI, all three scopes are listed for all endpoints.
+
+
+    If the endpoint supports something other than the default scope, the summary will have a 🔭 emoji and the scope will be
+
+    listed in the description as well as under the `security:` key in the specification.
+
+
+    ### Rate Limits
+
+    Unless specified in the resource, endpoints are rate-limited to 600 requests in 10 minutes.
+
+
+    ### Legacy (Basic HTTP Authentication)
+
+    **Please note: Basic HTTP Authentication has been removed on 2019 August 13**
+
+
+    ### Changelog
+
+    API changes can be viewed here'
+  contact:
+    name: support@castoredc.com
+servers:
+- url: https://data.castoredc.com/api/
+security:
+- OAuth2ClientCredentials:
+  - default
+  - study_statistics
+  - record
+tags:
+- name: Field
+paths:
+  /study/{study_id}/field:
+    get:
+      tags:
+      - Field
+      summary: Retrieves the list of all available fields
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Gets `Field` objects.
+
+        Always requires a study_id to be given. Can be paged.
+
+        Returns HalJson responses (with _links for paging and to single objects).'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: include
+        in: query
+        description: 'The extra properties to include in the Field array.
+
+          Currently it supports ''metadata'', ''validations'', ''optiongroup'', ''dependencies''.
+
+          List separated by '',''. Use like: ?include=metadata,validations,optiongroup.
+
+          Separation by ''|'' is deprecated and will be removed in the next major release.'
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: List of all fields of the Study
+          content:
+            application/hal+json:
+              schema:
+                title: Fields HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      fields:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Field'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdField
+      x-operation-id-source: derived
+  /study/{study_id}/field/{field_id}:
+    get:
+      tags:
+      - Field
+      summary: Retrieve a single Field
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links).
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: field_id
+        in: path
+        description: Field ID of the field to fetch
+        required: true
+        schema:
+          type: string
+      - name: include
+        in: query
+        description: 'The extra properties to include in the Field array.
+
+          Currently it supports ''metadata'', ''validations'', ''optiongroup'', ''dependencies''.
+
+          List separated by '',''. Use like: ?include=metadata,validations,optiongroup.
+
+          Separation by ''|'' is deprecated and will be removed in the next major release.'
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Single Field
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Field'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdFieldByFieldId
+      x-operation-id-source: derived
+components:
+  schemas:
+    Metadata:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Metadata
+        parent_id:
+          type: string
+          description: Metadata id of this metadata's parent (circular reference)
+        value:
+          type: string
+          description: The value
+        description:
+          type: string
+          description: The description
+        _embedded:
+          type: object
+          description: The metadataType
+          properties:
+            metadata_type:
+              $ref: '#/components/schemas/MetadataType'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    FieldDependencyNested:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier of the FieldDependency
+        parent_id:
+          type: string
+          format: UUID
+          description: The ID of the parent field (the field being checked)
+        child_id:
+          type: string
+          format: UUID
+          description: The ID of the child field (the field that depends on the parent)
+        value:
+          type: string
+          description: The value that the parent field is compared against
+        operator:
+          type: string
+          description: The dependency operator (e.g., ==, !=, >, <)
+    FieldOptionGroup:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the FieldOptionGroup
+        name:
+          type: string
+          description: The FieldOptionGroup name
+        description:
+          type: string
+          description: The FieldOptionGroup description
+        layout:
+          type: string
+          description: Horizontal or vertical option positioning
+        options:
+          type: array
+          description: The list of FieldOptions that are included in this FieldOptionGroup
+          items:
+            $ref: '#/components/schemas/FieldOption'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    MetadataType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the MetadataType
+        name:
+          type: string
+          description: The name of this MetadataType
+        description:
+          type: string
+          description: The description of this MetadataType
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    LinksCollection:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+        first:
+          type: object
+          properties:
+            href:
+              type: string
+        last:
+          type: object
+          properties:
+            href:
+              type: string
+        next:
+          type: object
+          properties:
+            href:
+              type: string
+    LinksSingle:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+    FieldOption:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Option
+        name:
+          type: string
+          description: The Option name
+        value:
+          type: string
+          description: The Option value
+        groupOrder:
+          type: integer
+          description: The position of the option within the group
+    FieldValidation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: integer
+          description: Unique identifier of the FieldValidation
+        type:
+          type: string
+          description: FieldValidation type
+        value:
+          type: string
+          default: null
+          description: The static value to compare against or null for field-to-field validations
+        text:
+          type: string
+          description: The message of the validation
+        field_id:
+          type: string
+          format: UUID
+          description: The field that uses this validation
+        reference_type:
+          type: string
+          enum:
+          - field
+          - value
+          description: The type of validation reference. "field" means comparing against another field, "value" means comparing against a static value
+        referenced_field_id:
+          type: string
+          format: UUID
+          default: null
+          description: The ID of the referenced field for field-to-field validations or null for value validations
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: The HTTP return code.
+        title:
+          type: string
+          description: The short error description belonging to the status code
+        detail:
+          type: string
+          description: The detailed explanation of the failure
+        type:
+          type: string
+          description: URL to RFC explaining this statuscode
+        errors:
+          type: object
+          description: Optional list of all errors that occurred during the request
+        validation_messages:
+          type: object
+          description: Optional list of validation failure message
+    Field:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Field (same as field_id)
+        field_id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Field (same as id)
+        field_type:
+          type: string
+          description: The Field type
+        field_label:
+          type: string
+          description: The Field label
+        field_number:
+          type: number
+          description: The Field's position within a step
+        field_variable_name:
+          type: string
+          description: The Field's variable name
+        field_required:
+          type: integer
+          description: If enabled, it makes the field required (cannot be left empty). Returns 1 for required, 0 for not required
+        field_enforce_decimals:
+          type: boolean
+          description: If enabled, it requires decimals digits in data-entry
+          default: null
+        field_hidden:
+          type: integer
+          description: If enabled, it hides the field in data-entry. Returns 1 for hidden, 0 for visible
+        field_info:
+          type: string
+          format: markdown
+          description: Information about the field. It is shown during data-entry
+        field_units:
+          type: string
+          description: The field's measurement unit
+        field_length:
+          type: number
+          description: Length parameter to derive UI input width for this field
+          default: null
+        field_slider_step:
+          type: string
+          description: Slider step (Deprecated. Use field_slider_step_value instead)
+          default: null
+        field_slider_step_value:
+          type: number
+          format: float
+          description: Slider step value
+          default: null
+        field_image:
+          type: string
+          description: URL to the image for the Image field type
+        parent_id:
+          type: string
+          format: UUID
+          description: The field's parent id
+        metadata_points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+        validations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldValidation'
+        option_group:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldOptionGroup'
+          default: null
+        randomize_option_order:
+          type: boolean
+          description: If enabled, the order of options should be randomized (only applies to dropdown, radio, and checkbox fields)
+        domains:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldDomain'
+        dependency_parents:
+          type: array
+          description: List of parent field dependencies (fields that this field depends on)
+          items:
+            $ref: '#/components/schemas/FieldDependencyNested'
+        dependency_children:
+          type: array
+          description: List of child field dependencies (fields that depend on this field)
+          items:
+            $ref: '#/components/schemas/FieldDependencyNested'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    FieldDomain:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Full domain name
+        abbreviation:
+          type: string
+          description: Abbreviated domain name
+        domain_variable_name:
+          type: string
+          description: Domain variable name
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            default: Grants access to everything
+            study_statistics: Grants access to a study's statistics
+            record: Grants access to the data for a single participant; intended for use by study subjects
+          tokenUrl: https://data.castoredc.com/oauth/token

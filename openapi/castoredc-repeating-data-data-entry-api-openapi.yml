@@ -1,0 +1,882 @@
+openapi: 3.2.0
+info:
+  version: 2026.1.6.1
+  title: Castor EDC API Documentation Repeating Data Data Entry API
+  description: '### Overview
+
+    This document provides the specifications of the Castor EDC API, describing the currently available
+
+    API endpoints and methods. We aim to provide a fully functional RESTful API to communicate with
+
+    Castor EDC and these are endpoints currently available.
+
+
+    The formal OpenAPI 2 specification by which this page is rendered is also available in the following formats:
+
+    * YAML
+
+    * JSON
+
+    * JSON (pretty print)
+
+
+    ### Authentication & Authorization with OAuth 2
+
+    Authentication and authorization are arranged through OAuth2. We currently provide full support for the Client
+
+    Credentials flow. The Authorization Code flow is supported, but we ask you to contact us if you want to use this flow.
+
+
+    To use the Client Credentials flow go to your
+
+    Castor EDC profile and generate
+
+    a Client ID and Client Secret. Use the Client ID and Client Secret to retrieve an access token by making a request to
+
+    the ''/oauth/token'' endpoint with your client_id and client_secret as parameters and grant_type=client_credentials.
+
+
+    PHP Example:
+
+    ```php
+
+    include __DIR__.''/vendor/autoload.php'';
+
+    use Guzzle\Http\Client;
+
+
+    // Create the HTTP Client.
+
+    $httpClient = new Client(
+
+    ''https://data.castoredc.com'',
+
+    [
+
+    ''request.options'' => [
+
+    ''exceptions'' => false,
+
+    ]
+
+    ]
+
+    );
+
+
+    // Build the request
+
+    $request = $httpClient->post(
+
+    ''/oauth/token'',
+
+    null,
+
+    [
+
+    ''client_id'' => ''YourCastorClientId'',
+
+    ''client_secret'' => ''YourCastorClientSecret'',
+
+    ''grant_type'' => ''client_credentials'',
+
+    ]
+
+    );
+
+
+    // Send the request
+
+    $response = $request->send();
+
+    $responseBody = $response->getBody(true);
+
+    $responseArr = json_decode($responseBody, true);
+
+    $accessToken = $responseArr[''access_token''];
+
+    ```
+
+
+    In your subsequent requests you can use the `$accessToken` as a Bearer token in the Authorization header, i.e:
+
+    ```php
+
+    $request = $httpClient->get(''/api/user'');
+
+    $request->addHeader(''Authorization'', ''Bearer ''. $accessToken);
+
+    $response = $request->send();
+
+    echo $response->getBody();
+
+    ```
+
+
+    ### OAuth2 Scopes
+
+
+    There are 3 scopes that endpoints may support.
+
+    * **default**: allows access to all endpoints
+
+    * **study_statistics**: allows access to study statistics
+
+    * **record**: allows access to data for a single participant
+
+
+    Due to a bug in the OpenAPI UI, all three scopes are listed for all endpoints.
+
+
+    If the endpoint supports something other than the default scope, the summary will have a 🔭 emoji and the scope will be
+
+    listed in the description as well as under the `security:` key in the specification.
+
+
+    ### Rate Limits
+
+    Unless specified in the resource, endpoints are rate-limited to 600 requests in 10 minutes.
+
+
+    ### Legacy (Basic HTTP Authentication)
+
+    **Please note: Basic HTTP Authentication has been removed on 2019 August 13**
+
+
+    ### Changelog
+
+    API changes can be viewed here'
+  contact:
+    name: support@castoredc.com
+servers:
+- url: https://data.castoredc.com/api/
+security:
+- OAuth2ClientCredentials:
+  - default
+  - study_statistics
+  - record
+tags:
+- name: repeating-data-data-entry
+paths:
+  /study/{study_id}/participant/{participant_id}/data-point/repeating-data/{repeating_data_instance_id}:
+    get:
+      tags:
+      - repeating-data-data-entry
+      summary: Retrieve list of all stored values for a participant's repeating data
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Gets `RepeatingDataDataPoint` objects that contain the stored value for a specific repeating data field in a specific participant.
+
+        Always requires a study_id, participant_id and repeating_data_instance_id to be given. Can be paged.
+
+        Returns HalJson responses (with _links for paging and to single objects).'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: participant_id
+        in: path
+        description: The ID of the participant to retrieve field values for
+        required: true
+        schema:
+          type: string
+      - name: repeating_data_instance_id
+        in: path
+        description: The ID of the repeating data instance to retrieve field values for
+        required: true
+        schema:
+          type: string
+      - name: validations
+        in: query
+        description: Set to 1 to include the list of validations for each field
+        required: false
+        schema:
+          type: integer
+          default: 0
+      responses:
+        200:
+          description: List of all field values for a participant.
+          content:
+            application/hal+json:
+              schema:
+                title: RepeatingDataInstanceFieldResults HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      RepeatingDataDataPoints:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/RepeatingDataInstanceFieldResult'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdParticipantByParticipantIdDataPointRepeatingDataByRepeatingDataInstanceId
+      x-operation-id-source: derived
+  /study/{study_id}/participant/{participant_id}/data-point/repeating-data/{repeating_data_instance_id}/{field_id}:
+    get:
+      tags:
+      - repeating-data-data-entry
+      summary: Retrieve a single RepeatingDataInstanceFieldResult object
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links).
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: participant_id
+        in: path
+        description: ID of the participant
+        required: true
+        schema:
+          type: string
+      - name: field_id
+        in: path
+        description: ID of the field
+        required: true
+        schema:
+          type: string
+      - name: repeating_data_instance_id
+        in: path
+        description: ID of the repeating data instance
+        required: true
+        schema:
+          type: string
+      - name: validations
+        in: query
+        description: Set to 1 to include the list of validations for each field
+        required: false
+        schema:
+          type: integer
+          default: 0
+      responses:
+        200:
+          description: Single RepeatingDataInstanceFieldResult
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepeatingDataInstanceFieldResult'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdParticipantByParticipantIdDataPointRepeatingDataByRepeatingDataInstanceIdByFieldId
+      x-operation-id-source: derived
+    post:
+      tags:
+      - repeating-data-data-entry
+      summary: Create a field result for a repeating data instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Create a field result for a repeating data instance.
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: participant_id
+        in: path
+        description: The ID of the participant
+        required: true
+        schema:
+          type: string
+      - name: field_id
+        in: path
+        description: ID of the field
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: repeating_data_instance_id
+        in: path
+        description: ID of the repeating data instance
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: Field value successfully created
+        404:
+          description: The given Participant, Field or RepeatingDataInstance does not exist.
+        400:
+          description: Invalid input
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/vnd.swagger+json:
+            schema:
+              type: object
+              properties:
+                field_value:
+                  type: string
+                  description: The value. If empty, it will clear any stored value, including uploaded files.
+                confirmed_changes:
+                  type: boolean
+                  description: Required when changing an existing data point that is verified or signed. Note that you also have to provide "change_reason".
+                change_reason:
+                  type: string
+                  description: Required change reason when changing an existing data point that is verified or signed, or when GCP is enabled and there is already a data point that is being changed.
+                upload_file:
+                  type: string
+                  description: Optional field. If supplied, the "field_value" parameter needs to be omitted. The contents will be uploaded. The upload limit is 2MB
+                  format: binary
+          application/json:
+            schema:
+              type: object
+              properties:
+                field_value:
+                  type: string
+                  description: The value. If empty, it will clear any stored value, including uploaded files.
+                confirmed_changes:
+                  type: boolean
+                  description: Required when changing an existing data point that is verified or signed. Note that you also have to provide "change_reason".
+                change_reason:
+                  type: string
+                  description: Required change reason when changing an existing data point that is verified or signed, or when GCP is enabled and there is already a data point that is being changed.
+                upload_file:
+                  type: string
+                  description: Optional field. If supplied, the "field_value" parameter needs to be omitted. The contents will be uploaded. The upload limit is 2MB
+                  format: binary
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                field_value:
+                  type: string
+                  description: The value. If empty, it will clear any stored value, including uploaded files.
+                confirmed_changes:
+                  type: boolean
+                  description: Required when changing an existing data point that is verified or signed. Note that you also have to provide "change_reason".
+                change_reason:
+                  type: string
+                  description: Required change reason when changing an existing data point that is verified or signed, or when GCP is enabled and there is already a data point that is being changed.
+                upload_file:
+                  type: string
+                  description: Optional field. If supplied, the "field_value" parameter needs to be omitted. The contents will be uploaded. The upload limit is 2MB
+                  format: binary
+      operationId: postStudyByStudyIdParticipantByParticipantIdDataPointRepeatingDataByRepeatingDataInstanceIdByFieldId
+      x-operation-id-source: derived
+components:
+  schemas:
+    DateTime:
+      type: object
+      description: A serialized PHP DateTime object.
+      properties:
+        date:
+          type: string
+          description: Date and time in Y-m-d H:i:s.u format.
+        timezone_type:
+          type: integer
+        timezone:
+          type: string
+    Metadata:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Metadata
+        parent_id:
+          type: string
+          description: Metadata id of this metadata's parent (circular reference)
+        value:
+          type: string
+          description: The value
+        description:
+          type: string
+          description: The description
+        _embedded:
+          type: object
+          description: The metadataType
+          properties:
+            metadata_type:
+              $ref: '#/components/schemas/MetadataType'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    RepeatingData:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Repeating Data (same as repeating_data_id)
+        repeating_data_id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Repeating Data(same as id)
+        name:
+          type: string
+          description: Name of the Repeating Data
+        description:
+          type: string
+          description: Description of the Repeating Data
+        type:
+          type: string
+          description: The repeating data type (event, medication, repeated_measure or other)
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    RepeatingDataInstance:
+      type: object
+      description: 'The repeating data instance is an instantiation of repeating data,
+
+        a real copy of repeating data to which the data points get saved.'
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique id of the repeating data instance.
+        name:
+          type: string
+          description: Name of the repeating data instance.
+        repeating data_name:
+          type: string
+          description: Name of the repeating data.
+        status:
+          type: string
+          description: The status.
+        parent_id:
+          type: string
+          format: UUID
+          description: The parent id.
+        parent_type:
+          type: string
+          description: The parent type.
+        participant_id:
+          type: string
+          description: The participant it belongs to.
+        created_on:
+          type: string
+          format: dateTime
+          description: the date the repeating data instance was created.
+        created_by:
+          type: string
+          format: UUID
+          description: ID of the user who created the repeating data instance.
+        archived:
+          type: boolean
+          description: Is the repeating data instance archived?
+        _embedded:
+          type: object
+          properties:
+            repeating_data:
+              $ref: '#/components/schemas/RepeatingData'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    FieldDependencyNested:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier of the FieldDependency
+        parent_id:
+          type: string
+          format: UUID
+          description: The ID of the parent field (the field being checked)
+        child_id:
+          type: string
+          format: UUID
+          description: The ID of the child field (the field that depends on the parent)
+        value:
+          type: string
+          description: The value that the parent field is compared against
+        operator:
+          type: string
+          description: The dependency operator (e.g., ==, !=, >, <)
+    FieldOptionGroup:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the FieldOptionGroup
+        name:
+          type: string
+          description: The FieldOptionGroup name
+        description:
+          type: string
+          description: The FieldOptionGroup description
+        layout:
+          type: string
+          description: Horizontal or vertical option positioning
+        options:
+          type: array
+          description: The list of FieldOptions that are included in this FieldOptionGroup
+          items:
+            $ref: '#/components/schemas/FieldOption'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    MetadataType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the MetadataType
+        name:
+          type: string
+          description: The name of this MetadataType
+        description:
+          type: string
+          description: The description of this MetadataType
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    LinksCollection:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+        first:
+          type: object
+          properties:
+            href:
+              type: string
+        last:
+          type: object
+          properties:
+            href:
+              type: string
+        next:
+          type: object
+          properties:
+            href:
+              type: string
+    Participant:
+      type: object
+      properties:
+        id:
+          type: string
+        participant_id:
+          type: string
+        participant_status:
+          $ref: '#/components/schemas/ParticipantStatus'
+        site:
+          $ref: '#/components/schemas/Site'
+        ccr_patient_id:
+          type: string
+        randomization_group:
+          type: number
+        randomization_group_name:
+          type: string
+        last_opened_step:
+          type: string
+          format: UUID
+        progress:
+          type: number
+        locked:
+          type: boolean
+        status:
+          type: string
+          description: 'Deprecated: use the locked property instead'
+        deleted:
+          type: boolean
+        archived_reason:
+          type: string
+        created_by:
+          type: string
+        created_on:
+          $ref: '#/components/schemas/DateTime'
+        updated_by:
+          type: string
+        updated_on:
+          $ref: '#/components/schemas/DateTime'
+        mobile_ui_version:
+          type: string
+          description: Existing versions are 1.0, 2.0, 3.0, 4.0, 5.0
+        mobile_my_details_enabled:
+          type: boolean
+          description: Feature toggle for My Details within the Castor Connect Mobile App
+        randomized_on:
+          $ref: '#/components/schemas/DateTime'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    LinksSingle:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+    Site:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    FieldValidation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: integer
+          description: Unique identifier of the FieldValidation
+        type:
+          type: string
+          description: FieldValidation type
+        value:
+          type: string
+          default: null
+          description: The static value to compare against or null for field-to-field validations
+        text:
+          type: string
+          description: The message of the validation
+        field_id:
+          type: string
+          format: UUID
+          description: The field that uses this validation
+        reference_type:
+          type: string
+          enum:
+          - field
+          - value
+          description: The type of validation reference. "field" means comparing against another field, "value" means comparing against a static value
+        referenced_field_id:
+          type: string
+          format: UUID
+          default: null
+          description: The ID of the referenced field for field-to-field validations or null for value validations
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    FieldOption:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Option
+        name:
+          type: string
+          description: The Option name
+        value:
+          type: string
+          description: The Option value
+        groupOrder:
+          type: integer
+          description: The position of the option within the group
+    RepeatingDataInstanceFieldResult:
+      type: object
+      properties:
+        participant_id:
+          type: string
+          description: The participant this field value belongs to.
+        field_variable_name:
+          type: string
+          description: The field variable name.
+        field_id:
+          type: string
+          format: UUID
+          description: The Field id.
+        value:
+          type: string
+          description: The field's value.
+        updated_on:
+          type: string
+          description: 'Will return UNIX epoch (1970-01-01) if updated_on is not available. '
+        repeating_data_instance_id:
+          type: string
+          description: The repeating data id this field value belongs to.
+        _embedded:
+          type: object
+          properties:
+            participant:
+              $ref: '#/components/schemas/Participant'
+            field:
+              $ref: '#/components/schemas/Field'
+            RepeatingDataInstance:
+              $ref: '#/components/schemas/RepeatingDataInstance'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    ParticipantStatus:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: The HTTP return code.
+        title:
+          type: string
+          description: The short error description belonging to the status code
+        detail:
+          type: string
+          description: The detailed explanation of the failure
+        type:
+          type: string
+          description: URL to RFC explaining this statuscode
+        errors:
+          type: object
+          description: Optional list of all errors that occurred during the request
+        validation_messages:
+          type: object
+          description: Optional list of validation failure message
+    Field:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Field (same as field_id)
+        field_id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Field (same as id)
+        field_type:
+          type: string
+          description: The Field type
+        field_label:
+          type: string
+          description: The Field label
+        field_number:
+          type: number
+          description: The Field's position within a step
+        field_variable_name:
+          type: string
+          description: The Field's variable name
+        field_required:
+          type: integer
+          description: If enabled, it makes the field required (cannot be left empty). Returns 1 for required, 0 for not required
+        field_enforce_decimals:
+          type: boolean
+          description: If enabled, it requires decimals digits in data-entry
+          default: null
+        field_hidden:
+          type: integer
+          description: If enabled, it hides the field in data-entry. Returns 1 for hidden, 0 for visible
+        field_info:
+          type: string
+          format: markdown
+          description: Information about the field. It is shown during data-entry
+        field_units:
+          type: string
+          description: The field's measurement unit
+        field_length:
+          type: number
+          description: Length parameter to derive UI input width for this field
+          default: null
+        field_slider_step:
+          type: string
+          description: Slider step (Deprecated. Use field_slider_step_value instead)
+          default: null
+        field_slider_step_value:
+          type: number
+          format: float
+          description: Slider step value
+          default: null
+        field_image:
+          type: string
+          description: URL to the image for the Image field type
+        parent_id:
+          type: string
+          format: UUID
+          description: The field's parent id
+        metadata_points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+        validations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldValidation'
+        option_group:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldOptionGroup'
+          default: null
+        randomize_option_order:
+          type: boolean
+          description: If enabled, the order of options should be randomized (only applies to dropdown, radio, and checkbox fields)
+        domains:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldDomain'
+        dependency_parents:
+          type: array
+          description: List of parent field dependencies (fields that this field depends on)
+          items:
+            $ref: '#/components/schemas/FieldDependencyNested'
+        dependency_children:
+          type: array
+          description: List of child field dependencies (fields that depend on this field)
+          items:
+            $ref: '#/components/schemas/FieldDependencyNested'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    FieldDomain:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Full domain name
+        abbreviation:
+          type: string
+          description: Abbreviated domain name
+        domain_variable_name:
+          type: string
+          description: Domain variable name
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            default: Grants access to everything
+            study_statistics: Grants access to a study's statistics
+            record: Grants access to the data for a single participant; intended for use by study subjects
+          tokenUrl: https://data.castoredc.com/oauth/token

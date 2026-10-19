@@ -49,86 +49,6 @@ created: '2026-07-05'
 modified: '2026-07-05'
 specificationVersion: '0.23'
 apis:
-- aid: castoredc:castoredc-audit-trail-api
-  name: Castor Audit Trail API
-  description: Immutable audit trail of study changes.
-  humanURL: >-
-    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
-  baseURL: https://data.castoredc.com/api
-  tags:
-  - Audit Trail
-  properties:
-  - type: OpenAPI
-    url: openapi/castoredc-audit-trail-api-openapi.yml
-  - type: Documentation
-    url: >-
-      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
-  - type: APIReference
-    url: https://data.castoredc.com/api
-  - type: PostmanCollection
-    url: collections/castoredc.postman_collection.json
-  - type: OpenCollection
-    url: collections/castoredc.opencollection.json
-- aid: castoredc:castoredc-data-export-api
-  name: Castor Data Export API
-  description: Bulk export of study data, structure, and option groups.
-  humanURL: >-
-    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
-  baseURL: https://data.castoredc.com/api
-  tags:
-  - Data Export
-  properties:
-  - type: OpenAPI
-    url: openapi/castoredc-data-export-api-openapi.yml
-  - type: Documentation
-    url: >-
-      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
-  - type: APIReference
-    url: https://data.castoredc.com/api
-  - type: PostmanCollection
-    url: collections/castoredc.postman_collection.json
-  - type: OpenCollection
-    url: collections/castoredc.opencollection.json
-- aid: castoredc:castoredc-fields-api
-  name: Castor Fields API
-  description: Study fields and their metadata (dependencies, option groups, validations).
-  humanURL: >-
-    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
-  baseURL: https://data.castoredc.com/api
-  tags:
-  - Fields
-  properties:
-  - type: OpenAPI
-    url: openapi/castoredc-fields-api-openapi.yml
-  - type: Documentation
-    url: >-
-      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
-  - type: APIReference
-    url: https://data.castoredc.com/api
-  - type: PostmanCollection
-    url: collections/castoredc.postman_collection.json
-  - type: OpenCollection
-    url: collections/castoredc.opencollection.json
-- aid: castoredc:castoredc-institutes-api
-  name: Castor Institutes API
-  description: Institutes (sites / centers) participating in a study.
-  humanURL: >-
-    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
-  baseURL: https://data.castoredc.com/api
-  tags:
-  - Institutes
-  properties:
-  - type: OpenAPI
-    url: openapi/castoredc-institutes-api-openapi.yml
-  - type: Documentation
-    url: >-
-      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
-  - type: APIReference
-    url: https://data.castoredc.com/api
-  - type: PostmanCollection
-    url: collections/castoredc.postman_collection.json
-  - type: OpenCollection
-    url: collections/castoredc.opencollection.json
 - aid: castoredc:castoredc-metadata-api
   name: Castor Metadata API
   description: Reference metadata such as countries.
@@ -149,17 +69,17 @@ apis:
     url: collections/castoredc.postman_collection.json
   - type: OpenCollection
     url: collections/castoredc.opencollection.json
-- aid: castoredc:castoredc-participants-api
-  name: Castor Participants API
-  description: Participants (records / subjects) enrolled in a study.
+- aid: castoredc:castoredc-beta-api
+  name: Castor Beta API
+  description: The beta API from Castor — 6 operation(s) for beta.
   humanURL: >-
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
-  - Participants
+  - beta
   properties:
   - type: OpenAPI
-    url: openapi/castoredc-participants-api-openapi.yml
+    url: openapi/castoredc-beta-api-openapi.yml
   - type: Documentation
     url: >-
       https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
@@ -169,17 +89,17 @@ apis:
     url: collections/castoredc.postman_collection.json
   - type: OpenCollection
     url: collections/castoredc.opencollection.json
-- aid: castoredc:castoredc-reports-api
-  name: Castor Reports API
-  description: Reports / repeating data and their instances.
+- aid: castoredc:castoredc-castor-internal-api
+  name: Castor Castor Internal API
+  description: The castor-internal API from Castor — 1 operation(s) for castor-internal.
   humanURL: >-
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
-  - Reports
+  - castor-internal
   properties:
   - type: OpenAPI
-    url: openapi/castoredc-reports-api-openapi.yml
+    url: openapi/castoredc-castor-internal-api-openapi.yml
   - type: Documentation
     url: >-
       https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
@@ -189,17 +109,17 @@ apis:
     url: collections/castoredc.postman_collection.json
   - type: OpenCollection
     url: collections/castoredc.opencollection.json
-- aid: castoredc:castoredc-studies-api
-  name: Castor Studies API
-  description: Studies accessible to the API client.
+- aid: castoredc:castoredc-country-api
+  name: Castor Country API
+  description: The country API from Castor — 2 operation(s) for country.
   humanURL: >-
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
-  - Studies
+  - country
   properties:
   - type: OpenAPI
-    url: openapi/castoredc-studies-api-openapi.yml
+    url: openapi/castoredc-country-api-openapi.yml
   - type: Documentation
     url: >-
       https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
@@ -209,17 +129,17 @@ apis:
     url: collections/castoredc.postman_collection.json
   - type: OpenCollection
     url: collections/castoredc.opencollection.json
-- aid: castoredc:castoredc-study-data-points-api
-  name: Castor Study Data Points API
-  description: Collected values for study forms.
+- aid: castoredc:castoredc-data-point-collection-api
+  name: Castor Data Point Collection API
+  description: The data-point-collection API from Castor — 13 operation(s) for data-point-collection.
   humanURL: >-
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
-  - Study Data Points
+  - data-point-collection
   properties:
   - type: OpenAPI
-    url: openapi/castoredc-study-data-points-api-openapi.yml
+    url: openapi/castoredc-data-point-collection-api-openapi.yml
   - type: Documentation
     url: >-
       https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
@@ -229,17 +149,17 @@ apis:
     url: collections/castoredc.postman_collection.json
   - type: OpenCollection
     url: collections/castoredc.opencollection.json
-- aid: castoredc:castoredc-surveys-api
-  name: Castor Surveys API
-  description: Surveys, survey packages, and ePRO.
+- aid: castoredc:castoredc-data-points-api
+  name: Castor Data Points API
+  description: The data-points API from Castor — 13 operation(s) for data-points.
   humanURL: >-
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
-  - Surveys
+  - data-points
   properties:
   - type: OpenAPI
-    url: openapi/castoredc-surveys-api-openapi.yml
+    url: openapi/castoredc-data-points-api-openapi.yml
   - type: Documentation
     url: >-
       https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
@@ -249,19 +169,780 @@ apis:
     url: collections/castoredc.postman_collection.json
   - type: OpenCollection
     url: collections/castoredc.opencollection.json
-- aid: castoredc:castoredc-users-api
-  name: Castor Users API
-  description: Users and study membership.
+- aid: castoredc:castoredc-export-api
+  name: Castor Export API
+  description: The export API from Castor — 5 operation(s) for export.
   humanURL: >-
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
-  - User
-  tags_raw:
-  - Users
+  - export
   properties:
   - type: OpenAPI
-    url: openapi/castoredc-users-api-openapi.yml
+    url: openapi/castoredc-export-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-field-api
+  name: Castor Field API
+  description: The field API from Castor — 2 operation(s) for field.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - field
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-field-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-field-dependency-api
+  name: Castor Field Dependency API
+  description: The field-dependency API from Castor — 2 operation(s) for field-dependency.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - field-dependency
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-field-dependency-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-field-optiongroup-api
+  name: Castor Field Optiongroup API
+  description: The field-optiongroup API from Castor — 3 operation(s) for field-optiongroup.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - field-optiongroup
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-field-optiongroup-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-field-validation-api
+  name: Castor Field Validation API
+  description: The field-validation API from Castor — 2 operation(s) for field-validation.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - field-validation
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-field-validation-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-form-api
+  name: Castor Form API
+  description: The form API from Castor — 2 operation(s) for form.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - form
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-form-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-institute-api
+  name: Castor Institute API
+  description: The institute API from Castor — 2 operation(s) for institute.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - institute
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-institute-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-metadatatype-api
+  name: Castor Metadatatype API
+  description: The metadatatype API from Castor — 2 operation(s) for metadatatype.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - metadatatype
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-metadatatype-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-participant-api
+  name: Castor Participant API
+  description: The participant API from Castor — 2 operation(s) for participant.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - participant
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-participant-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-participant-device-token-api
+  name: Castor Participant Device Token API
+  description: >-
+    The participant-device-token API from Castor — 1 operation(s) for participant-device-token.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - participant-device-token
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-participant-device-token-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-participant-econsent-api
+  name: Castor Participant Econsent API
+  description: The participant-econsent API from Castor — 1 operation(s) for participant-econsent.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - participant-econsent
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-participant-econsent-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-participant-progress-api
+  name: Castor Participant Progress API
+  description: The participant-progress API from Castor — 3 operation(s) for participant-progress.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - participant-progress
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-participant-progress-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-phase-api
+  name: Castor Phase API
+  description: The phase API from Castor — 2 operation(s) for phase.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - phase
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-phase-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-query-api
+  name: Castor Query API
+  description: The query API from Castor — 2 operation(s) for query.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - query
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-query-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-randomization-api
+  name: Castor Randomization API
+  description: The randomization API from Castor — 2 operation(s) for randomization.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - randomization
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-randomization-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-record-api
+  name: Castor Record API
+  description: The record API from Castor — 2 operation(s) for record.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - record
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-record-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-record-progress-api
+  name: Castor Record Progress API
+  description: The record-progress API from Castor — 1 operation(s) for record-progress.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - record-progress
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-record-progress-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-repeating-data-api
+  name: Castor Repeating Data API
+  description: The repeating-data API from Castor — 2 operation(s) for repeating-data.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - repeating-data
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-repeating-data-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-repeating-data-data-entry-api
+  name: Castor Repeating Data Data Entry API
+  description: >-
+    The repeating-data-data-entry API from Castor — 2 operation(s) for repeating-data-data-entry.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - repeating-data-data-entry
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-repeating-data-data-entry-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-repeating-data-form-api
+  name: Castor Repeating Data Form API
+  description: The repeating-data-form API from Castor — 2 operation(s) for repeating-data-form.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - repeating-data-form
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-repeating-data-form-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-repeating-data-instance-api
+  name: Castor Repeating Data Instance API
+  description: >-
+    The repeating-data-instance API from Castor — 5 operation(s) for repeating-data-instance.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - repeating-data-instance
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-repeating-data-instance-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-report-api
+  name: Castor Report API
+  description: The report API from Castor — 2 operation(s) for report.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - report
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-report-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-report-data-entry-api
+  name: Castor Report Data Entry API
+  description: The report-data-entry API from Castor — 2 operation(s) for report-data-entry.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - report-data-entry
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-report-data-entry-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-report-instance-api
+  name: Castor Report Instance API
+  description: The report-instance API from Castor — 5 operation(s) for report-instance.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - report-instance
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-report-instance-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-report-step-api
+  name: Castor Report Step API
+  description: The report-step API from Castor — 2 operation(s) for report-step.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - report-step
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-report-step-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-role-api
+  name: Castor Role API
+  description: The role API from Castor — 2 operation(s) for role.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - role
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-role-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-site-api
+  name: Castor Site API
+  description: The site API from Castor — 2 operation(s) for site.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - site
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-site-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-step-api
+  name: Castor Step API
+  description: The step API from Castor — 2 operation(s) for step.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - step
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-step-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-study-api
+  name: Castor Study API
+  description: The study API from Castor — 3 operation(s) for study.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - study
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-study-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-study-data-entry-api
+  name: Castor Study Data Entry API
+  description: The study-data-entry API from Castor — 4 operation(s) for study-data-entry.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - study-data-entry
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-study-data-entry-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-study-statistics-api
+  name: Castor Study Statistics API
+  description: The study-statistics API from Castor — 1 operation(s) for study-statistics.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - study-statistics
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-study-statistics-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-study-user-api
+  name: Castor Study User API
+  description: The study-user API from Castor — 2 operation(s) for study-user.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - study-user
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-study-user-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-survey-api
+  name: Castor Survey API
+  description: The survey API from Castor — 14 operation(s) for survey.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - survey
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-survey-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-survey-data-entry-api
+  name: Castor Survey Data Entry API
+  description: The survey-data-entry API from Castor — 4 operation(s) for survey-data-entry.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - survey-data-entry
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-survey-data-entry-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-survey-form-api
+  name: Castor Survey Form API
+  description: The survey-form API from Castor — 2 operation(s) for survey-form.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - survey-form
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-survey-form-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-survey-step-api
+  name: Castor Survey Step API
+  description: The survey-step API from Castor — 2 operation(s) for survey-step.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - survey-step
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-survey-step-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-user-api
+  name: Castor User API
+  description: The user API from Castor — 2 operation(s) for user.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - user
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-user-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-verification-api
+  name: Castor Verification API
+  description: The verification API from Castor — 1 operation(s) for verification.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - verification
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-verification-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  - type: APIReference
+    url: https://data.castoredc.com/api
+  - type: PostmanCollection
+    url: collections/castoredc.postman_collection.json
+  - type: OpenCollection
+    url: collections/castoredc.opencollection.json
+- aid: castoredc:castoredc-visit-api
+  name: Castor Visit API
+  description: The visit API from Castor — 2 operation(s) for visit.
+  humanURL: >-
+    https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
+  baseURL: https://data.castoredc.com/api
+  tags:
+  - visit
+  properties:
+  - type: OpenAPI
+    url: openapi/castoredc-visit-api-openapi.yml
   - type: Documentation
     url: >-
       https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API

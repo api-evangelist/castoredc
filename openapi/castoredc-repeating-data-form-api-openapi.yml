@@ -1,0 +1,389 @@
+openapi: 3.2.0
+info:
+  version: 2026.1.6.1
+  title: Castor EDC API Documentation Repeating Data Form API
+  description: '### Overview
+
+    This document provides the specifications of the Castor EDC API, describing the currently available
+
+    API endpoints and methods. We aim to provide a fully functional RESTful API to communicate with
+
+    Castor EDC and these are endpoints currently available.
+
+
+    The formal OpenAPI 2 specification by which this page is rendered is also available in the following formats:
+
+    * YAML
+
+    * JSON
+
+    * JSON (pretty print)
+
+
+    ### Authentication & Authorization with OAuth 2
+
+    Authentication and authorization are arranged through OAuth2. We currently provide full support for the Client
+
+    Credentials flow. The Authorization Code flow is supported, but we ask you to contact us if you want to use this flow.
+
+
+    To use the Client Credentials flow go to your
+
+    Castor EDC profile and generate
+
+    a Client ID and Client Secret. Use the Client ID and Client Secret to retrieve an access token by making a request to
+
+    the ''/oauth/token'' endpoint with your client_id and client_secret as parameters and grant_type=client_credentials.
+
+
+    PHP Example:
+
+    ```php
+
+    include __DIR__.''/vendor/autoload.php'';
+
+    use Guzzle\Http\Client;
+
+
+    // Create the HTTP Client.
+
+    $httpClient = new Client(
+
+    ''https://data.castoredc.com'',
+
+    [
+
+    ''request.options'' => [
+
+    ''exceptions'' => false,
+
+    ]
+
+    ]
+
+    );
+
+
+    // Build the request
+
+    $request = $httpClient->post(
+
+    ''/oauth/token'',
+
+    null,
+
+    [
+
+    ''client_id'' => ''YourCastorClientId'',
+
+    ''client_secret'' => ''YourCastorClientSecret'',
+
+    ''grant_type'' => ''client_credentials'',
+
+    ]
+
+    );
+
+
+    // Send the request
+
+    $response = $request->send();
+
+    $responseBody = $response->getBody(true);
+
+    $responseArr = json_decode($responseBody, true);
+
+    $accessToken = $responseArr[''access_token''];
+
+    ```
+
+
+    In your subsequent requests you can use the `$accessToken` as a Bearer token in the Authorization header, i.e:
+
+    ```php
+
+    $request = $httpClient->get(''/api/user'');
+
+    $request->addHeader(''Authorization'', ''Bearer ''. $accessToken);
+
+    $response = $request->send();
+
+    echo $response->getBody();
+
+    ```
+
+
+    ### OAuth2 Scopes
+
+
+    There are 3 scopes that endpoints may support.
+
+    * **default**: allows access to all endpoints
+
+    * **study_statistics**: allows access to study statistics
+
+    * **record**: allows access to data for a single participant
+
+
+    Due to a bug in the OpenAPI UI, all three scopes are listed for all endpoints.
+
+
+    If the endpoint supports something other than the default scope, the summary will have a 🔭 emoji and the scope will be
+
+    listed in the description as well as under the `security:` key in the specification.
+
+
+    ### Rate Limits
+
+    Unless specified in the resource, endpoints are rate-limited to 600 requests in 10 minutes.
+
+
+    ### Legacy (Basic HTTP Authentication)
+
+    **Please note: Basic HTTP Authentication has been removed on 2019 August 13**
+
+
+    ### Changelog
+
+    API changes can be viewed here'
+  contact:
+    name: support@castoredc.com
+servers:
+- url: https://data.castoredc.com/api/
+security:
+- OAuth2ClientCredentials:
+  - default
+  - study_statistics
+  - record
+tags:
+- name: repeating-data-form
+paths:
+  /study/{study_id}/repeating-data/{repeating_data_id}/repeating-data-form:
+    get:
+      tags:
+      - repeating-data-form
+      summary: Retrieve list of available RepeatingDataForms of one specific Repeating Data
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Gets `RepeatingDataForm` objects, which are Forms that are collected only once per Repeating Data.
+
+        RepeatingDataForms are placed in a Repeating Data and contain Fields.
+
+        Always requires a study_id to be given. Can be paged.
+
+        Returns HalJson responses (with _links for paging and to single objects).'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: repeating_data_id
+        in: path
+        description: The ID of the repeating data for which this call should be made
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      responses:
+        200:
+          description: Retrieve list of available RepeatingDataForms of one specific Repeating Data
+          content:
+            application/hal+json:
+              schema:
+                title: Fields HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      repeating_data_forms:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/RepeatingDataForm'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdRepeatingDataByRepeatingDataIdRepeatingDataForm
+      x-operation-id-source: derived
+  /study/{study_id}/repeating-data/{repeating_data_id}/repeating-data-form/{repeating_data_form_id}:
+    get:
+      tags:
+      - repeating-data-form
+      summary: Retrieve a single RepeatingDataForm
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links).
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: repeating_data_id
+        in: path
+        description: The ID of the repeating data for which this call should be made
+        required: true
+        schema:
+          type: string
+      - name: repeating_data_form_id
+        in: path
+        description: ID of the RepeatingDataForm to fetch
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Single RepeatingDataForm
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RepeatingDataForm'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdRepeatingDataByRepeatingDataIdRepeatingDataFormByRepeatingDataFormId
+      x-operation-id-source: derived
+components:
+  schemas:
+    RepeatingData:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Repeating Data (same as repeating_data_id)
+        repeating_data_id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Repeating Data(same as id)
+        name:
+          type: string
+          description: Name of the Repeating Data
+        description:
+          type: string
+          description: Description of the Repeating Data
+        type:
+          type: string
+          description: The repeating data type (event, medication, repeated_measure or other)
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    RepeatingDataForm:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the RepeatingDataForm (same as repeating_data_form_id)
+        repeating_data_form_id:
+          type: string
+          format: UUID
+          description: Unique identifier of the RepeatingDataForm (same as id)
+        repeating_data_form_name:
+          type: string
+          description: RepeatingDataForm name
+        repeating_data_form_description:
+          type: string
+          description: RepeatingDataForm description
+        repeating_data_form_number:
+          type: integer
+          description: The RepeatingDataForms's order within the study
+        _embedded:
+          type: object
+          description: The Repeating Data this RepeatingDataForm belongs to
+          properties:
+            repeating_data:
+              $ref: '#/components/schemas/RepeatingData'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    LinksCollection:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+        first:
+          type: object
+          properties:
+            href:
+              type: string
+        last:
+          type: object
+          properties:
+            href:
+              type: string
+        next:
+          type: object
+          properties:
+            href:
+              type: string
+    LinksSingle:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: The HTTP return code.
+        title:
+          type: string
+          description: The short error description belonging to the status code
+        detail:
+          type: string
+          description: The detailed explanation of the failure
+        type:
+          type: string
+          description: URL to RFC explaining this statuscode
+        errors:
+          type: object
+          description: Optional list of all errors that occurred during the request
+        validation_messages:
+          type: object
+          description: Optional list of validation failure message
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            default: Grants access to everything
+            study_statistics: Grants access to a study's statistics
+            record: Grants access to the data for a single participant; intended for use by study subjects
+          tokenUrl: https://data.castoredc.com/oauth/token

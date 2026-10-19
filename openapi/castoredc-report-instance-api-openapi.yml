@@ -1,0 +1,746 @@
+openapi: 3.2.0
+info:
+  version: 2026.1.6.1
+  title: Castor EDC API Documentation Report Instance API
+  description: '### Overview
+
+    This document provides the specifications of the Castor EDC API, describing the currently available
+
+    API endpoints and methods. We aim to provide a fully functional RESTful API to communicate with
+
+    Castor EDC and these are endpoints currently available.
+
+
+    The formal OpenAPI 2 specification by which this page is rendered is also available in the following formats:
+
+    * YAML
+
+    * JSON
+
+    * JSON (pretty print)
+
+
+    ### Authentication & Authorization with OAuth 2
+
+    Authentication and authorization are arranged through OAuth2. We currently provide full support for the Client
+
+    Credentials flow. The Authorization Code flow is supported, but we ask you to contact us if you want to use this flow.
+
+
+    To use the Client Credentials flow go to your
+
+    Castor EDC profile and generate
+
+    a Client ID and Client Secret. Use the Client ID and Client Secret to retrieve an access token by making a request to
+
+    the ''/oauth/token'' endpoint with your client_id and client_secret as parameters and grant_type=client_credentials.
+
+
+    PHP Example:
+
+    ```php
+
+    include __DIR__.''/vendor/autoload.php'';
+
+    use Guzzle\Http\Client;
+
+
+    // Create the HTTP Client.
+
+    $httpClient = new Client(
+
+    ''https://data.castoredc.com'',
+
+    [
+
+    ''request.options'' => [
+
+    ''exceptions'' => false,
+
+    ]
+
+    ]
+
+    );
+
+
+    // Build the request
+
+    $request = $httpClient->post(
+
+    ''/oauth/token'',
+
+    null,
+
+    [
+
+    ''client_id'' => ''YourCastorClientId'',
+
+    ''client_secret'' => ''YourCastorClientSecret'',
+
+    ''grant_type'' => ''client_credentials'',
+
+    ]
+
+    );
+
+
+    // Send the request
+
+    $response = $request->send();
+
+    $responseBody = $response->getBody(true);
+
+    $responseArr = json_decode($responseBody, true);
+
+    $accessToken = $responseArr[''access_token''];
+
+    ```
+
+
+    In your subsequent requests you can use the `$accessToken` as a Bearer token in the Authorization header, i.e:
+
+    ```php
+
+    $request = $httpClient->get(''/api/user'');
+
+    $request->addHeader(''Authorization'', ''Bearer ''. $accessToken);
+
+    $response = $request->send();
+
+    echo $response->getBody();
+
+    ```
+
+
+    ### OAuth2 Scopes
+
+
+    There are 3 scopes that endpoints may support.
+
+    * **default**: allows access to all endpoints
+
+    * **study_statistics**: allows access to study statistics
+
+    * **record**: allows access to data for a single participant
+
+
+    Due to a bug in the OpenAPI UI, all three scopes are listed for all endpoints.
+
+
+    If the endpoint supports something other than the default scope, the summary will have a 🔭 emoji and the scope will be
+
+    listed in the description as well as under the `security:` key in the specification.
+
+
+    ### Rate Limits
+
+    Unless specified in the resource, endpoints are rate-limited to 600 requests in 10 minutes.
+
+
+    ### Legacy (Basic HTTP Authentication)
+
+    **Please note: Basic HTTP Authentication has been removed on 2019 August 13**
+
+
+    ### Changelog
+
+    API changes can be viewed here'
+  contact:
+    name: support@castoredc.com
+servers:
+- url: https://data.castoredc.com/api/
+security:
+- OAuth2ClientCredentials:
+  - default
+  - study_statistics
+  - record
+tags:
+- name: report-instance
+paths:
+  /study/{study_id}/record/{record_id}/report-instance:
+    get:
+      deprecated: true
+      tags:
+      - report-instance
+      summary: Retrieve list of available report instances
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Gets `ReportPackageInstance` objects, which are ''instantiations'' of Reports.
+
+        The Report Instance (RI) is the entity to which the data gets saved.
+
+        Always requires a study_id to be given. Can be paged.
+
+        Returns HalJson responses (with _links for paging and to single objects).
+
+        (Deprecated, use "repeating-data-instance" instead).'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: record_id
+        in: path
+        description: The ID of the record to retrieve report instances for
+        required: true
+        schema:
+          type: string
+      - name: archived
+        in: query
+        description: Extract only archived reports or only unarchived reports. Accepted values are 0,1. Default value is 0.
+        required: false
+        schema:
+          type: integer
+      responses:
+        200:
+          description: List of all report instances of the Study
+          content:
+            application/hal+json:
+              schema:
+                title: Report Instance HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      reportInstances:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ReportInstance'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdRecordByRecordIdReportInstance
+      x-operation-id-source: derived
+    post:
+      deprecated: true
+      tags:
+      - report-instance
+      summary: Creates a report instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Creates an instance of a Report for a specific Record. Report instances are the objects on which data points are
+
+        stored and are required to be created before that happens. They can have a custom name that has to be unique within
+
+        a given record.
+
+
+        Report instances can have a parent defined to create a tree-like structure of parent/child information elements. Parents
+
+        can be either a phase or another report instance and have to be defined with parent_type and parent_id.
+
+
+        To store data on repeated measures reports, the parent_type and parent_id should always point to the phase or
+
+        report instance on which the repeated measure field is present.
+
+        (Deprecated, use "repeating-data-instance" instead)'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study to create a report instance for
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record to create a report instance for
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: Report instance successfully created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ReportInstance'
+        400:
+          description: Could not create the report instance due to a domain error. See the errors/detail property for additional information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: No permissions to create the report instance or the report is blinded. See the errors/detail property for additional information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Record or report not found. See the errors/detail property for additional information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newReportInstance'
+        description: Report instance details to create the object.
+        required: true
+      operationId: postStudyByStudyIdRecordByRecordIdReportInstance
+      x-operation-id-source: derived
+  /study/{study_id}/record/{record_id}/report-instance/{report_instance_id}:
+    get:
+      deprecated: true
+      tags:
+      - report-instance
+      summary: Retrieve a single report instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links). (Deprecated, use "repeating-data-instance" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: report_instance_id
+        in: path
+        description: Report instance ID to fetch
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Single ReportInstance
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ReportInstance'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdRecordByRecordIdReportInstanceByReportInstanceId
+      x-operation-id-source: derived
+  /study/{study_id}/report-instance:
+    get:
+      deprecated: true
+      tags:
+      - report-instance
+      summary: Retrieve list of available report instances
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Gets `ReportPackageInstance` objects, which are ''instantiations'' of Reports.
+
+        The Report Instance (RI) is the entity to which the data gets saved.
+
+        Always requires a study_id to be given. Can be paged.
+
+        Returns HalJson responses (with _links for paging and to single objects).
+
+        (Deprecated, use "repeating-data-instance" instead).'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: archived
+        in: query
+        description: Extract only archived reports or only unarchived reports. Accepted values are 0,1. Default value is 0.
+        required: false
+        schema:
+          type: integer
+      responses:
+        200:
+          description: List of all report instances of the Study
+          content:
+            application/hal+json:
+              schema:
+                title: Report Instance HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      reportInstances:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ReportInstance'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdReportInstance
+      x-operation-id-source: derived
+  /study/{study_id}/report-instance/{report_instance_id}:
+    get:
+      deprecated: true
+      tags:
+      - report-instance
+      summary: Retrieve a single report instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links). (Deprecated, use "repeating-data-instance" instead)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: report_instance_id
+        in: path
+        description: Report instance ID to fetch
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Single ReportInstance
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ReportInstance'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdReportInstanceByReportInstanceId
+      x-operation-id-source: derived
+  /study/{study_id}/record/{record_id}/report-instance-collection:
+    post:
+      deprecated: true
+      tags:
+      - report-instance
+      summary: Creates a collection of report instances
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Creates a collection of report instances for a specific record. Report instances are the objects on which data points are
+
+        stored and are required to be created before that happens. They can have a custom name that has to be unique within
+
+        a given record.
+
+
+        Report instances can have a parent defined to create a tree-like structure of parent/child information elements. Parents
+
+        can be either a phase or another report instance and have to be defined with parent_type and parent_id.
+
+
+        To store data on repeated measures reports, the parent_type and parent_id should always point to the phase or
+
+        report instance on which the repeated measure field is present.
+
+        (Deprecated, use "repeating-data-instance" instead)'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study to create the report instances for
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record to create the report instances for
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: Report instances successfully created.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/ReportInstanceCollection'
+        422:
+          description: Duplicate name for report instance
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newReportInstanceCollection'
+        description: Report instance collection data with the details to create them.
+        required: true
+      operationId: postStudyByStudyIdRecordByRecordIdReportInstanceCollection
+      x-operation-id-source: derived
+components:
+  schemas:
+    Report:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Report (same as report_id)
+        report_id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Report(same as id)
+        name:
+          type: string
+          description: Name of the Report
+        description:
+          type: string
+          description: Description of the Report
+        type:
+          type: string
+          description: The report type (event, medication, repeated_measure or other)
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    newReportInstanceCollection:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/newReportInstance'
+      required:
+      - data
+    newReportInstance:
+      type: object
+      properties:
+        report_id:
+          type: string
+          format: uuid
+          description: The identifier of the report that should be instantiated in this report instance
+        report_name_custom:
+          type: string
+          description: The name of the report instance. Must be unique within the given record.
+        parent_id:
+          type: string
+          format: uuid
+          description: Identifier of the phase or report instance to attach the new report instance to.
+      required:
+      - report_id
+      - report_name_custom
+    LinksCollection:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+        first:
+          type: object
+          properties:
+            href:
+              type: string
+        last:
+          type: object
+          properties:
+            href:
+              type: string
+        next:
+          type: object
+          properties:
+            href:
+              type: string
+    LinksSingle:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: The HTTP return code.
+        title:
+          type: string
+          description: The short error description belonging to the status code
+        detail:
+          type: string
+          description: The detailed explanation of the failure
+        type:
+          type: string
+          description: URL to RFC explaining this statuscode
+        errors:
+          type: object
+          description: Optional list of all errors that occurred during the request
+        validation_messages:
+          type: object
+          description: Optional list of validation failure message
+    ReportInstanceCreationFailed:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
+        record_id:
+          type: string
+        report_id:
+          type: string
+          format: UUID
+        report_name_custom:
+          type: string
+    ReportInstanceCollection:
+      type: object
+      description: 'Allows the creation of multiple report instances at once.
+
+        Always requires a study_id to be given.'
+      properties:
+        success:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportInstance'
+        failed:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportInstanceCreationFailed'
+        total_processed:
+          type: number
+        total_success:
+          type: number
+        total_failed:
+          type: number
+    ReportInstance:
+      type: object
+      description: 'The report instance is an instantiation of a report,
+
+        a real copy of a report to which the datapoints get saved.'
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique id of the report instance.
+        name:
+          type: string
+          description: Name of the report instance.
+        report_name:
+          type: string
+          description: Name of the report.
+        status:
+          type: string
+          description: The status.
+        parent_id:
+          type: string
+          format: UUID
+          description: The parent id.
+        parent_type:
+          type: string
+          description: The parent type.
+        record_id:
+          type: string
+          description: The record it belongs to.
+        created_on:
+          type: string
+          format: dateTime
+          description: the date the report instance was created.
+        created_by:
+          type: string
+          format: UUID
+          description: ID of the user who created the report instance.
+        archived:
+          type: boolean
+          description: Is the report instance archived?
+        _embedded:
+          type: object
+          properties:
+            report:
+              $ref: '#/components/schemas/Report'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            default: Grants access to everything
+            study_statistics: Grants access to a study's statistics
+            record: Grants access to the data for a single participant; intended for use by study subjects
+          tokenUrl: https://data.castoredc.com/oauth/token

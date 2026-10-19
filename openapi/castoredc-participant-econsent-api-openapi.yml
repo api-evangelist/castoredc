@@ -1,0 +1,347 @@
+openapi: 3.2.0
+info:
+  version: 2026.1.6.1
+  title: Castor EDC API Documentation Participant Econsent API
+  description: '### Overview
+
+    This document provides the specifications of the Castor EDC API, describing the currently available
+
+    API endpoints and methods. We aim to provide a fully functional RESTful API to communicate with
+
+    Castor EDC and these are endpoints currently available.
+
+
+    The formal OpenAPI 2 specification by which this page is rendered is also available in the following formats:
+
+    * YAML
+
+    * JSON
+
+    * JSON (pretty print)
+
+
+    ### Authentication & Authorization with OAuth 2
+
+    Authentication and authorization are arranged through OAuth2. We currently provide full support for the Client
+
+    Credentials flow. The Authorization Code flow is supported, but we ask you to contact us if you want to use this flow.
+
+
+    To use the Client Credentials flow go to your
+
+    Castor EDC profile and generate
+
+    a Client ID and Client Secret. Use the Client ID and Client Secret to retrieve an access token by making a request to
+
+    the ''/oauth/token'' endpoint with your client_id and client_secret as parameters and grant_type=client_credentials.
+
+
+    PHP Example:
+
+    ```php
+
+    include __DIR__.''/vendor/autoload.php'';
+
+    use Guzzle\Http\Client;
+
+
+    // Create the HTTP Client.
+
+    $httpClient = new Client(
+
+    ''https://data.castoredc.com'',
+
+    [
+
+    ''request.options'' => [
+
+    ''exceptions'' => false,
+
+    ]
+
+    ]
+
+    );
+
+
+    // Build the request
+
+    $request = $httpClient->post(
+
+    ''/oauth/token'',
+
+    null,
+
+    [
+
+    ''client_id'' => ''YourCastorClientId'',
+
+    ''client_secret'' => ''YourCastorClientSecret'',
+
+    ''grant_type'' => ''client_credentials'',
+
+    ]
+
+    );
+
+
+    // Send the request
+
+    $response = $request->send();
+
+    $responseBody = $response->getBody(true);
+
+    $responseArr = json_decode($responseBody, true);
+
+    $accessToken = $responseArr[''access_token''];
+
+    ```
+
+
+    In your subsequent requests you can use the `$accessToken` as a Bearer token in the Authorization header, i.e:
+
+    ```php
+
+    $request = $httpClient->get(''/api/user'');
+
+    $request->addHeader(''Authorization'', ''Bearer ''. $accessToken);
+
+    $response = $request->send();
+
+    echo $response->getBody();
+
+    ```
+
+
+    ### OAuth2 Scopes
+
+
+    There are 3 scopes that endpoints may support.
+
+    * **default**: allows access to all endpoints
+
+    * **study_statistics**: allows access to study statistics
+
+    * **record**: allows access to data for a single participant
+
+
+    Due to a bug in the OpenAPI UI, all three scopes are listed for all endpoints.
+
+
+    If the endpoint supports something other than the default scope, the summary will have a 🔭 emoji and the scope will be
+
+    listed in the description as well as under the `security:` key in the specification.
+
+
+    ### Rate Limits
+
+    Unless specified in the resource, endpoints are rate-limited to 600 requests in 10 minutes.
+
+
+    ### Legacy (Basic HTTP Authentication)
+
+    **Please note: Basic HTTP Authentication has been removed on 2019 August 13**
+
+
+    ### Changelog
+
+    API changes can be viewed here'
+  contact:
+    name: support@castoredc.com
+servers:
+- url: https://data.castoredc.com/api/
+security:
+- OAuth2ClientCredentials:
+  - default
+  - study_statistics
+  - record
+tags:
+- name: participant-econsent
+paths:
+  /study/{study_id}/participant/{participant_id}/econsent:
+    patch:
+      tags:
+      - participant-econsent
+      summary: Updates link between eConsent and Participant
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Updates link between eConsent and Participant.
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: participant_id
+        in: path
+        description: The ID of the participant for which this call should be made
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: eConsent Participant link successfully updated.
+        405:
+          description: Invalid input
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EConsentLink'
+        description: Participant eConsent data.
+        required: true
+      operationId: patchStudyByStudyIdParticipantByParticipantIdEconsent
+      x-operation-id-source: derived
+    post:
+      tags:
+      - participant-econsent
+      summary: Creates `EConsentLink` objects containing eConsent information tied to CDMS…
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Creates `EConsentLink` objects containing eConsent information tied to CDMS Participant.
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: participant_id
+        in: path
+        description: The ID of the participant for which this call should be made
+        required: true
+        schema:
+          type: string
+      responses:
+        201:
+          description: eConsent Participant link successfully created.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EConsentLink'
+        405:
+          description: Invalid input
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EConsentLink'
+        description: Participant eConsent data.
+        required: true
+      operationId: postStudyByStudyIdParticipantByParticipantIdEconsent
+      x-operation-id-source: derived
+    get:
+      tags:
+      - participant-econsent
+      summary: Retrieve eConsent (link) information about CDMS Participant
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Gets `EConsentLink` objects containing eConsent information tied to CDMS Participant.
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: participant_id
+        in: path
+        description: The ID of the participant for which this call should be made
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Information about Participants eConsentLink
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/EConsentLink'
+        404:
+          description: Requested EConsentLink does not exist.
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdParticipantByParticipantIdEconsent
+      x-operation-id-source: derived
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: The HTTP return code.
+        title:
+          type: string
+          description: The short error description belonging to the status code
+        detail:
+          type: string
+          description: The detailed explanation of the failure
+        type:
+          type: string
+          description: URL to RFC explaining this statuscode
+        errors:
+          type: object
+          description: Optional list of all errors that occurred during the request
+        validation_messages:
+          type: object
+          description: Optional list of validation failure message
+    EConsentLink:
+      type: object
+      properties:
+        econsent_subject_id:
+          type: string
+          description: eConsent Subject identifier (UUID)
+        econsent_study_id:
+          type: string
+          description: eConsent Study identifier (UUID)
+        econsent_region:
+          type: string
+          description: Region (ex. us, eu)
+          maxLength: 64
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            default: Grants access to everything
+            study_statistics: Grants access to a study's statistics
+            record: Grants access to the data for a single participant; intended for use by study subjects
+          tokenUrl: https://data.castoredc.com/oauth/token

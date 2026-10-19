@@ -1,0 +1,594 @@
+openapi: 3.2.0
+info:
+  version: 2026.1.6.1
+  title: Castor EDC API Documentation Study User API
+  description: '### Overview
+
+    This document provides the specifications of the Castor EDC API, describing the currently available
+
+    API endpoints and methods. We aim to provide a fully functional RESTful API to communicate with
+
+    Castor EDC and these are endpoints currently available.
+
+
+    The formal OpenAPI 2 specification by which this page is rendered is also available in the following formats:
+
+    * YAML
+
+    * JSON
+
+    * JSON (pretty print)
+
+
+    ### Authentication & Authorization with OAuth 2
+
+    Authentication and authorization are arranged through OAuth2. We currently provide full support for the Client
+
+    Credentials flow. The Authorization Code flow is supported, but we ask you to contact us if you want to use this flow.
+
+
+    To use the Client Credentials flow go to your
+
+    Castor EDC profile and generate
+
+    a Client ID and Client Secret. Use the Client ID and Client Secret to retrieve an access token by making a request to
+
+    the ''/oauth/token'' endpoint with your client_id and client_secret as parameters and grant_type=client_credentials.
+
+
+    PHP Example:
+
+    ```php
+
+    include __DIR__.''/vendor/autoload.php'';
+
+    use Guzzle\Http\Client;
+
+
+    // Create the HTTP Client.
+
+    $httpClient = new Client(
+
+    ''https://data.castoredc.com'',
+
+    [
+
+    ''request.options'' => [
+
+    ''exceptions'' => false,
+
+    ]
+
+    ]
+
+    );
+
+
+    // Build the request
+
+    $request = $httpClient->post(
+
+    ''/oauth/token'',
+
+    null,
+
+    [
+
+    ''client_id'' => ''YourCastorClientId'',
+
+    ''client_secret'' => ''YourCastorClientSecret'',
+
+    ''grant_type'' => ''client_credentials'',
+
+    ]
+
+    );
+
+
+    // Send the request
+
+    $response = $request->send();
+
+    $responseBody = $response->getBody(true);
+
+    $responseArr = json_decode($responseBody, true);
+
+    $accessToken = $responseArr[''access_token''];
+
+    ```
+
+
+    In your subsequent requests you can use the `$accessToken` as a Bearer token in the Authorization header, i.e:
+
+    ```php
+
+    $request = $httpClient->get(''/api/user'');
+
+    $request->addHeader(''Authorization'', ''Bearer ''. $accessToken);
+
+    $response = $request->send();
+
+    echo $response->getBody();
+
+    ```
+
+
+    ### OAuth2 Scopes
+
+
+    There are 3 scopes that endpoints may support.
+
+    * **default**: allows access to all endpoints
+
+    * **study_statistics**: allows access to study statistics
+
+    * **record**: allows access to data for a single participant
+
+
+    Due to a bug in the OpenAPI UI, all three scopes are listed for all endpoints.
+
+
+    If the endpoint supports something other than the default scope, the summary will have a 🔭 emoji and the scope will be
+
+    listed in the description as well as under the `security:` key in the specification.
+
+
+    ### Rate Limits
+
+    Unless specified in the resource, endpoints are rate-limited to 600 requests in 10 minutes.
+
+
+    ### Legacy (Basic HTTP Authentication)
+
+    **Please note: Basic HTTP Authentication has been removed on 2019 August 13**
+
+
+    ### Changelog
+
+    API changes can be viewed here'
+  contact:
+    name: support@castoredc.com
+servers:
+- url: https://data.castoredc.com/api/
+security:
+- OAuth2ClientCredentials:
+  - default
+  - study_statistics
+  - record
+tags:
+- name: study-user
+paths:
+  /study/{study_id}/user:
+    get:
+      tags:
+      - study-user
+      summary: Retrieve a list of users who have access to the study, including their assigned…
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson responses (with _links for paging and to single objects).
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: List of all users with access to the study.
+          content:
+            application/hal+json:
+              schema:
+                title: Users
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudyUser'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdUser
+      x-operation-id-source: derived
+    post:
+      tags:
+      - study-user
+      summary: Add a user to the study
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: ''
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        201:
+          description: User successfully invited
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/InvitationSuccess'
+        400:
+          description: Validation errors.
+        403:
+          description: User should have MANAGE::USER permission for sending invitations.
+        422:
+          description: "Permission error: The site_id key has match an existing site_id in\n                            the study or the role does not exist."
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Invitation'
+        required: true
+      operationId: postStudyByStudyIdUser
+      x-operation-id-source: derived
+  /study/{study_id}/user/{user_id}:
+    get:
+      tags:
+      - study-user
+      summary: Retrieve a single user, including their assigned roles per site
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links).
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: user_id
+        in: path
+        description: The ID of the user to retrieve
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: Single StudyUser
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/StudyUser'
+        403:
+          description: Forbidden
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdUserByUserId
+      x-operation-id-source: derived
+    put:
+      tags:
+      - study-user
+      summary: Replace a single user's role assignments
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Removes all of a users permissions and replaces them with the provided payload.
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: user_id
+        in: path
+        description: The ID of the user to update
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: Permissions successfully replaced
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/RoleAssignmentUpdateSuccess'
+        400:
+          description: Validation errors.
+        403:
+          description: User should have MANAGE::USER permission for modifying permissions.
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleAssignmentUpdate'
+        required: true
+      operationId: putStudyByStudyIdUserByUserId
+      x-operation-id-source: derived
+    delete:
+      tags:
+      - study-user
+      summary: Removes a user from the study
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: user_id
+        in: path
+        description: The ID of the user to remove
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        204:
+          description: User successfully removed from study
+        400:
+          description: Validation errors.
+        403:
+          description: User should have MANAGE::USER permission for modifying permissions.
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: deleteStudyByStudyIdUserByUserId
+      x-operation-id-source: derived
+components:
+  schemas:
+    ManagementPermissions:
+      type: object
+      properties:
+        manage_form:
+          type: boolean
+        manage_users:
+          type: boolean
+        manage_settings:
+          type: boolean
+        manage_encryption:
+          type: boolean
+        manage_records:
+          type: boolean
+    DateTime:
+      type: object
+      description: A serialized PHP DateTime object.
+      properties:
+        date:
+          type: string
+          description: Date and time in Y-m-d H:i:s.u format.
+        timezone_type:
+          type: integer
+        timezone:
+          type: string
+    RoleAssignmentObject:
+      type: object
+      properties:
+        site_id:
+          type: string
+        role_name:
+          type: string
+    StudyUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+        user_id:
+          type: string
+          format: UUID
+        entity_id:
+          type: string
+          format: UUID
+        full_name:
+          type: string
+        name_first:
+          type: string
+        name_middle:
+          type: string
+        name_last:
+          type: string
+        email_address:
+          type: string
+        department:
+          type: string
+        last_login:
+          $ref: '#/components/schemas/DateTime'
+        manage_permissions:
+          $ref: '#/components/schemas/ManagementPermissions'
+        default_role_assignment:
+          $ref: '#/components/schemas/DefaultSiteRole'
+        role_assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleAssignments'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    DefaultSiteRole:
+      type: object
+      properties:
+        role_id:
+          type: string
+        role_name:
+          type: string
+    RoleAssignments:
+      type: object
+      properties:
+        site_id:
+          type: string
+        role_id:
+          type: string
+        role_name:
+          type: string
+        permissions:
+          type: object
+          properties:
+            add:
+              description: add permission
+              type: boolean
+            view:
+              description: view permission
+              type: boolean
+            edit:
+              description: edit permission
+              type: boolean
+            delete:
+              description: delete permission
+              type: boolean
+            lock:
+              description: lock permission
+              type: boolean
+            query:
+              description: query permission
+              type: boolean
+            export:
+              description: export permission
+              type: boolean
+            randomization_read:
+              description: randomization_read permission
+              type: boolean
+            sign:
+              description: sign permission
+              type: boolean
+            email_addresses:
+              description: email_addresses permission
+              type: boolean
+            randomization_write:
+              description: randomization_write permission
+              type: boolean
+            sdv:
+              description: sdv permission
+              type: boolean
+            survey_send:
+              description: survey_send permission
+              type: boolean
+            survey_view:
+              description: survey_view permission
+              type: boolean
+            televisit:
+              description: televisit permission
+              type: boolean
+            encrypt:
+              description: encrypt permission
+              type: boolean
+            decrypt:
+              description: decrypt permission
+              type: boolean
+            validation:
+              description: validation permission
+              type: boolean
+            catalyst_upload:
+              description: catalyst_upload permission
+              type: boolean
+    LinksSingle:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+    Invitation:
+      type: object
+      properties:
+        email:
+          type: string
+        send_invite_email:
+          type: boolean
+        message:
+          type: string
+        manage_permissions:
+          $ref: '#/components/schemas/ManagementPermissions'
+        default_role_assignment:
+          type: integer
+        role_assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleAssignmentObject'
+    InvitationSuccess:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: The HTTP return code.
+        title:
+          type: string
+          description: The short error description belonging to the status code
+        detail:
+          type: string
+          description: The detailed explanation of the failure
+        type:
+          type: string
+          description: URL to RFC explaining this statuscode
+        errors:
+          type: object
+          description: Optional list of all errors that occurred during the request
+        validation_messages:
+          type: object
+          description: Optional list of validation failure message
+    RoleAssignmentUpdate:
+      type: object
+      properties:
+        manage_permissions:
+          $ref: '#/components/schemas/ManagementPermissions'
+        role_assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleAssignmentObject'
+        default_role_assignment:
+          type: integer
+    RoleAssignmentUpdateSuccess:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            default: Grants access to everything
+            study_statistics: Grants access to a study's statistics
+            record: Grants access to the data for a single participant; intended for use by study subjects
+          tokenUrl: https://data.castoredc.com/oauth/token

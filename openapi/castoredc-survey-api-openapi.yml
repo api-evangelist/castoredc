@@ -1,0 +1,2330 @@
+openapi: 3.2.0
+info:
+  version: 2026.1.6.1
+  title: Castor EDC API Documentation Survey API
+  description: '### Overview
+
+    This document provides the specifications of the Castor EDC API, describing the currently available
+
+    API endpoints and methods. We aim to provide a fully functional RESTful API to communicate with
+
+    Castor EDC and these are endpoints currently available.
+
+
+    The formal OpenAPI 2 specification by which this page is rendered is also available in the following formats:
+
+    * YAML
+
+    * JSON
+
+    * JSON (pretty print)
+
+
+    ### Authentication & Authorization with OAuth 2
+
+    Authentication and authorization are arranged through OAuth2. We currently provide full support for the Client
+
+    Credentials flow. The Authorization Code flow is supported, but we ask you to contact us if you want to use this flow.
+
+
+    To use the Client Credentials flow go to your
+
+    Castor EDC profile and generate
+
+    a Client ID and Client Secret. Use the Client ID and Client Secret to retrieve an access token by making a request to
+
+    the ''/oauth/token'' endpoint with your client_id and client_secret as parameters and grant_type=client_credentials.
+
+
+    PHP Example:
+
+    ```php
+
+    include __DIR__.''/vendor/autoload.php'';
+
+    use Guzzle\Http\Client;
+
+
+    // Create the HTTP Client.
+
+    $httpClient = new Client(
+
+    ''https://data.castoredc.com'',
+
+    [
+
+    ''request.options'' => [
+
+    ''exceptions'' => false,
+
+    ]
+
+    ]
+
+    );
+
+
+    // Build the request
+
+    $request = $httpClient->post(
+
+    ''/oauth/token'',
+
+    null,
+
+    [
+
+    ''client_id'' => ''YourCastorClientId'',
+
+    ''client_secret'' => ''YourCastorClientSecret'',
+
+    ''grant_type'' => ''client_credentials'',
+
+    ]
+
+    );
+
+
+    // Send the request
+
+    $response = $request->send();
+
+    $responseBody = $response->getBody(true);
+
+    $responseArr = json_decode($responseBody, true);
+
+    $accessToken = $responseArr[''access_token''];
+
+    ```
+
+
+    In your subsequent requests you can use the `$accessToken` as a Bearer token in the Authorization header, i.e:
+
+    ```php
+
+    $request = $httpClient->get(''/api/user'');
+
+    $request->addHeader(''Authorization'', ''Bearer ''. $accessToken);
+
+    $response = $request->send();
+
+    echo $response->getBody();
+
+    ```
+
+
+    ### OAuth2 Scopes
+
+
+    There are 3 scopes that endpoints may support.
+
+    * **default**: allows access to all endpoints
+
+    * **study_statistics**: allows access to study statistics
+
+    * **record**: allows access to data for a single participant
+
+
+    Due to a bug in the OpenAPI UI, all three scopes are listed for all endpoints.
+
+
+    If the endpoint supports something other than the default scope, the summary will have a 🔭 emoji and the scope will be
+
+    listed in the description as well as under the `security:` key in the specification.
+
+
+    ### Rate Limits
+
+    Unless specified in the resource, endpoints are rate-limited to 600 requests in 10 minutes.
+
+
+    ### Legacy (Basic HTTP Authentication)
+
+    **Please note: Basic HTTP Authentication has been removed on 2019 August 13**
+
+
+    ### Changelog
+
+    API changes can be viewed here'
+  contact:
+    name: support@castoredc.com
+servers:
+- url: https://data.castoredc.com/api/
+security:
+- OAuth2ClientCredentials:
+  - default
+  - study_statistics
+  - record
+tags:
+- name: Survey
+paths:
+  /study/{study_id}/compliance:
+    post:
+      tags:
+      - Survey
+      summary: Retrieve participant survey compliance information
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Retrieves participant survey compliance. Result is based on the site permissions of the API user.
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: The size of pages
+        required: false
+        schema:
+          type: integer
+      - name: sort
+        in: query
+        description: 'The field to sort on, the default is `participantId`. All available ones are: siteName, participantId, participantStatus, compliance, totalSurveys, completedSurveys'
+        required: false
+        schema:
+          type: string
+      - name: dir
+        in: query
+        description: Sorting direction of the results ASC or DESC, defaults to ASC
+        required: false
+        schema:
+          type: string
+      - name: participantId[]
+        in: query
+        description: Returns compliance result filtered on given participants.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: availabilityStart
+        in: query
+        description: Returns all surveys available for completion between availabilityStart and availabilityEnd dates. Supported format Y-m-d H:i:s
+        required: false
+        schema:
+          type: string
+      - name: availabilityEnd
+        in: query
+        description: Returns all surveys available for completion between availabilityStart and availabilityEnd dates Supported format Y-m-d H:i:s
+        required: false
+        schema:
+          type: string
+      - name: siteId[]
+        in: query
+        description: Returns compliance result filtered on given sites.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: participantStatus[]
+        in: query
+        description: Returns compliance result filtered on given participant statuses.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: surveyPackageId[]
+        in: query
+        description: Returns compliance result filtered on given survey packages.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: surveyPackageStatus[]
+        in: query
+        description: 'Returns compliance result filtered on survey package status. Available ones are: Created, Completed, Failed, In Progress, Locked, Received, Sent, Viewed'
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: mobile
+        in: query
+        description: Filter on mobile surveys. Requires mobile surveys to be enabled on the study.
+        required: false
+        schema:
+          type: boolean
+      - name: compliance
+        in: query
+        description: Compliance percentage to filter on, integer between 0 and 100. Requires complianceOption to be set.
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 0
+      - name: complianceOption
+        in: query
+        description: Logical operator to be combined with "compliance" parameter.
+        required: false
+        schema:
+          type: string
+          enum:
+          - '='
+          - '>'
+          - <
+          - <=
+          - '>='
+      - name: parentId
+        in: query
+        description: UUID of the visit or repeating data survey parent. Requires the "parentType" parameter.
+        required: false
+        schema:
+          type: string
+      - name: parentType
+        in: query
+        description: '0: No parent. 1: Surveys belongs to a visit. 2: The surveys belongs to a repeating data instance.'
+        required: false
+        schema:
+          type: string
+          enum:
+          - '0'
+          - '1'
+          - '2'
+      responses:
+        200:
+          description: List of compliance information
+          content:
+            application/json:
+              schema:
+                title: Compliance response
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Compliance'
+                  total:
+                    type: number
+        403:
+          description: No site permissions.
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: postStudyByStudyIdCompliance
+      x-operation-id-source: derived
+  /study/{study_id}/surveypackage:
+    get:
+      deprecated: true
+      tags:
+      - Survey
+      summary: Retrieve list of available Survey Packages
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Gets `SurveyPackage` objects. A Survey Package is a collection of 1 or more Surveys.
+
+        SurveyPackages get instantiated through SurveyPackageInstances, which are the objects
+
+        to which datapoints really get stored.
+
+        Always requires a study_id to be given. Can be paged.
+
+        Returns HalJson responses (with _links for paging and to single objects).'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      responses:
+        200:
+          description: List of all Survey Packages of the Study
+          content:
+            application/hal+json:
+              schema:
+                title: SurveyPackages HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      survey_packages:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyPackage'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdSurveypackage
+      x-operation-id-source: derived
+  /study/{study_id}/surveypackage/{survey_package_id}:
+    get:
+      deprecated: true
+      tags:
+      - Survey
+      summary: Retrieve a single Survey Package
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links).
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: survey_package_id
+        in: path
+        description: Survey Package ID of the Survey Package to fetch
+        required: true
+        schema:
+          type: string
+      - name: include
+        in: query
+        description: 'Adds the option of including fields in the query. Use like: ?include=fields'
+        required: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: Single SurveyPackage
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/SurveyPackage'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdSurveypackageBySurveyPackageId
+      x-operation-id-source: derived
+  /study/{study_id}/surveypackageinstance:
+    get:
+      deprecated: true
+      tags:
+      - Survey
+      summary: Retrieve list of available SurveyPackageInstances
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Gets `SurveyPackageInstance` objects, which are ''instantiations'' of SurveyPackages.
+
+        The SurveyPackageInstance (SPI) is the entity to which the data gets saved, for which email invitations are sent, etc.
+
+        Always requires a study_id to be given. Can be paged.
+
+        Returns HalJson responses (with _links for paging and to single objects).'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: record_id
+        in: query
+        description: Filter survey package invitations based on record id. Cannot be combined with "ccr_patient_id"
+        required: false
+        schema:
+          type: string
+      - name: ccr_patient_id
+        in: query
+        description: Filter survey package invitations based on CCR patient id. Cannot be combined with "record_id"
+        required: false
+        schema:
+          type: string
+      - name: finished_on
+        in: query
+        description: 'Filter survey package invitations based on finished date. Multiple modifiers can be applied. Supported formats: 2021-03-20, 2021-03-20 12:34:56, 2021-03-20T12:34:56Z'
+        required: false
+        schema:
+          type: string
+      - name: finished_on[gt]
+        in: query
+        description: Filter survey package invitations that has finished date greater than provided.
+        required: false
+        schema:
+          type: string
+      - name: finished_on[gte]
+        in: query
+        description: Filter survey package invitations that has finished date greater or equal to provided.
+        required: false
+        schema:
+          type: string
+      - name: finished_on[lt]
+        in: query
+        description: Filter survey package invitations that has finished date lower than provided.
+        required: false
+        schema:
+          type: string
+      - name: finished_on[lte]
+        in: query
+        description: Filter survey package invitations that has finished date lower or equal to provided.
+        required: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: List of all Survey Package Instances of the Study
+          content:
+            application/vnd.swagger+json:
+              schema:
+                title: SurveyPackageInstances HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      surveypackageinstance:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyPackageInstance'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+            application/json:
+              schema:
+                title: SurveyPackageInstances HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      surveypackageinstance:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyPackageInstance'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+            application/xhtml+xml:
+              schema:
+                title: SurveyPackageInstances HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      surveypackageinstance:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyPackageInstance'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+            text/html:
+              schema:
+                title: SurveyPackageInstances HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      surveypackageinstance:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyPackageInstance'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/vnd.swagger+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/xhtml+xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdSurveypackageinstance
+      x-operation-id-source: derived
+    post:
+      deprecated: true
+      tags:
+      - Survey
+      summary: Creates a SurveyPackageInstance and (optionally) send the email invite directly
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Creates an instantiation of a SurveyPackage for a specific Record.
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study to retrieve survey package instances for
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        201:
+          description: SurveyPackageInstance successfully created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/SurveyPackageInstance'
+        404:
+          description: The given SurveyPackage or Record does not exist.
+        405:
+          description: Invalid input
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newOldNamingSurveyPackageInstance'
+        description: SurveyPackageInstance details to create the object.
+        required: true
+      operationId: postStudyByStudyIdSurveypackageinstance
+      x-operation-id-source: derived
+  /study/{study_id}/surveypackageinstance/{survey_package_instance_id}:
+    get:
+      deprecated: true
+      tags:
+      - Survey
+      summary: Retrieve a single Survey Package Instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: survey_package_instance_id
+        in: path
+        description: Survey Package Instance ID of the Survey Package Instance to fetch
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Single OldNamingSurveyPackageInstance
+          content:
+            application/vnd.swagger+json:
+              schema:
+                $ref: '#/components/schemas/OldNamingSurveyPackageInstance'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OldNamingSurveyPackageInstance'
+            application/xhtml+xml:
+              schema:
+                $ref: '#/components/schemas/OldNamingSurveyPackageInstance'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/OldNamingSurveyPackageInstance'
+        default:
+          description: Unexpected error
+          content:
+            application/vnd.swagger+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/xhtml+xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdSurveypackageinstanceBySurveyPackageInstanceId
+      x-operation-id-source: derived
+    patch:
+      deprecated: true
+      tags:
+      - Survey
+      summary: Locks/unlocks a SurveyPackageInstance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Locks/unlocks an instance of a SurveyPackage. Lock permissions are required in order for this operation to succeed.
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: survey_package_instance_id
+        in: path
+        description: SurveyPackageInstanceId to lock or unlock.
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: SurveyPackageInstance successfully updated
+        404:
+          description: The given SurveyPackage or Record does not exist.
+        405:
+          description: Invalid input
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchSurveyPackageInstance'
+        description: SurveyPackageInstance details to patch the object.
+        required: true
+      operationId: patchStudyByStudyIdSurveypackageinstanceBySurveyPackageInstanceId
+      x-operation-id-source: derived
+  /study/{study_id}/record/{record_id}/surveypackageinstance/{survey_package_instance_id}:
+    patch:
+      deprecated: true
+      tags:
+      - Survey
+      summary: Updates the start time or the delivery time for a SurveyPackageInstance 🔭
+      security:
+      - OAuth2ClientCredentials:
+        - record
+        - default
+      description: 'Updates the date and time when the filling of a SurveyPackageInstance has started,
+
+        or the date and time when it has been received. Supports the `record` scope.'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: record_id
+        in: path
+        description: The ID of the record for which this call should be made
+        required: true
+        schema:
+          type: string
+      - name: survey_package_instance_id
+        in: path
+        description: SurveyPackageInstanceId to lock or unlock.
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: SurveyPackageInstance successfully updated
+        404:
+          description: The given SurveyPackage or Record does not exist.
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchRecordSurveyPackageInstance'
+        description: SurveyPackageInstance details to patch the object.
+        required: true
+      operationId: patchStudyByStudyIdRecordByRecordIdSurveypackageinstanceBySurveyPackageInstanceId
+      x-operation-id-source: derived
+  /study/{study_id}/survey:
+    get:
+      tags:
+      - Survey
+      summary: Retrieve list of available Surveys
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Gets `Survey` objects. Surveys consist of Survey Forms. Multiple surveys can be combined in
+
+        Survey Packages, which are being sent to respondents using Survey Package Instances.
+
+        Always requires a study_id to be given. Can be paged.
+
+        Returns HalJson responses (with _links for paging and to single objects).'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: include
+        in: query
+        description: 'Adds the option of including survey forms in the query. Use like: ?include=forms'
+        required: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: List of all Surveys of the Study
+          content:
+            application/hal+json:
+              schema:
+                title: Surveys HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      surveys:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Survey'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdSurvey
+      x-operation-id-source: derived
+  /study/{study_id}/survey/{survey_id}:
+    get:
+      tags:
+      - Survey
+      summary: Retrieve a single Survey
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links).
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: survey_id
+        in: path
+        description: The ID of the survey for which this call should be made
+        required: true
+        schema:
+          type: string
+      - name: include
+        in: query
+        description: 'Adds the option of including survey forms in the query. Use like: ?include=forms'
+        required: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: Single Survey
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Survey'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdSurveyBySurveyId
+      x-operation-id-source: derived
+  /study/{study_id}/survey-package:
+    get:
+      tags:
+      - Survey
+      summary: Retrieve list of available Survey Packages
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Gets `SurveyPackage` objects. A Survey Package is a collection of 1 or more Surveys.
+
+        SurveyPackages get instantiated through SurveyPackageInstances, which are the objects
+
+        to which datapoints really get stored.
+
+        Always requires a study_id to be given. Can be paged.
+
+        Returns HalJson responses (with _links for paging and to single objects).'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      responses:
+        200:
+          description: List of all Survey Packages of the Study
+          content:
+            application/hal+json:
+              schema:
+                title: SurveyPackages HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      survey_packages:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyPackage'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdSurveyPackage
+      x-operation-id-source: derived
+  /study/{study_id}/survey-package/{survey_package_id}:
+    get:
+      tags:
+      - Survey
+      summary: Retrieve a single Survey Package
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links).
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: survey_package_id
+        in: path
+        description: Survey Package ID of the Survey Package to fetch
+        required: true
+        schema:
+          type: string
+      - name: include
+        in: query
+        description: 'Adds the option of including fields in the query. Use like: ?include=fields'
+        required: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: Single SurveyPackage
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/SurveyPackage'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdSurveyPackageBySurveyPackageId
+      x-operation-id-source: derived
+  /study/{study_id}/survey-package-instance:
+    get:
+      tags:
+      - Survey
+      summary: Retrieve list of available SurveyPackageInstances
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'Gets `SurveyPackageInstance` objects, which are ''instantiations'' of SurveyPackages.
+
+        The SurveyPackageInstance (SPI) is the entity to which the data gets saved, for which email invitations are sent, etc.
+
+        Always requires a study_id to be given. Can be paged and filtered.
+
+        Returns HalJson responses (with _links for paging and to single objects).'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: The size of pages
+        required: false
+        schema:
+          type: integer
+      - name: participant_id
+        in: query
+        description: Filter survey package invitations based on participant id. Cannot be combined with "ccr_patient_id"
+        required: false
+        schema:
+          type: string
+      - name: ccr_patient_id
+        in: query
+        description: Filter survey package invitations based on CCR patient id. Cannot be combined with "participant_id"
+        required: false
+        schema:
+          type: string
+      - name: sort
+        in: query
+        description: 'The field to sort on, the default is `createdOn`. All available ones are: availableFrom, progress, createdOn, updatedOn, sentOn, locked, archived, record_id, siteName, survey_package_name, status, finishedOn, startedOn, isMobile, expiresOn'
+        required: false
+        schema:
+          type: string
+      - name: dir
+        in: query
+        description: Sorting direction of the results ASC or DESC, defaults to ASC
+        required: false
+        schema:
+          type: string
+      - name: available_from_start
+        in: query
+        description: Filter on survey `available_from` field based on a date range. Requires available_from_end. Supported format Y-m-d H:i:s
+        required: false
+        schema:
+          type: string
+      - name: available_from_end
+        in: query
+        description: Filter on survey `available_from` field based on a date range. Requires available_from_start. Supported format Y-m-d H:i:s
+        required: false
+        schema:
+          type: string
+      - name: available
+        in: query
+        description: If the survey is available based on the current server datetime.
+        required: false
+        schema:
+          type: boolean
+          default: null
+      - name: archived
+        in: query
+        description: Filter on surveys that have been archived.
+        required: false
+        schema:
+          type: boolean
+          default: null
+      - name: repeatable
+        in: query
+        description: Filter on surveys that have been generated from a repeatable survey.
+        required: false
+        schema:
+          type: boolean
+          default: null
+      - name: training
+        in: query
+        description: Filter on surveys belonging to a training configured survey package.
+        required: false
+        schema:
+          type: boolean
+          default: null
+      - name: status
+        in: query
+        description: 'Status to filter on - available ones are: Created, Completed, Failed, In Progress, Locked, Received, Sent, Viewed'
+        required: false
+        schema:
+          type: string
+      - name: availability_window_start
+        in: query
+        description: Filter to return surveys that were available for completion within the given time period. Requires availability_window_end. Supported format Y-m-d H:i:s
+        required: false
+        schema:
+          type: string
+      - name: availability_window_end
+        in: query
+        description: Filter to return surveys that were available for completion within the given time period. Requires availability_window_start. Supported format Y-m-d H:i:s
+        required: false
+        schema:
+          type: string
+      - name: finished_on
+        in: query
+        description: 'Filter survey package invitations based on finished date. Multiple modifiers can be applied. Supported formats: 2021-03-20, 2021-03-20 12:34:56, 2021-03-20T12:34:56Z'
+        required: false
+        schema:
+          type: string
+      - name: finished_on[gt]
+        in: query
+        description: Filter survey package invitations that has finished date greater than provided.
+        required: false
+        schema:
+          type: string
+      - name: finished_on[gte]
+        in: query
+        description: Filter survey package invitations that has finished date greater or equal to provided.
+        required: false
+        schema:
+          type: string
+      - name: finished_on[lt]
+        in: query
+        description: Filter survey package invitations that has finished date lower than provided.
+        required: false
+        schema:
+          type: string
+      - name: finished_on[lte]
+        in: query
+        description: Filter survey package invitations that has finished date lower or equal to provided.
+        required: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: List of all Survey Package Instances of the Study
+          content:
+            application/vnd.swagger+json:
+              schema:
+                title: SurveyPackageInstances HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      surveypackageinstance:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyPackageInstance'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+            application/json:
+              schema:
+                title: SurveyPackageInstances HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      surveypackageinstance:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyPackageInstance'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+            application/xhtml+xml:
+              schema:
+                title: SurveyPackageInstances HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      surveypackageinstance:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyPackageInstance'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+            text/html:
+              schema:
+                title: SurveyPackageInstances HalJSON representation
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksCollection'
+                  _embedded:
+                    type: object
+                    properties:
+                      surveypackageinstance:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SurveyPackageInstance'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        default:
+          description: Unexpected error
+          content:
+            application/vnd.swagger+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/xhtml+xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdSurveyPackageInstance
+      x-operation-id-source: derived
+    post:
+      tags:
+      - Survey
+      summary: Creates a SurveyPackageInstance and (optionally) send the email invite directly
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Creates an instantiation of a SurveyPackage for a specific Record.
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study to retrieve survey package instances for
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        201:
+          description: SurveyPackageInstance successfully created
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/SurveyPackageInstance'
+        404:
+          description: The given SurveyPackage or Participant does not exist.
+        405:
+          description: Invalid input
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newSurveyPackageInstance'
+        description: SurveyPackageInstance details to create the object.
+        required: true
+      operationId: postStudyByStudyIdSurveyPackageInstance
+      x-operation-id-source: derived
+  /study/{study_id}/survey-package-instance/{survey_package_instance_id}:
+    get:
+      tags:
+      - Survey
+      summary: Retrieve a single Survey Package Instance
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Returns HalJson objects (with _links)
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: survey_package_instance_id
+        in: path
+        description: Survey Package Instance ID of the Survey Package Instance to fetch
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Single SurveyPackageInstance
+          content:
+            application/vnd.swagger+json:
+              schema:
+                $ref: '#/components/schemas/SurveyPackageInstance'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SurveyPackageInstance'
+            application/xhtml+xml:
+              schema:
+                $ref: '#/components/schemas/SurveyPackageInstance'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/SurveyPackageInstance'
+        default:
+          description: Unexpected error
+          content:
+            application/vnd.swagger+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+            application/xhtml+xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+            text/html:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdSurveyPackageInstanceBySurveyPackageInstanceId
+      x-operation-id-source: derived
+    patch:
+      tags:
+      - Survey
+      summary: Updates a SurveyPackageInstance. Can be used to lock/unlock or mark as sent
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: 'The endpoint allows updating **either** the `locked` status or the `sent_on` datetime of a SurveyPackageInstance.
+
+
+        ⚠️ These options are **mutually exclusive**—only one operation is allowed per request.
+
+
+        ### Locking/Unlocking
+
+        - Accepts a `boolean` (`true` or `false`).
+
+        - Used to **lock or unlock** a SurveyPackageInstance.
+
+
+        ### Marking as sent
+
+        - Accepts a **past** date in **UTC format** (`YYYY-MM-DD HH:MM:SS`).
+
+        - Only applicable for unsent SurveyPackageInstances in the `Created` status.
+
+        - Updating `sent_on` will:
+
+        - Set **both** `available_from` and `sent_on` to the submitted date.
+
+        - Update the SurveyPackageInstance status to `Sent`.'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: survey_package_instance_id
+        in: path
+        description: The ID of the SurveyPackageInstance to update.
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: SurveyPackageInstance successfully updated
+        404:
+          description: The given SurveyPackage or Participant does not exist.
+        405:
+          description: Invalid input
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchSurveyPackageInstance'
+        description: SurveyPackageInstance details to patch the object.
+        required: true
+      operationId: patchStudyByStudyIdSurveyPackageInstanceBySurveyPackageInstanceId
+      x-operation-id-source: derived
+  /study/{study_id}/participant/{participant_id}/survey-package-instance/{survey_package_instance_id}:
+    patch:
+      tags:
+      - Survey
+      summary: Updates the start time or the delivery time for a SurveyPackageInstance 🔭
+      security:
+      - OAuth2ClientCredentials:
+        - record
+        - default
+      description: 'Updates the date and time when the filling of a SurveyPackageInstance has started,
+
+        or the date and time when it has been received. Supports the `record` scope.'
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: participant_id
+        in: path
+        description: The ID of the participant for which this call should be made
+        required: true
+        schema:
+          type: string
+      - name: survey_package_instance_id
+        in: path
+        description: SurveyPackageInstanceId to lock or unlock.
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: SurveyPackageInstance successfully updated
+        404:
+          description: The given SurveyPackage or Participant does not exist.
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchParticipantSurveyPackageInstance'
+        description: SurveyPackageInstance details to patch the object.
+        required: true
+      operationId: patchStudyByStudyIdParticipantByParticipantIdSurveyPackageInstanceBySurveyPackageInstanceId
+      x-operation-id-source: derived
+  /study/{study_id}/participant/{participant_id}/survey-package-instance:
+    patch:
+      tags:
+      - Survey
+      summary: Updates the start time or the received time of multiple Survey Package…
+      security:
+      - OAuth2ClientCredentials:
+        - record
+      description: Updates the status of multiple Survey Package Instances at once, either when they were received or when progress was started. Supports only the `record` scope.
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: participant_id
+        in: path
+        description: The ID of the participant for which this call should be made
+        required: true
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: Status of the survey package instances corresponding to which date value should be patched (received/started)
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "1 survey package instance(s) was marked started.\n                     1 survey package instance(s) was not marked started due to the following reason(s): Survey package invitation not found."
+        400:
+          description: Invalid request parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkPatchParticipantSurveyPackageInstance'
+        description: Array of Survey Package Instance id(s) and their date values.
+        required: true
+      operationId: patchStudyByStudyIdParticipantByParticipantIdSurveyPackageInstance
+      x-operation-id-source: derived
+components:
+  schemas:
+    BulkPatchParticipantSurveyPackageInstance:
+      type: array
+      items:
+        type: object
+        properties:
+          survey_package_instance_id:
+            type: string
+            format: UUID
+          date_value:
+            type: string
+            format: dateTime
+            description: The UTC date and time when the filling of a survey package instance has started or when it has been received.
+      example:
+      - survey_package_instance_id: 27FB1E8C-BF44-4334-94D2-0C3BC3C2548A
+        date_value: '2023-06-20 18:10:30'
+      - survey_package_instance_id: F7299D50-FD9F-4B59-8B25-C72EDA71D64E
+        date_value: '2023-06-21 18:10:30'
+    PatchSurveyPackageInstance:
+      type: object
+      properties:
+        locked:
+          type: boolean
+          description: Set to true to lock or false to unlock the SurveyPackageInstance. Cannot be combined with "status".
+        sent_on:
+          type: string
+          format: dateTime
+          description: The UTC date and time when the survey has been sent. Cannot be combined with "locked".
+      example:
+        sent_on: '2022-07-15 18:10:30'
+        locked: true
+    LinksCollection:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+        first:
+          type: object
+          properties:
+            href:
+              type: string
+        last:
+          type: object
+          properties:
+            href:
+              type: string
+        next:
+          type: object
+          properties:
+            href:
+              type: string
+    Compliance:
+      description: Compliance overview of participant surveys
+      type: object
+      properties:
+        siteName:
+          type: string
+        siteId:
+          type: string
+          format: UUID
+        totalSurveys:
+          type: integer
+          description: Total number of surveys used for the compliance calculation
+        completedSurveys:
+          type: integer
+          description: Total number of completed surveys used for the compliance calculation
+        participantStatus:
+          type: string
+        compliance:
+          type: integer
+          description: The compliance percentage of the participant, represented as 0 - 100 integer value
+        participant_id:
+          type: string
+    LinksSingle:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+    RecordStatus:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    Survey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+        survey_id:
+          type: string
+          format: UUID
+        name:
+          type: string
+        description:
+          type: string
+        intro_text:
+          type: string
+          format: markdown
+        outro_text:
+          type: string
+          format: markdown
+        footer_text:
+          type: string
+          format: markdown
+        survey_forms:
+          type: array
+          description: Only included with `?include=forms`, otherwise returns an empty array.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: UUID
+              name:
+                type: string
+              description:
+                type: string
+              number:
+                type: integer
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    DateTime:
+      type: object
+      description: A serialized PHP DateTime object.
+      properties:
+        date:
+          type: string
+          description: Date and time in Y-m-d H:i:s.u format.
+        timezone_type:
+          type: integer
+        timezone:
+          type: string
+    SurveyPackageInstance:
+      type: object
+      description: 'The SurveyPackageInstance is an instantiation of a SurveyPackage,
+
+        a real copy a SurveyPackage that gets sent to survey participants.'
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique id of the SurveyPackageInstance. Synonymous to survey_package_instance_id
+        survey_package_instance_id:
+          type: string
+          format: UUID
+          description: Unique identifier for the SurveyPackageInstance. Synonymous to id.
+        participant_id:
+          type: string
+          description: The identifier of the Participant this SurveyPackageInstance belongs to.
+        site_id:
+          type: string
+          description: The identifier of the Site this SurveyPackageInstance's Participant belongs to
+        site_name:
+          type: string
+          description: 'The name of the Site this SurveyPackageInstance''s Participant belongs to . '
+        survey_package_id:
+          type: string
+          format: UUID
+          description: The identifier of the SurveyPackage of which this SurveyPackageInstance is an instantiation from
+        survey_package_name:
+          type: string
+          description: The name of the SurveyPackage of which this SurveyPackageInstance is an instantiation from .
+        invitation_subject:
+          type: string
+          description: The  email subject used in the invitation message for this SurveyPackageInstance.
+        invitation_content:
+          type: string
+          description: The email invitation message for this SurveyPackageInstance.
+        created_on:
+          $ref: '#/components/schemas/DateTime'
+        created_by:
+          type: string
+          format: UUID
+          description: The user ID of the user who created this instance.
+        sent_on:
+          $ref: '#/components/schemas/DateTime'
+        received_on:
+          $ref: '#/components/schemas/DateTime'
+        first_opened_on:
+          $ref: '#/components/schemas/DateTime'
+        started_on:
+          $ref: '#/components/schemas/DateTime'
+        all_fields_filled_on:
+          $ref: '#/components/schemas/DateTime'
+        finished_on:
+          $ref: '#/components/schemas/DateTime'
+        locked:
+          type: boolean
+          description: Whether this SurveyPackageInstance is locked or not. Locked ones cannot be updated
+        archived:
+          type: boolean
+          description: Archived SurveyPackageInstances are invisible to the enduser. Invitations will not be sent and data will not be exported .
+        survey_url_string:
+          type: string
+          description: The unique identifier used in the URL to open this specific SurveyPackageInstance. URL should point to https://hostname/survey/survey_url_string.
+        progress:
+          type: integer
+          description: The progress of the SurveyPackageInstance, from 0 to 100
+        available_from:
+          $ref: '#/components/schemas/DateTime'
+        expire_on:
+          $ref: '#/components/schemas/DateTime'
+        auto_lock_on_finish:
+          type: boolean
+          description: Whether this SurveyPackageInstance shall be locked upon completion
+        parent_type:
+          type: string
+          description: '0: No parent. 1: The survey belongs to a visit. 2: The survey belongs to a repeating data instance.'
+        parent_id:
+          type: string
+          description: The UUID of the parent instance.
+        status:
+          type: string
+          description: The status of the survey package instance
+        _embedded:
+          type: object
+          properties:
+            participant:
+              $ref: '#/components/schemas/Participant'
+            site:
+              $ref: '#/components/schemas/Site'
+            survey_package:
+              $ref: '#/components/schemas/SurveyPackage'
+            survey_instances:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: UUID
+                  progress:
+                    type: integer
+                  progress_total_fields:
+                    type: integer
+                  progress_total_fields_not_empty:
+                    type: integer
+                  survey:
+                    $ref: '#/components/schemas/Survey'
+                  _links:
+                    $ref: '#/components/schemas/LinksSingle'
+            survey_reminders:
+              $ref: '#/components/schemas/SurveyPackageReminder'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    PatchParticipantSurveyPackageInstance:
+      type: object
+      properties:
+        started_on:
+          type: string
+          format: dateTime
+          description: The UTC date and time when the filling of a survey package instance has started. This parameter is incompatible with `received_on`
+        received_on:
+          type: string
+          description: The UNIX timestamp when the survey package instance has been received. This parameter is incompatible with `started_on`
+      example:
+        started_on: 15-07-2022 18:10:30
+        received_on: '1658174255'
+    ParticipantStatus:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    Institute:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    newSurveyPackageInstance:
+      type: object
+      properties:
+        survey_package_id:
+          type: string
+          description: The identifier of the SurveyPackage that should be instantiated in this SurveyPackageInstance.
+        participant_id:
+          type: string
+          description: The identifier of the Participant to create this SurveyPackageInstance for. Should exist already. Cannot be combined with ccr_patient_id. One of "participant_id" or "ccr_patient_id" is required.
+        ccr_patient_id:
+          type: string
+          description: The CCR Patient identifier of the Participant to create this SurveyPackageInstance for. Should exist already. Cannot be combined with participant_id. One of "participant_id" or "ccr_patient_id" is required.
+        email_address:
+          type: string
+          description: The email address this SurveyPackageInstance will be sent to. If no email_address is provided in the request the system will try to use the Participant's stored email address. The email address is stored encrypted.
+        package_invitation_subject:
+          type: string
+          description: The subject of the invitation message that will be sent. If left empty will inherit the default subject of the SurveyPackage .
+        package_invitation:
+          type: string
+          description: The contents of the invitation message that will be sent. If left empty will inherit the default contents from the SurveyPackage. Must contain a {url} tag that will be replaced with survey_url_string when sending the email. If sending a mobile Survey, it's recommended to reuse the default SurveyPackage invitation message or include the app store tags ({castorconnect-apple-store-link} and {castorconnect-google-store-link}) and the activation QR code tag ({CC-activation-QR}).
+        available_from:
+          type: string
+          format: date-time
+          description: UTC date and time when the Survey Package Instance should be scheduled. The provided value is converted to server time during creation. Web surveys are scheduled based on **date**, while mobile surveys use **date and time**. If `available_from` is in the past or today, the survey is sent immediately. If in the future, it will be scheduled accordingly. If left empty, the Survey Package Instance will be created but not scheduled.
+        auto_lock_on_finish:
+          type: boolean
+          default: 'false'
+          description: Whether the SurveyPackageInstance should be automatically locked when the survey respondent clicks the finish button at the end of data entry .
+        parent_type:
+          type: string
+          default: '0'
+          description: '0: No parent. 1: The survey belongs to a visit. 2: The survey belongs to a repeating data instance.'
+        parent_id:
+          type: string
+          default: 'null'
+          description: The UUID of the parent instance.
+      required:
+      - survey_package_id
+      - participant_id
+      - ccr_patient_id
+    OldNamingSurveyPackageInstance:
+      type: object
+      description: 'The SurveyPackageInstance is an instantiation of a SurveyPackage,
+
+        a real copy a SurveyPackage that gets sent to survey participants.'
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique id of the SurveyPackageInstance. Synonymous to survey_package_instance_id
+        survey_package_instance_id:
+          type: string
+          format: UUID
+          description: Unique identifier for the SurveyPackageInstance. Synonymous to id.
+        record_id:
+          type: string
+          description: The identifier of the Record this SurveyPackageInstance belongs to.
+        institute_id:
+          type: string
+          description: The identifier of the Institute this SurveyPackageInstance's Record belongs to
+        institute_name:
+          type: string
+          description: 'The name of the Institute this SurveyPackageInstance''s Record belongs to . '
+        survey_package_id:
+          type: string
+          format: UUID
+          description: The identifier of the SurveyPackage of which this SurveyPackageInstance is an instantiation from
+        survey_package_name:
+          type: string
+          description: The name of the SurveyPackage of which this SurveyPackageInstance is an instantiation from .
+        invitation_subject:
+          type: string
+          description: The  email subject used in the invitation message for this SurveyPackageInstance.
+        invitation_content:
+          type: string
+          description: The email invitation message for this SurveyPackageInstance.
+        created_on:
+          $ref: '#/components/schemas/DateTime'
+        created_by:
+          type: string
+          format: UUID
+          description: The user ID of the user who created this instance.
+        sent_on:
+          $ref: '#/components/schemas/DateTime'
+        received_on:
+          $ref: '#/components/schemas/DateTime'
+        first_opened_on:
+          $ref: '#/components/schemas/DateTime'
+        started_on:
+          $ref: '#/components/schemas/DateTime'
+        all_fields_filled_on:
+          $ref: '#/components/schemas/DateTime'
+        finished_on:
+          $ref: '#/components/schemas/DateTime'
+        locked:
+          type: boolean
+          description: Whether this SurveyPackageInstance is locked or not. Locked ones cannot be updated
+        archived:
+          type: boolean
+          description: Archived SurveyPackageInstances are invisible to the enduser. Invitations will not be sent and data will not be exported .
+        survey_url_string:
+          type: string
+          description: The unique identifier used in the URL to open this specific SurveyPackageInstance. URL should point to https://hostname/survey/survey_url_string.
+        progress:
+          type: integer
+          description: The progress of the SurveyPackageInstance, from 0 to 100
+        available_from:
+          $ref: '#/components/schemas/DateTime'
+        expire_on:
+          $ref: '#/components/schemas/DateTime'
+        auto_lock_on_finish:
+          type: boolean
+          description: Whether this SurveyPackageInstance shall be locked upon completion
+        parent_type:
+          type: string
+          description: '0: No parent. 1: The survey belongs to a visit. 2: The survey belongs to a repeating data instance.'
+        parent_id:
+          type: string
+          description: The UUID of the parent instance.
+        _embedded:
+          type: object
+          properties:
+            record:
+              $ref: '#/components/schemas/Record'
+            institute:
+              $ref: '#/components/schemas/Institute'
+            survey_package:
+              $ref: '#/components/schemas/SurveyPackage'
+            survey_instances:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: UUID
+                  progress:
+                    type: integer
+                  progress_total_fields:
+                    type: integer
+                  progress_total_fields_not_empty:
+                    type: integer
+                  survey:
+                    $ref: '#/components/schemas/Survey'
+                  _links:
+                    $ref: '#/components/schemas/LinksSingle'
+            survey_reminders:
+              $ref: '#/components/schemas/SurveyPackageReminder'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    SurveyPackageReminder:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique id of the SurveyPackageReminder
+        subject:
+          type: string
+          description: The email subject used in the reminder message for this SurveyPackage
+        message:
+          type: string
+          description: The email content used in the reminder message for this SurveyPackage
+        send_on:
+          $ref: '#/components/schemas/DateTime'
+    SurveyPackage:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier for the SurveyPackage. Synonymous to survey_package_id.
+        survey_package_id:
+          type: string
+          format: UUID
+          description: Unique identifier for the SurveyPackage. Synonymous to id.
+        name:
+          type: string
+          description: Name of the SurveyPackage
+        description:
+          type: string
+          description: Description of the SurveyPackage
+        intro_text:
+          type: string
+          format: markdown
+          description: The text shown on the introduction page of the data entry of this SurveyPackage
+        outro_text:
+          type: string
+          format: markdown
+          description: The text shown on the finishing page of the data entry of this SurveyPackage
+        sender_name:
+          type: string
+          description: Name shown as sender on the email invitation
+        sender_email:
+          type: string
+          format: email
+          description: Reply-to / sender address on the email invitation
+        allow_step_navigation:
+          type: boolean
+          description: Whether survey participants are allowed to navigate between steps
+        show_step_navigator:
+          type: boolean
+          description: Whether the step navigator is shown in the survey data entry view
+        finish_url:
+          type: string
+          format: URL
+          description: The URL where a participant is forwarded to upon completion of data entry
+        pre_redirect_text:
+          type: string
+          description: The text shown on the finishing page of the data entry of this SurveyPackage before the participant is redirected to the finish_url
+        auto_5s_redirect:
+          type: boolean
+          description: Whether to enable automatic 5 seconds redirect to the finish_url after completion of data entry
+        auto_lock_on_finish:
+          type: boolean
+          description: Lock instantiations of this SurveyPackage upon completion
+        default_invitation:
+          type: string
+          format: markdown
+          description: The default invitation message used for invitation messages in Markdown format. Must contain a {url} tag.
+        default_invitation_subject:
+          type: string
+          description: The default email subject used in the invitation messages.
+        is_mobile:
+          type: boolean
+          description: Whether to send the SurveyPackage via mobile app
+        is_training:
+          type: boolean
+          description: Whether a mobile SurveyPackage is used for training
+        is_repeatable:
+          type: boolean
+          description: Whether a mobile SurveyPackage is repeatable
+        is_resumable:
+          type: boolean
+          description: Whether a mobile SurveyPackage is resumable
+        as_needed:
+          type: boolean
+          description: Whether a mobile SurveyPackage can be completed as needed
+        field_pagination:
+          type: string
+          description: Whether mobile SurveyPackage fields should be paginated and how
+          enum:
+          - none
+          - forms
+        expire_after_hours:
+          type: integer
+          description: Expire after x hours, for mobile enabled SurveyPackages
+        allow_open_survey_link:
+          type: boolean
+          description: Whether an open survey link can be generated for this SurveyPackage
+        _embbeded:
+          type: array
+          description: The list of Surveys that are included in this package
+          items:
+            $ref: '#/components/schemas/Survey'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    newOldNamingSurveyPackageInstance:
+      type: object
+      properties:
+        survey_package_id:
+          type: string
+          description: The identifier of the SurveyPackage that should be instantiated in this SurveyPackageInstance.
+        record_id:
+          type: string
+          description: The identifier of the Record to create this SurveyPackageInstance for. Should exist already. Cannot be combined with ccr_patient_id. One of "record_id" or "ccr_patient_id" is required.
+        ccr_patient_id:
+          type: string
+          description: The CCR Patient identifier of the Record to create this SurveyPackageInstance for. Should exist already. Cannot be combined with record_id. One of "record_id" or "ccr_patient_id" is required.
+        email_address:
+          type: string
+          description: The email address this SurveyPackageInstance will be sent to. If no email_address is provided in the request the system will try to use the Record's stored email address. The email address is stored encrypted.
+        package_invitation_subject:
+          type: string
+          description: The subject of the invitation message that will be sent. If left empty will inherit the default subject of the SurveyPackage .
+        package_invitation:
+          type: string
+          description: The contents of the invitation message that will be sent. If left empty will inherit the default contents from the SurveyPackage. Must contain a {url} tag that will be replaced with survey_url_string when sending the email. If sending a mobile Survey, it's recommended to reuse the default SurveyPackage invitation message or include the app store tags ({castorconnect-apple-store-link} and {castorconnect-google-store-link}) and the activation QR code tag ({CC-activation-QR}).
+        available_from:
+          type: string
+          format: date-time
+          description: UTC date and time when the Survey Package Instance should be scheduled. The provided value is converted to server time during creation. Web surveys are scheduled based on **date**, while mobile surveys use **date and time**. If `available_from` is in the past or today, the survey is sent immediately. If in the future, it will be scheduled accordingly. If left empty, the Survey Package Instance will be created but not scheduled.
+        auto_lock_on_finish:
+          type: boolean
+          default: 'false'
+          description: Whether the SurveyPackageInstance should be automatically locked when the survey respondent clicks the finish button at the end of data entry .
+      required:
+      - survey_package_id
+      - record_id
+      - ccr_patient_id
+    Participant:
+      type: object
+      properties:
+        id:
+          type: string
+        participant_id:
+          type: string
+        participant_status:
+          $ref: '#/components/schemas/ParticipantStatus'
+        site:
+          $ref: '#/components/schemas/Site'
+        ccr_patient_id:
+          type: string
+        randomization_group:
+          type: number
+        randomization_group_name:
+          type: string
+        last_opened_step:
+          type: string
+          format: UUID
+        progress:
+          type: number
+        locked:
+          type: boolean
+        status:
+          type: string
+          description: 'Deprecated: use the locked property instead'
+        deleted:
+          type: boolean
+        archived_reason:
+          type: string
+        created_by:
+          type: string
+        created_on:
+          $ref: '#/components/schemas/DateTime'
+        updated_by:
+          type: string
+        updated_on:
+          $ref: '#/components/schemas/DateTime'
+        mobile_ui_version:
+          type: string
+          description: Existing versions are 1.0, 2.0, 3.0, 4.0, 5.0
+        mobile_my_details_enabled:
+          type: boolean
+          description: Feature toggle for My Details within the Castor Connect Mobile App
+        randomized_on:
+          $ref: '#/components/schemas/DateTime'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    Site:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: The HTTP return code.
+        title:
+          type: string
+          description: The short error description belonging to the status code
+        detail:
+          type: string
+          description: The detailed explanation of the failure
+        type:
+          type: string
+          description: URL to RFC explaining this statuscode
+        errors:
+          type: object
+          description: Optional list of all errors that occurred during the request
+        validation_messages:
+          type: object
+          description: Optional list of validation failure message
+    Record:
+      type: object
+      properties:
+        id:
+          type: string
+        record_id:
+          type: string
+        record_status:
+          $ref: '#/components/schemas/RecordStatus'
+        institute:
+          $ref: '#/components/schemas/Institute'
+        ccr_patient_id:
+          type: string
+        randomization_group:
+          type: number
+        randomization_group_name:
+          type: string
+        last_opened_step:
+          type: string
+          format: UUID
+        progress:
+          type: number
+        locked:
+          type: boolean
+        status:
+          type: string
+          description: 'Deprecated: use the locked property instead'
+        deleted:
+          type: boolean
+        archived_reason:
+          type: string
+        created_by:
+          type: string
+        created_on:
+          $ref: '#/components/schemas/DateTime'
+        updated_by:
+          type: string
+        updated_on:
+          $ref: '#/components/schemas/DateTime'
+        mobile_ui_version:
+          type: string
+          description: Existing versions are 1.0, 2.0, 3.0, 4.0, 5.0
+        randomized_on:
+          $ref: '#/components/schemas/DateTime'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    PatchRecordSurveyPackageInstance:
+      type: object
+      properties:
+        started_on:
+          type: string
+          format: dateTime
+          description: The UTC date and time when the filling of a survey package instance has started. This parameter is incompatible with `received_on`
+        received_on:
+          type: string
+          description: The UNIX timestamp when the survey package instance has been received. This parameter is incompatible with `started_on`
+      example:
+        started_on: 15-07-2022 18:10:30
+        received_on: '1658174255'
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            default: Grants access to everything
+            study_statistics: Grants access to a study's statistics
+            record: Grants access to the data for a single participant; intended for use by study subjects
+          tokenUrl: https://data.castoredc.com/oauth/token

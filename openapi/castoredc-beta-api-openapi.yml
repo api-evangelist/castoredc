@@ -1,0 +1,1620 @@
+openapi: 3.2.0
+info:
+  version: 2026.1.6.1
+  title: Castor EDC API Documentation Beta API
+  description: '### Overview
+
+    This document provides the specifications of the Castor EDC API, describing the currently available
+
+    API endpoints and methods. We aim to provide a fully functional RESTful API to communicate with
+
+    Castor EDC and these are endpoints currently available.
+
+
+    The formal OpenAPI 2 specification by which this page is rendered is also available in the following formats:
+
+    * YAML
+
+    * JSON
+
+    * JSON (pretty print)
+
+
+    ### Authentication & Authorization with OAuth 2
+
+    Authentication and authorization are arranged through OAuth2. We currently provide full support for the Client
+
+    Credentials flow. The Authorization Code flow is supported, but we ask you to contact us if you want to use this flow.
+
+
+    To use the Client Credentials flow go to your
+
+    Castor EDC profile and generate
+
+    a Client ID and Client Secret. Use the Client ID and Client Secret to retrieve an access token by making a request to
+
+    the ''/oauth/token'' endpoint with your client_id and client_secret as parameters and grant_type=client_credentials.
+
+
+    PHP Example:
+
+    ```php
+
+    include __DIR__.''/vendor/autoload.php'';
+
+    use Guzzle\Http\Client;
+
+
+    // Create the HTTP Client.
+
+    $httpClient = new Client(
+
+    ''https://data.castoredc.com'',
+
+    [
+
+    ''request.options'' => [
+
+    ''exceptions'' => false,
+
+    ]
+
+    ]
+
+    );
+
+
+    // Build the request
+
+    $request = $httpClient->post(
+
+    ''/oauth/token'',
+
+    null,
+
+    [
+
+    ''client_id'' => ''YourCastorClientId'',
+
+    ''client_secret'' => ''YourCastorClientSecret'',
+
+    ''grant_type'' => ''client_credentials'',
+
+    ]
+
+    );
+
+
+    // Send the request
+
+    $response = $request->send();
+
+    $responseBody = $response->getBody(true);
+
+    $responseArr = json_decode($responseBody, true);
+
+    $accessToken = $responseArr[''access_token''];
+
+    ```
+
+
+    In your subsequent requests you can use the `$accessToken` as a Bearer token in the Authorization header, i.e:
+
+    ```php
+
+    $request = $httpClient->get(''/api/user'');
+
+    $request->addHeader(''Authorization'', ''Bearer ''. $accessToken);
+
+    $response = $request->send();
+
+    echo $response->getBody();
+
+    ```
+
+
+    ### OAuth2 Scopes
+
+
+    There are 3 scopes that endpoints may support.
+
+    * **default**: allows access to all endpoints
+
+    * **study_statistics**: allows access to study statistics
+
+    * **record**: allows access to data for a single participant
+
+
+    Due to a bug in the OpenAPI UI, all three scopes are listed for all endpoints.
+
+
+    If the endpoint supports something other than the default scope, the summary will have a 🔭 emoji and the scope will be
+
+    listed in the description as well as under the `security:` key in the specification.
+
+
+    ### Rate Limits
+
+    Unless specified in the resource, endpoints are rate-limited to 600 requests in 10 minutes.
+
+
+    ### Legacy (Basic HTTP Authentication)
+
+    **Please note: Basic HTTP Authentication has been removed on 2019 August 13**
+
+
+    ### Changelog
+
+    API changes can be viewed here'
+  contact:
+    name: support@castoredc.com
+servers:
+- url: https://data.castoredc.com/api/
+security:
+- OAuth2ClientCredentials:
+  - default
+  - study_statistics
+  - record
+tags:
+- name: Beta
+paths:
+  /study/{study_id}/audit-trail:
+    get:
+      tags:
+      - Beta
+      summary: Retrieve list of audit trail entries based on input criteria.Please note that…
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: ''
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: The size of pages
+        required: false
+        schema:
+          type: integer
+      - name: date_from
+        in: query
+        description: Start of date range
+        required: true
+        schema:
+          type: string
+      - name: date_to
+        in: query
+        description: End of date range
+        required: true
+        schema:
+          type: string
+      - name: user_id
+        in: query
+        description: Actor of audit trail entry, "," separated.
+        required: false
+        schema:
+          type: string
+      - name: event_types
+        in: query
+        description: Event types to be returned, "," separated. Event "audit_trail_viewed" must be requested explicitly to be returned.
+        required: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: List of all audit trail entries of the Study in a given timeframe
+          content:
+            application/hal+json:
+              schema:
+                title: Audit trail entry HalJSON representation
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuditTrailEntry'
+                  extra:
+                    type: object
+                    properties:
+                      total_pages:
+                        type: integer
+        422:
+          description: Unprocessable entity - see error details for more information.
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdAuditTrail
+      x-operation-id-source: derived
+  /study/{study_id}/export:
+    post:
+      tags:
+      - Beta
+      summary: Request exports of multiple types
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: This batch endpoint supports initiating multiple, distinct export types in a single request.
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made.
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        201:
+          description: Successful batch export
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportSuccess'
+        400:
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        429:
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchExportRequest'
+        description: 'Please note that this endpoint is currently in beta and implementation details may change.
+
+
+          Export format, options, and filters depend on the export type. All filters are optional.
+
+          Please find a description of some parameters below.
+
+          - filters.participant_ids: <b>If provided, other filters will be skipped.</b>
+
+          - queries.elements: Only one type at a time is supported, so provide either repeating_data, visits or visit_forms key.
+
+          - survey_compliance.parent_id: Visit/Repeating data UUID.
+
+
+          To demonstrate use of all supported ENUM values, following notation is used in request payload:
+
+          <b>empty | visit | repeating_data</b> - meaning in this example, all three values are supported.
+
+          '
+        required: true
+      operationId: postStudyByStudyIdExport
+      x-operation-id-source: derived
+  /study/{study_id}/participant/{participant_id}/monitoring/validations:
+    get:
+      tags:
+      - Beta
+      summary: Fetch triggered validations per participant
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: participant_id
+        in: path
+        required: true
+        description: The ID of the participant for which to retrieve validations
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: The size of pages
+        required: false
+        schema:
+          type: integer
+      - name: include_referenced_field
+        in: query
+        description: 'Include validations with referenced field. When false (default), only value-based validations are returned. (Deprecated: check API changelog for more information)'
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        200:
+          description: List of all validations
+          content:
+            application/json:
+              schema:
+                title: MonitoringValidationsCollection
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksSingle'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/MonitoringValidationsCollection'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdParticipantByParticipantIdMonitoringValidations
+      x-operation-id-source: derived
+  /study/{study_id}/monitoring/validations:
+    get:
+      tags:
+      - Beta
+      summary: Fetch triggered validations
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: The size of pages
+        required: false
+        schema:
+          type: integer
+      - name: include_referenced_field
+        in: query
+        description: 'Include field-to-field validations. When false (default), only value-based validations are returned. (Deprecated: check API changelog for more information)'
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        200:
+          description: List of all validations
+          content:
+            application/json:
+              schema:
+                title: MonitoringValidationsCollection
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksSingle'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/MonitoringValidationsCollection'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdMonitoringValidations
+      x-operation-id-source: derived
+  /study/{study_id}/validations/{validation_id}/history:
+    get:
+      tags:
+      - Beta
+      summary: Fetch validation history for the given triggered validation
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      - name: validation_id
+        in: path
+        required: true
+        description: The ID of the triggered validation to retrieve related history
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The page to retrieve
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: page_size
+        in: query
+        description: The size of pages
+        required: false
+        schema:
+          type: integer
+      responses:
+        200:
+          description: List of all validation history entries for a given validation
+          content:
+            application/json:
+              schema:
+                title: ValidationHistoryCollection
+                type: object
+                properties:
+                  _links:
+                    $ref: '#/components/schemas/LinksSingle'
+                  _embedded:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ValidationHistoryEntry'
+                  page_count:
+                    type: number
+                  page_size:
+                    type: number
+                  total_items:
+                    type: number
+                  page:
+                    type: number
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: The given Record or Field does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdValidationsByValidationIdHistory
+      x-operation-id-source: derived
+  /study/{study_id}/domains:
+    get:
+      tags:
+      - Beta
+      summary: Request data standardization related information (Domains)
+      security:
+      - OAuth2ClientCredentials:
+        - default
+      description: Request data standardization related information (Domains).
+      parameters:
+      - name: study_id
+        in: path
+        description: The ID of the study for which this call should be made
+        required: true
+        schema:
+          type: string
+          format: UUID
+      responses:
+        200:
+          description: List of all the domains with configured fields.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Domain'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          description: Invalid request parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: getStudyByStudyIdDomains
+      x-operation-id-source: derived
+components:
+  schemas:
+    DateTime:
+      type: object
+      description: A serialized PHP DateTime object.
+      properties:
+        date:
+          type: string
+          description: Date and time in Y-m-d H:i:s.u format.
+        timezone_type:
+          type: integer
+        timezone:
+          type: string
+    Metadata:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Metadata
+        parent_id:
+          type: string
+          description: Metadata id of this metadata's parent (circular reference)
+        value:
+          type: string
+          description: The value
+        description:
+          type: string
+          description: The description
+        _embedded:
+          type: object
+          description: The metadataType
+          properties:
+            metadata_type:
+              $ref: '#/components/schemas/MetadataType'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    FieldDependencyNested:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier of the FieldDependency
+        parent_id:
+          type: string
+          format: UUID
+          description: The ID of the parent field (the field being checked)
+        child_id:
+          type: string
+          format: UUID
+          description: The ID of the child field (the field that depends on the parent)
+        value:
+          type: string
+          description: The value that the parent field is compared against
+        operator:
+          type: string
+          description: The dependency operator (e.g., ==, !=, >, <)
+    FieldOptionGroup:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the FieldOptionGroup
+        name:
+          type: string
+          description: The FieldOptionGroup name
+        description:
+          type: string
+          description: The FieldOptionGroup description
+        layout:
+          type: string
+          description: Horizontal or vertical option positioning
+        options:
+          type: array
+          description: The list of FieldOptions that are included in this FieldOptionGroup
+          items:
+            $ref: '#/components/schemas/FieldOption'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    MetadataType:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the MetadataType
+        name:
+          type: string
+          description: The name of this MetadataType
+        description:
+          type: string
+          description: The description of this MetadataType
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    ValidationHistoryEntry:
+      type: object
+      properties:
+        validation_id:
+          type: string
+          description: The unique identifier for the triggered validation
+        previous_status:
+          type: string
+          default: null
+          description: The previous status of the triggered validation
+        new_status:
+          type: string
+          description: The new status of the triggered validation
+        reason_for_change:
+          type: string
+          default: null
+          description: The reason for the change of the triggered validation status, if applicable
+        triggered_on:
+          type: string
+          description: Date and time when the validation was triggered
+        updated_by:
+          type: string
+          description: The id of the user who updated the triggered validation status, if applicable
+        updated_by_user_name:
+          type: string
+          description: The name of the user who updated the triggered validation status, if applicable
+    MonitoringValidationsCollection:
+      type: object
+      properties:
+        validation_id:
+          type: string
+          description: Data Entry Validation ID (A unique identifier for the data entry validation)
+        participant_id:
+          type: string
+          description: Participant ID (A unique identifier for the record)
+        status:
+          type: string
+          description: Data Entry Validation Status (The status of the data entry validation)
+        triggered_on:
+          type: string
+          description: Created On (Date and time when the validation was fired)
+        last_updated_by:
+          type: string
+          description: Data Entry Validation Status Last Updated By User ID (The user ID of the person who last updated the data entry validation status, if applicable)
+        field_value:
+          type: string
+          description: Field Value (The value of the field)
+        instance_id:
+          type: string
+          description: Instance ID (A unique identifier for the instance, if applicable)
+        data_entry_type:
+          type: string
+          enum:
+          - visit
+          - repeating_data
+          - survey
+          description: Data Entry Type (The type of data entry)
+        _embedded:
+          type: object
+          properties:
+            field:
+              $ref: '#/components/schemas/Field'
+            validation:
+              $ref: '#/components/schemas/FieldValidation'
+    BatchExportRequest:
+      type: object
+      required:
+      - exports
+      properties:
+        exports:
+          type: object
+          properties:
+            participant_casebook:
+              type: array
+              items:
+                type: object
+                required:
+                - format
+                properties:
+                  format:
+                    type: string
+                    enum:
+                    - pdf
+                    example: pdf
+                  filters:
+                    type: object
+                    properties:
+                      participant_ids:
+                        type: array
+                        items:
+                          type: string
+                      paper_size:
+                        type: string
+                        enum:
+                        - a4paper
+                        - letterpaper
+                        example: a4paper|letterpaper
+                  options:
+                    type: object
+            audit_trail:
+              type: array
+              items:
+                type: object
+                required:
+                - format
+                properties:
+                  format:
+                    type: string
+                    enum:
+                    - csv
+                    example: csv
+                  filters:
+                    type: object
+                  options:
+                    type: object
+            domain_mapping:
+              type: array
+              items:
+                type: object
+                required:
+                - format
+                properties:
+                  format:
+                    type: string
+                    enum:
+                    - csv
+                    example: csv
+                  filters:
+                    type: object
+                  options:
+                    type: object
+            empty_crf:
+              type: array
+              items:
+                type: object
+                required:
+                - format
+                properties:
+                  format:
+                    type: string
+                    enum:
+                    - pdf
+                    example: pdf
+                  filters:
+                    type: object
+                    properties:
+                      paper_size:
+                        type: string
+                        enum:
+                        - a4paper
+                        - letterpaper
+                        example: a4paper|letterpaper
+                      elements:
+                        type: object
+                        properties:
+                          forms:
+                            type: array
+                            items:
+                              type: string
+                          repeating_data:
+                            type: array
+                            items:
+                              type: string
+                          repeating_data_forms:
+                            type: array
+                            items:
+                              type: string
+                          visits:
+                            type: array
+                            items:
+                              type: string
+                          surveys:
+                            type: array
+                            items:
+                              type: string
+                          survey_forms:
+                            type: array
+                            items:
+                              type: string
+                  options:
+                    type: object
+                    properties:
+                      include_title_page:
+                        type: boolean
+                      include_table_of_contents:
+                        type: boolean
+                      include_helptexts:
+                        type: boolean
+                      inline_repeated_measure_forms:
+                        type: boolean
+                      start_forms_on_new_page:
+                        type: boolean
+                      include_additional_info:
+                        type: boolean
+                      include_calculated_templates:
+                        type: boolean
+                      include_hidden_calculated_fields:
+                        type: boolean
+                      include_validations:
+                        type: boolean
+                      include_dependencies:
+                        type: boolean
+            form_structure:
+              type: array
+              items:
+                type: object
+                required:
+                - format
+                properties:
+                  format:
+                    type: string
+                    enum:
+                    - xml
+                    - odm
+                    example: xml|odm
+                  filters:
+                    type: object
+                    properties:
+                      element_id:
+                        type: string
+                      element_type:
+                        type: string
+                        enum:
+                        - all
+                        - study
+                        - phase
+                        - step
+                        - field
+                        - reports
+                        - report
+                        - report_step
+                        - report_field
+                        - surveys
+                        - survey
+                        - survey_step
+                        - survey_field
+                        - survey_packages
+                        - survey_package
+                        example: all|study|phase|step|field|reports|report|report_step|report_field|surveys|survey|survey_step|survey_field|survey_packages|survey_package
+                  options:
+                    type: object
+                    properties:
+                      include_annotations:
+                        type: boolean
+                      include_domains:
+                        type: boolean
+            queries:
+              type: array
+              items:
+                type: object
+                required:
+                - format
+                properties:
+                  format:
+                    type: string
+                    enum:
+                    - csv
+                    - excel
+                    example: csv|excel
+                  filters:
+                    type: object
+                    properties:
+                      elements:
+                        type: object
+                        properties:
+                          repeating_data:
+                            type: array
+                            items:
+                              type: string
+                          visits:
+                            type: array
+                            items:
+                              type: string
+                          visit_forms:
+                            type: array
+                            items:
+                              type: string
+                      statuses:
+                        type: array
+                        items:
+                          type: string
+                          enum:
+                          - new
+                          - open
+                          - closed
+                          - confirmed
+                          - unconfirmed
+                          - resolved
+                        example:
+                        - new
+                        - open
+                        - closed
+                        - confirmed
+                        - unconfirmed
+                        - resolved
+                      updated_by:
+                        type: array
+                        items:
+                          type: string
+                      created_between_start:
+                        type: string
+                        format: date-time
+                        example: '2024-01-01'
+                      created_between_end:
+                        type: string
+                        format: date-time
+                        example: '2024-01-01'
+                      days_in_current_status_from:
+                        type: integer
+                        example: 0
+                      days_in_current_status_to:
+                        type: integer
+                        example: 10
+                      days_since_opened_from:
+                        type: integer
+                        example: 0
+                      days_since_opened_to:
+                        type: integer
+                        example: 10
+                  options:
+                    type: object
+            sites:
+              type: array
+              items:
+                type: object
+                required:
+                - format
+                properties:
+                  format:
+                    type: string
+                    enum:
+                    - csv
+                    example: csv
+                  filters:
+                    type: object
+                  options:
+                    type: object
+            survey_compliance:
+              type: array
+              items:
+                type: object
+                required:
+                - format
+                properties:
+                  format:
+                    type: string
+                    enum:
+                    - csv
+                    - excel
+                    example: csv|excel
+                  filters:
+                    type: object
+                    properties:
+                      survey_package_ids:
+                        type: array
+                        items:
+                          type: string
+                      survey_package_status:
+                        type: array
+                        items:
+                          type: string
+                          enum:
+                          - Created
+                          - Completed
+                          - Failed
+                          - In Progress
+                          - Locked
+                          - Received
+                          - Sent
+                          - Viewed
+                          example:
+                          - Created
+                          - Completed
+                          - Failed
+                          - In Progress
+                          - Locked
+                          - Received
+                          - Sent
+                          - Viewed
+                      availability_start:
+                        type: string
+                        format: date-time
+                        example: 2024-01-01 11:11
+                      availability_end:
+                        type: string
+                        format: date-time
+                        example: 2024-01-01 11:11
+                      participant_ids:
+                        type: array
+                        items:
+                          type: string
+                      mobile:
+                        type: boolean
+                      compliance_value:
+                        type: integer
+                        example: '99'
+                      compliance_operator:
+                        type: string
+                        enum:
+                        - '>'
+                        - <
+                        - '>='
+                        - <=
+                        - '='
+                        example: '>|<|>=|<=|='
+                      parent_id:
+                        type: string
+                      parent_type:
+                        type: string
+                        enum:
+                        - empty
+                        - visit
+                        - repeating_data
+                        example: empty|visit|repeating_data
+                  options:
+                    type: object
+            participant_data:
+              type: array
+              items:
+                type: object
+                required:
+                - format
+                properties:
+                  format:
+                    type: string
+                    enum:
+                    - csv
+                    - excel
+                    - spss
+                    - sas_xpt
+                    - sas_7bdat
+                    - odm
+                    example: csv|excel|spss|sas_xpt|sas_7bdat|odm
+                  filters:
+                    type: object
+                    properties:
+                      participant_ids:
+                        type: array
+                        items:
+                          type: string
+                      site_ids:
+                        type: array
+                        items:
+                          type: string
+                      locked:
+                        type: boolean
+                      randomized:
+                        type: boolean
+                      sdv_pending:
+                        type: boolean
+                      progress:
+                        type: array
+                        items:
+                          type: string
+                          enum:
+                          - not_started
+                          - in_progress
+                          - completed
+                          - archived
+                        example:
+                        - not_started
+                        - in_progress
+                        - completed
+                        - archived
+                      subject_status_ids:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                        - not_set
+                        - ID_1
+                        - ID_2
+                        - ID_N
+                      created_by:
+                        type: array
+                        items:
+                          type: string
+                      updated_by:
+                        type: array
+                        items:
+                          type: string
+                      created_between_start:
+                        type: string
+                        format: date
+                        example: '2024-01-01'
+                      created_between_end:
+                        type: string
+                        format: date
+                        example: '2024-01-01'
+                      last_updated_between_start:
+                        type: string
+                        format: date
+                        example: '2024-01-01'
+                      last_updated_between_end:
+                        type: string
+                        format: date
+                        example: '2024-01-01'
+                      elements:
+                        type: object
+                        properties:
+                          forms:
+                            type: array
+                            items:
+                              type: string
+                          repeating_data:
+                            type: array
+                            items:
+                              type: string
+                          repeating_data_forms:
+                            type: array
+                            items:
+                              type: string
+                          visits:
+                            type: array
+                            items:
+                              type: string
+                          surveys:
+                            type: array
+                            items:
+                              type: string
+                          survey_forms:
+                            type: array
+                            items:
+                              type: string
+                  options:
+                    type: object
+                    properties:
+                      grouped:
+                        description: Whether to group participant data by domain.
+                        type: boolean
+                        default: false
+                      display_options_as:
+                        description: Whether Options are exported as numbers (values) or names (labels).<br /><br />Only applicable when `grouped` is set to false
+                        type: string
+                        enum:
+                        - names
+                        - numbers
+                        example: numbers|names
+                        default: numbers
+                      export_coded_options_as:
+                        description: 'Whether Options are exported as values only,  or in two columns with both values and names included<br/><br/>Only applicable when `grouped` is set to true. '
+                        type: string
+                        enum:
+                        - values
+                        - values_and_names
+                        example: values|values_and_names
+                        default: values
+                      export_missing_data_in:
+                        description: Whether missing data annotations (reason for missing) are exported in the same column as the field, or in a separate column next to the field.<br/><br/>Only applicable when `grouped` is set to true.
+                        type: string
+                        enum:
+                        - same_column
+                        - separate_column
+                        example: same_column|separate_column
+                        default: same_column
+                      include_empty_rows:
+                        description: Include data from visits, repeating data instances, and survey instances that are not started yet.<br/><br/>Only applicable when `grouped` is set to true.
+                        type: boolean
+                        default: false
+                      include_survey_metadata:
+                        description: Include survey metadata.<br/><br/>Only applicable when `grouped` is set to true.
+                        type: boolean
+                        default: false
+                      include_encrypted_fields:
+                        description: Include encrypted fields should be included in the export.<br/><br/>Only applicable when `grouped` is false and Field Encryption is enabled.
+                        type: boolean
+                        default: false
+                      include_comments:
+                        description: Include comments in the export.<br/><br/>Only applicable when `grouped` is set to false.
+                        type: boolean
+                        default: false
+                      include_queries:
+                        description: Include queries in the export.<br/><br/>Only applicable when `grouped` is set to false.
+                        type: boolean
+                        default: false
+                      include_verifications:
+                        description: Include verifications in the export.<br/><br/>Only applicable when `grouped` is set to false.
+                        type: boolean
+                        default: false
+                      export_dates_as:
+                        description: Export dates, date & times, and time fields as SAS date/datetime/time types or as strings.<br/><br/>Only applicable when `grouped` is set to true and `format` is `sas_xpt` or `sas_7bdat`.
+                        type: string
+                        default: date
+                        enum:
+                        - date
+                        - text
+                        example: date|text
+            uploaded_files:
+              type: array
+              items:
+                type: object
+                required:
+                - format
+                properties:
+                  format:
+                    type: string
+                    enum:
+                    - zip
+                    example: zip
+                  filters:
+                    type: object
+                    properties:
+                      participant_ids:
+                        type: array
+                        items:
+                          type: string
+                  options:
+                    type: object
+            validations:
+              type: array
+              items:
+                type: object
+                required:
+                - format
+                properties:
+                  format:
+                    type: string
+                    enum:
+                    - csv
+                    - excel
+                    example: csv
+                  filters:
+                    type: object
+                    properties:
+                      participant_id:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                        - TEST-110001
+                      sites:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                        - 046F5240-2F6B-416F-85B8-2AA9E264029C
+                      form_collection_types:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                        - study
+                        - report
+                        - survey
+                      validation_types:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                        - inclusion_stop
+                        - warning
+                        - message
+                      validation_statuses:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                        - new
+                        - reviewed
+                        - resolved
+                        - auto-closed
+                      triggered_after:
+                        type: string
+                        format: date
+                        example: '2025-09-01'
+                      triggered_before:
+                        type: string
+                        format: date
+                        example: '2025-09-10'
+                  options:
+                    type: object
+    LinksSingle:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+    FieldOption:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Option
+        name:
+          type: string
+          description: The Option name
+        value:
+          type: string
+          description: The Option value
+        groupOrder:
+          type: integer
+          description: The position of the option within the group
+    DomainField:
+      type: object
+      properties:
+        field_id:
+          type: string
+          description: ID of a field bound to the domain.
+        domain_variable_name:
+          type: string
+          description: Domain variable name configured for the field.
+    AuditTrailEntry:
+      type: object
+      properties:
+        datetime:
+          $ref: '#/components/schemas/DateTime'
+        event_type:
+          type: string
+        user_id:
+          type: string
+        user_name:
+          type: string
+        user_email:
+          type: string
+        event_details:
+          type: object
+    ExportSuccess:
+      type: object
+      properties:
+        queued_exports:
+          type: array
+          items:
+            type: string
+        success:
+          type: boolean
+          example: true
+        description:
+          type: string
+          example: Export(s) have been successfully requested.
+    Error:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          description: The HTTP return code.
+        title:
+          type: string
+          description: The short error description belonging to the status code
+        detail:
+          type: string
+          description: The detailed explanation of the failure
+        type:
+          type: string
+          description: URL to RFC explaining this statuscode
+        errors:
+          type: object
+          description: Optional list of all errors that occurred during the request
+        validation_messages:
+          type: object
+          description: Optional list of validation failure message
+    FieldValidation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: integer
+          description: Unique identifier of the FieldValidation
+        type:
+          type: string
+          description: FieldValidation type
+        value:
+          type: string
+          default: null
+          description: The static value to compare against or null for field-to-field validations
+        text:
+          type: string
+          description: The message of the validation
+        field_id:
+          type: string
+          format: UUID
+          description: The field that uses this validation
+        reference_type:
+          type: string
+          enum:
+          - field
+          - value
+          description: The type of validation reference. "field" means comparing against another field, "value" means comparing against a static value
+        referenced_field_id:
+          type: string
+          format: UUID
+          default: null
+          description: The ID of the referenced field for field-to-field validations or null for value validations
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    Field:
+      type: object
+      properties:
+        id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Field (same as field_id)
+        field_id:
+          type: string
+          format: UUID
+          description: Unique identifier of the Field (same as id)
+        field_type:
+          type: string
+          description: The Field type
+        field_label:
+          type: string
+          description: The Field label
+        field_number:
+          type: number
+          description: The Field's position within a step
+        field_variable_name:
+          type: string
+          description: The Field's variable name
+        field_required:
+          type: integer
+          description: If enabled, it makes the field required (cannot be left empty). Returns 1 for required, 0 for not required
+        field_enforce_decimals:
+          type: boolean
+          description: If enabled, it requires decimals digits in data-entry
+          default: null
+        field_hidden:
+          type: integer
+          description: If enabled, it hides the field in data-entry. Returns 1 for hidden, 0 for visible
+        field_info:
+          type: string
+          format: markdown
+          description: Information about the field. It is shown during data-entry
+        field_units:
+          type: string
+          description: The field's measurement unit
+        field_length:
+          type: number
+          description: Length parameter to derive UI input width for this field
+          default: null
+        field_slider_step:
+          type: string
+          description: Slider step (Deprecated. Use field_slider_step_value instead)
+          default: null
+        field_slider_step_value:
+          type: number
+          format: float
+          description: Slider step value
+          default: null
+        field_image:
+          type: string
+          description: URL to the image for the Image field type
+        parent_id:
+          type: string
+          format: UUID
+          description: The field's parent id
+        metadata_points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Metadata'
+        validations:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldValidation'
+        option_group:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldOptionGroup'
+          default: null
+        randomize_option_order:
+          type: boolean
+          description: If enabled, the order of options should be randomized (only applies to dropdown, radio, and checkbox fields)
+        domains:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldDomain'
+        dependency_parents:
+          type: array
+          description: List of parent field dependencies (fields that this field depends on)
+          items:
+            $ref: '#/components/schemas/FieldDependencyNested'
+        dependency_children:
+          type: array
+          description: List of child field dependencies (fields that depend on this field)
+          items:
+            $ref: '#/components/schemas/FieldDependencyNested'
+        _links:
+          $ref: '#/components/schemas/LinksSingle'
+    FieldDomain:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Full domain name
+        abbreviation:
+          type: string
+          description: Abbreviated domain name
+        domain_variable_name:
+          type: string
+          description: Domain variable name
+    Domain:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Full domain name
+        abbreviation:
+          type: string
+          description: Abbreviated domain name
+        fields:
+          type: array
+          description: List of fields associated with this domain
+          items:
+            $ref: '#/components/schemas/DomainField'
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes:
+            default: Grants access to everything
+            study_statistics: Grants access to a study's statistics
+            record: Grants access to the data for a single participant; intended for use by study subjects
+          tokenUrl: https://data.castoredc.com/oauth/token
