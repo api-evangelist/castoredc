@@ -351,3 +351,9 @@ components:
             study_statistics: Grants access to a study's statistics
             record: Grants access to the data for a single participant; intended for use by study subjects
           tokenUrl: https://data.castoredc.com/oauth/token
+x-provenance:
+  method: harvested
+  publisher: Castor
+  source: https://data.castoredc.com/api/swagger
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)

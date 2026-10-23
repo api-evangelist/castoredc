@@ -13,29 +13,29 @@ artifacts:
     method: unknown
     evidence: no authorship recorded
   collections/castoredc-audit-trail-api.opencollection.json:
-    method: derived
-    evidence: openapi/castoredc-audit-trail-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-audit-trail-api.postman_collection.json:
-    method: derived
-    evidence: openapi/castoredc-audit-trail-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-data-export-api.opencollection.json:
-    method: derived
-    evidence: openapi/castoredc-data-export-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-data-export-api.postman_collection.json:
-    method: derived
-    evidence: openapi/castoredc-data-export-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-fields-api.opencollection.json:
-    method: derived
-    evidence: openapi/castoredc-fields-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-fields-api.postman_collection.json:
-    method: derived
-    evidence: openapi/castoredc-fields-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-institutes-api.opencollection.json:
-    method: derived
-    evidence: openapi/castoredc-institutes-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-institutes-api.postman_collection.json:
-    method: derived
-    evidence: openapi/castoredc-institutes-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-metadata-api.opencollection.json:
     method: derived
     evidence: openapi/castoredc-metadata-api
@@ -43,41 +43,41 @@ artifacts:
     method: derived
     evidence: openapi/castoredc-metadata-api
   collections/castoredc-participants-api.opencollection.json:
-    method: derived
-    evidence: openapi/castoredc-participants-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-participants-api.postman_collection.json:
-    method: derived
-    evidence: openapi/castoredc-participants-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-reports-api.opencollection.json:
-    method: derived
-    evidence: openapi/castoredc-reports-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-reports-api.postman_collection.json:
-    method: derived
-    evidence: openapi/castoredc-reports-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-studies-api.opencollection.json:
-    method: derived
-    evidence: openapi/castoredc-studies-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-studies-api.postman_collection.json:
-    method: derived
-    evidence: openapi/castoredc-studies-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-study-data-points-api.opencollection.json:
-    method: derived
-    evidence: openapi/castoredc-study-data-points-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-study-data-points-api.postman_collection.json:
-    method: derived
-    evidence: openapi/castoredc-study-data-points-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-surveys-api.opencollection.json:
-    method: derived
-    evidence: openapi/castoredc-surveys-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-surveys-api.postman_collection.json:
-    method: derived
-    evidence: openapi/castoredc-surveys-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-users-api.opencollection.json:
-    method: derived
-    evidence: openapi/castoredc-users-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc-users-api.postman_collection.json:
-    method: derived
-    evidence: openapi/castoredc-users-api
+    method: unknown
+    evidence: no authorship recorded
   collections/castoredc.opencollection.json:
     method: derived
     evidence: openapi/castoredc
@@ -85,132 +85,18 @@ artifacts:
     method: derived
     evidence: openapi/castoredc
   finops/castoredc-finops.yml:
-    method: unknown
-    evidence: no authorship recorded
+    method: generated
+    evidence: declared in the artifact
   front-door-ai/2026-09-17.yml:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-09-24T161608.yml:
+  integrations/_index.yml:
     method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T125852.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T133943.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T143147.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-25T154045.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-26T215308.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T094438.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T103455.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T123021.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T132314.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-27T140727.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-28T221322.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-29T213958.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-29T230545.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-30T203505.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-30T220315.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-08-31T223420.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T063623.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T210448.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-01T222808.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-02T211804.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-02T224043.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-03T161828.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-03T174231.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T062714.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T212454.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-04T224856.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T055819.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T072335.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T144739.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T195450.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-05T211839.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T011047.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T211804.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-06T224210.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-07T200636.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-07T213054.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-08T214843.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-08T232836.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-10T204815.yml:
-    method: generated
-    evidence: Kin Score snapshot written by score.rb
-  kin/score-2026-09-10T222408.yml:
+    evidence: carries an API Evangelist house phrase
+  integrations/castoredc-integration-edges.yml:
+    method: searched
+    evidence: declared in the artifact
+  kin/checks-2026-10-11T110117.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-12T062655.yml:
@@ -294,49 +180,165 @@ artifacts:
   kin/score-2026-09-24T161608.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T210408.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T232841.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T000835.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T024842.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-11T110117.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
   openapi/_original/castoredc-openapi.yml:
     method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
-  openapi/castoredc-audit-trail-api-openapi.yml:
+    evidence: byte-identical to https://data.castoredc.com/api/swagger (sha256 b289c1a73510, fetched 2026-10-19)
+  openapi/castoredc-beta-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/castoredc-data-export-api-openapi.yml:
+  openapi/castoredc-castor-internal-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/castoredc-fields-api-openapi.yml:
+  openapi/castoredc-country-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/castoredc-institutes-api-openapi.yml:
+  openapi/castoredc-data-point-collection-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-data-points-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-export-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-field-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-field-dependency-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-field-optiongroup-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-field-validation-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-form-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-institute-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   openapi/castoredc-metadata-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/castoredc-participants-api-openapi.yml:
+  openapi/castoredc-metadatatype-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/castoredc-reports-api-openapi.yml:
+  openapi/castoredc-participant-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/castoredc-studies-api-openapi.yml:
+  openapi/castoredc-participant-device-token-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/castoredc-study-data-points-api-openapi.yml:
+  openapi/castoredc-participant-econsent-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/castoredc-surveys-api-openapi.yml:
+  openapi/castoredc-participant-progress-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/castoredc-users-api-openapi.yml:
+  openapi/castoredc-phase-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-query-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-randomization-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-record-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-record-progress-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-repeating-data-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-repeating-data-data-entry-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-repeating-data-form-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-repeating-data-instance-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-report-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-report-data-entry-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-report-instance-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-report-step-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-role-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-site-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-step-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-study-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-study-data-entry-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-study-statistics-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-study-user-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-survey-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-survey-data-entry-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-survey-form-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-survey-step-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-user-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-verification-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/castoredc-visit-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
   plans/castoredc-plans-pricing.yml:
-    method: unknown
-    evidence: no authorship recorded
+    method: generated
+    evidence: declared in the artifact
   rate-limits/castoredc-rate-limits.yml:
-    method: unknown
-    evidence: no authorship recorded
+    method: generated
+    evidence: declared in the artifact
   scopes/castoredc-scopes.yml:
     method: searched
     evidence: declared in the artifact
