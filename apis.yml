@@ -76,6 +76,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Beta
+  tags_raw:
   - beta
   properties:
   - type: OpenAPI
@@ -116,6 +118,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Country
+  tags_raw:
   - country
   properties:
   - type: OpenAPI
@@ -156,6 +160,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Datapoints
+  tags_raw:
   - data-points
   properties:
   - type: OpenAPI
@@ -176,6 +182,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Export
+  tags_raw:
   - export
   properties:
   - type: OpenAPI
@@ -196,6 +204,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Field
+  tags_raw:
   - field
   properties:
   - type: OpenAPI
@@ -276,6 +286,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Form
+  tags_raw:
   - form
   properties:
   - type: OpenAPI
@@ -336,6 +348,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Participant
+  tags_raw:
   - participant
   properties:
   - type: OpenAPI
@@ -417,6 +431,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Phase
+  tags_raw:
   - phase
   properties:
   - type: OpenAPI
@@ -437,6 +453,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Query
+  tags_raw:
   - query
   properties:
   - type: OpenAPI
@@ -457,6 +475,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Randomization
+  tags_raw:
   - randomization
   properties:
   - type: OpenAPI
@@ -477,6 +497,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Record
+  tags_raw:
   - record
   properties:
   - type: OpenAPI
@@ -599,6 +621,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Report
+  tags_raw:
   - report
   properties:
   - type: OpenAPI
@@ -679,6 +703,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Role
+  tags_raw:
   - role
   properties:
   - type: OpenAPI
@@ -699,6 +725,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Site
+  tags_raw:
   - site
   properties:
   - type: OpenAPI
@@ -719,6 +747,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Step
+  tags_raw:
   - step
   properties:
   - type: OpenAPI
@@ -739,6 +769,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Study
+  tags_raw:
   - study
   properties:
   - type: OpenAPI
@@ -819,6 +851,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Surveys
+  tags_raw:
   - survey
   properties:
   - type: OpenAPI
@@ -899,6 +933,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - User
+  tags_raw:
   - user
   properties:
   - type: OpenAPI
@@ -919,6 +955,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Verification
+  tags_raw:
   - verification
   properties:
   - type: OpenAPI
@@ -939,6 +977,8 @@ apis:
     https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API
   baseURL: https://data.castoredc.com/api
   tags:
+  - Visit
+  tags_raw:
   - visit
   properties:
   - type: OpenAPI
