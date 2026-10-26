@@ -1,0 +1,306 @@
+# Castor (castoredc)
+
+<!-- API-EVANGELIST-PROVENANCE:BEGIN -->
+> ### About this repository
+>
+> **This is not our API.** This repository is an independent, third-party profile of a company's
+> **publicly available** API surface, maintained by [API Evangelist](https://apievangelist.com).
+> API Evangelist does not operate, host, resell, or support this company's APIs, and is not
+> affiliated with or endorsed by the company unless stated on the profile.
+>
+> **Where the information came from.** Everything here is assembled from material a member of the
+> public can reach with a browser and no credentials — the company's own website, developer portal
+> and documentation, the specifications it publishes for public use (OpenAPI, AsyncAPI, JSON Schema,
+> `apis.json`, `llms.txt` and similar), its public repositories, and its public status, pricing and
+> changelog pages. **Nothing here is obtained by breaching a system, defeating an access control, or
+> using credentials of any kind.**
+>
+> **The rating is an independent assessment.** The Kin Score and Agent Readiness rating are
+> independently calculated scores of a company's *public* API artifacts, produced by API Evangelist
+> against a published rubric. They are not certifications, endorsements, security assessments, or
+> audits, and they score published artifacts — not the quality, safety, or security of the software.
+>
+> **Corrections, re-scores, and removal are free.** No partnership, contract, or purchase is
+> required, and you do not need to justify the request.
+>
+> - **Something wrong?** Open an issue on this repository, or email
+>   [info@apievangelist.com](mailto:info@apievangelist.com).
+> - **Published something new?** Ask for a re-score and we will re-run the rating.
+> - **Want the listing taken down?** Say so and we will honor it. The profile is reduced to your
+>   company name, a factual description, and a link to your own site, and the company is recorded as
+>   **unrated** — never scored zero for having asked.
+>
+> **Response times.** Acknowledgement within **one business day**; removal or restriction within
+> **two business days**; corrections and re-scores within **five business days**.
+>
+> **Not from the company, and here with a question?** You are welcome here — we would rather be the
+> front line and point you the right way than have a good report go nowhere. What this repository
+> can answer is narrow, though, so it is worth knowing who you are actually looking for:
+>
+> - **A question about how the API works, an account, billing, or a bug in the service** — that is
+>   the company's own support, not us. We profile this API; we do not operate it and cannot see
+>   your account.
+> - **A bug in an open-source project we only catalog** — file it on that project's own repository.
+>   This has happened with a real and correct bug report that reached us instead of the people who
+>   could fix it, which helped nobody.
+> - **Anything about this listing itself** — the description, the tags, the rating, a missing or
+>   wrong artifact — is ours. Open an issue here.
+> - **Not sure, or something general about API Evangelist or APIs.io** — open an issue on the
+>   [APIs.io Inbox](https://github.com/api-search/inbox) and we will route it.
+>
+> **This repository contains no software, and we will never ask you to download anything.** There is
+> no build, release, installer, or binary here — only text and machine-readable API descriptions, so
+> there is nothing here that can be "corrupt" or need "repairing". Any issue, comment, or email
+> claiming otherwise and offering a download link is not from us and is hostile. Do not follow the
+> link; it is a lure. Report it to GitHub and, if you like, tell us at
+> [info@apievangelist.com](mailto:info@apievangelist.com) so we can take it down.
+>
+> **On a security or compliance team?** Email
+> [info@apievangelist.com](mailto:info@apievangelist.com) with *security* in the subject line and
+> you will get a person, not a form. We will tell you exactly which public URLs this profile was
+> built from so your team can see the same surface we did, and we will take the listing down on
+> request while you work through it.
+>
+> Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
+<!-- API-EVANGELIST-PROVENANCE:END -->
+
+Castor (Castor EDC / CDMS) is a cloud electronic data capture (EDC) and clinical data management platform for clinical trials and real-world research. Its RESTful API at `https://data.castoredc.com/api` exposes study configuration and collected data - studies, participants (records), institutes (sites), users, fields and field metadata, study data points, repeating data (reports), surveys and survey packages, audit trail, and batch data export - authenticated with OAuth2 client-credentials. The API powers integrations with external systems, automated data entry and extraction, and statistical analysis via the official R and Python wrapper packages.
+
+**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/castoredc/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/castoredc/refs/heads/main/apis.yml)
+
+## Tags
+
+- Clinical Trials
+- Electronic Data Capture
+- EDC
+- Clinical Data Management
+- Healthcare
+- Life Sciences
+- Research
+
+## Timestamps
+
+- **Created:** 2026-07-05
+- **Modified:** 2026-07-05
+
+## Authentication
+
+The Castor API uses OAuth2 with the Client Credentials flow. Generate an API Client ID and Client Secret from your Castor **User Settings**, then request an access token from `POST https://data.castoredc.com/api/oauth/token` with `grant_type=client_credentials`. Tokens are valid for 5 hours and are passed as a `Bearer` token on every request. Most IDs (study, field, report/repeating-data instance, survey package instance) are uppercase GUIDs in `8-4-4-4-12` format; the participant ID is the exception.
+
+## APIs
+
+### Castor Studies API
+
+List the studies your API client can access and retrieve a single study's configuration and metadata. A study is the top-level container in Castor; its GUID (the `study_id`) is required by nearly every other endpoint.
+
+- **Human URL:** [https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API](https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API)
+- **Base URL:** `https://data.castoredc.com/api`
+
+#### Tags
+
+- Studies
+- Metadata
+- Configuration
+
+#### Properties
+
+- [Documentation](https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API)
+- [API Reference](https://data.castoredc.com/api)
+- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Castor Participants (Records) API
+
+Create, list, and retrieve participants (records / subjects) enrolled in a study, including their institute assignment, randomization status, progress, and lifecycle. Participants are the entities that data points are collected against.
+
+- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
+- **Base URL:** `https://data.castoredc.com/api`
+
+#### Tags
+
+- Participants
+- Records
+- Subjects
+
+#### Properties
+
+- [API Reference](https://data.castoredc.com/api)
+- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Castor Institutes API
+
+List and retrieve the institutes (sites / centers) participating in a study, and create new institutes. Institutes group participants for multi-center trials and drive site-level access control and reporting.
+
+- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
+- **Base URL:** `https://data.castoredc.com/api`
+
+#### Tags
+
+- Institutes
+- Sites
+- Multi-Center
+
+#### Properties
+
+- [API Reference](https://data.castoredc.com/api)
+- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Castor Users API
+
+List the users the authenticated account can see, retrieve a single user, and list the users who are members of a given study. Used to reconcile study membership and site staff with external identity and CTMS systems.
+
+- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
+- **Base URL:** `https://data.castoredc.com/api`
+
+#### Tags
+
+- Users
+- Access
+- Membership
+
+#### Properties
+
+- [API Reference](https://data.castoredc.com/api)
+- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Castor Fields API
+
+Retrieve the data-capture fields that define a study's forms, plus their supporting metadata - field dependencies (conditional logic), option groups (answer choices), and field validations. This is the schema you need to interpret and write study data points correctly.
+
+- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
+- **Base URL:** `https://data.castoredc.com/api`
+
+#### Tags
+
+- Fields
+- Field Metadata
+- Option Groups
+
+#### Properties
+
+- [API Reference](https://data.castoredc.com/api)
+- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Castor Study Data Points API
+
+Read and write the actual collected values (data points) for the study forms of a participant - retrieve all study data points for a study or a single participant, and create or update participant study data points programmatically.
+
+- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
+- **Base URL:** `https://data.castoredc.com/api`
+
+#### Tags
+
+- Data Points
+- Data Entry
+- Data Extraction
+
+#### Properties
+
+- [API Reference](https://data.castoredc.com/api)
+- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Castor Reports (Repeating Data) API
+
+Work with reports (now called repeating data) - unscheduled or repeatable forms such as adverse events or medications. List report definitions, list and create repeating-data instances for a participant, and read or write their data points.
+
+- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
+- **Base URL:** `https://data.castoredc.com/api`
+
+#### Tags
+
+- Reports
+- Repeating Data
+- Instances
+
+#### Properties
+
+- [API Reference](https://data.castoredc.com/api)
+- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Castor Surveys API
+
+Manage surveys and electronic patient-reported outcomes (ePRO) - list survey definitions, send survey packages to participants (creating survey-package instances), check survey compliance, and read survey data points and instances.
+
+- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
+- **Base URL:** `https://data.castoredc.com/api`
+
+#### Tags
+
+- Surveys
+- ePRO
+- Survey Packages
+
+#### Properties
+
+- [API Reference](https://data.castoredc.com/api)
+- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Castor Audit Trail API
+
+Retrieve the immutable audit trail for a study - the who, what, and when of every data and configuration change - to support GCP / 21 CFR Part 11 compliance, monitoring, and reconciliation with external quality systems.
+
+- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
+- **Base URL:** `https://data.castoredc.com/api`
+
+#### Tags
+
+- Audit Trail
+- Compliance
+- GCP
+
+#### Properties
+
+- [API Reference](https://data.castoredc.com/api)
+- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+### Castor Data Export API
+
+Request and download bulk exports of a study - the collected data, the study structure, and the option groups - for downstream statistical analysis, archiving, and data warehousing.
+
+- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
+- **Base URL:** `https://data.castoredc.com/api`
+
+#### Tags
+
+- Export
+- Bulk Data
+- Structure
+
+#### Properties
+
+- [API Reference](https://data.castoredc.com/api)
+- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
+- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
+- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+
+## Common Properties
+
+- [LinkedIn](https://www.linkedin.com/company/castoredc)
+- [Website](https://www.castoredc.com)
+- [Documentation](https://helpdesk.castoredc.com/application-programming-interface-api)
+- [Plans](plans/castoredc-plans-pricing.yml)
+- [Rate Limits](rate-limits/castoredc-rate-limits.yml)
+- [Fin Ops](finops/castoredc-finops.yml)
+- [Blog](https://www.castoredc.com/blog/)
+
+## Maintainers
+
+**FN:** Kin Lane
+**Email:** kin@apievangelist.com
