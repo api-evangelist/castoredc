@@ -1,4 +1,4 @@
-# Castor (castoredc)
+# Castor
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,243 +64,144 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Castor (Castor EDC / CDMS) is a cloud electronic data capture (EDC) and clinical data management platform for clinical trials and real-world research. Its RESTful API at `https://data.castoredc.com/api` exposes study configuration and collected data - studies, participants (records), institutes (sites), users, fields and field metadata, study data points, repeating data (reports), surveys and survey packages, audit trail, and batch data export - authenticated with OAuth2 client-credentials. The API powers integrations with external systems, automated data entry and extraction, and statistical analysis via the official R and Python wrapper packages.
+Castor (Castor EDC / CDMS) is a cloud electronic data capture (EDC) and clinical data management platform for clinical trials and real-world research. Its RESTful API at https://data.castoredc.com/api exposes study configuration and collected data - studies, participants (records), institutes (sites), users, fields and field metadata, study data points, repeating data (reports), surveys and survey packages, audit trail, and batch data export - authenticated with OAuth2 client-credentials. The API is used to integrate Castor with external systems, automate data entry and extraction, and support statistical analysis via the official R and Python wrapper packages.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/castoredc/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/castoredc/refs/heads/main/apis.yml)
+**Areas:** Clinical Trials · Electronic Data Capture · EDC · Clinical Data Management · Healthcare · Life Sciences · Research
 
-## Tags
+## Castor on APIs.io
 
-- Clinical Trials
-- Electronic Data Capture
-- EDC
-- Clinical Data Management
-- Healthcare
-- Life Sciences
-- Research
+Everything profiled for Castor is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/castoredc/](https://apis.io/providers/castoredc/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (11)
 
-- **Created:** 2026-07-05
-- **Modified:** 2026-07-05
+- [Castor Audit Trail API](https://apis.io/apis/castoredc/castoredc-audit-trail-api/) — Immutable audit trail of study changes.
+- [Castor Data Export API](https://apis.io/apis/castoredc/castoredc-data-export-api/) — Bulk export of study data, structure, and option groups.
+- [Castor Fields API](https://apis.io/apis/castoredc/castoredc-fields-api/) — Study fields and their metadata (dependencies, option groups, validations).
+- [Castor Institutes API](https://apis.io/apis/castoredc/castoredc-institutes-api/) — Institutes (sites / centers) participating in a study.
+- [Castor Metadata API](https://apis.io/apis/castoredc/castoredc-metadata-api/) — Reference metadata such as countries.
+- [Castor Participants API](https://apis.io/apis/castoredc/castoredc-participants-api/) — Participants (records / subjects) enrolled in a study.
+- [Castor Reports API](https://apis.io/apis/castoredc/castoredc-reports-api/) — Reports / repeating data and their instances.
+- [Castor Studies API](https://apis.io/apis/castoredc/castoredc-studies-api/) — Studies accessible to the API client.
+- [Castor Study Data Points API](https://apis.io/apis/castoredc/castoredc-study-data-points-api/) — Collected values for study forms.
+- [Castor Surveys API](https://apis.io/apis/castoredc/castoredc-surveys-api/) — Surveys, survey packages, and ePRO.
+- [Castor Users API](https://apis.io/apis/castoredc/castoredc-users-api/) — Users and study membership.
 
-## Authentication
+### Published properties
 
-The Castor API uses OAuth2 with the Client Credentials flow. Generate an API Client ID and Client Secret from your Castor **User Settings**, then request an access token from `POST https://data.castoredc.com/api/oauth/token` with `grant_type=client_credentials`. Tokens are valid for 5 hours and are passed as a `Bearer` token on every request. Most IDs (study, field, report/repeating-data instance, survey package instance) are uppercase GUIDs in `8-4-4-4-12` format; the participant ID is the exception.
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### Agentic access (1)
 
-### Castor Studies API
+Which operations an agent can call, which act, and which need a human in the loop.
 
-List the studies your API client can access and retrieve a single study's configuration and metadata. A study is the top-level container in Castor; its GUID (the `study_id`) is required by nearly every other endpoint.
+- [Castoredc Agentic Access](https://apis.io/agentic-access/castoredc/castoredc-agentic-access/)
 
-- **Human URL:** [https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API](https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API)
-- **Base URL:** `https://data.castoredc.com/api`
+#### Collections (12)
 
-#### Tags
+Postman and Open Collection request collections.
 
-- Studies
-- Metadata
-- Configuration
+- [Castor EDC / CDMS API](https://apis.io/collections/castoredc/open-castoredc/)
+- [Castor EDC / CDMS Audit Trail API](https://apis.io/collections/castoredc/open-castoredc-audit-trail-api/)
+- [Castor EDC / CDMS Audit Trail Data Export API](https://apis.io/collections/castoredc/open-castoredc-data-export-api/)
+- [Castor EDC / CDMS Audit Trail Fields API](https://apis.io/collections/castoredc/open-castoredc-fields-api/)
+- [Castor EDC / CDMS Audit Trail Institutes API](https://apis.io/collections/castoredc/open-castoredc-institutes-api/)
+- [Castor EDC / CDMS Audit Trail Metadata API](https://apis.io/collections/castoredc/open-castoredc-metadata-api/)
+- [Castor EDC / CDMS Audit Trail Participants API](https://apis.io/collections/castoredc/open-castoredc-participants-api/)
+- [Castor EDC / CDMS Audit Trail Reports API](https://apis.io/collections/castoredc/open-castoredc-reports-api/)
+- [Castor EDC / CDMS Audit Trail Studies API](https://apis.io/collections/castoredc/open-castoredc-studies-api/)
+- [Castor EDC / CDMS Audit Trail Study Data Points API](https://apis.io/collections/castoredc/open-castoredc-study-data-points-api/)
+- [Castor EDC / CDMS Audit Trail Surveys API](https://apis.io/collections/castoredc/open-castoredc-surveys-api/)
+- [Castor EDC / CDMS Audit Trail Users API](https://apis.io/collections/castoredc/open-castoredc-users-api/)
 
-#### Properties
+#### Security (3)
 
-- [Documentation](https://helpdesk.castoredc.com/hc/en-us/articles/27149233860509-Castor-EDC-CDMS-Application-Programming-Interface-API)
-- [API Reference](https://data.castoredc.com/api)
-- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Authentication, trust centre, and vulnerability disclosure.
 
-### Castor Participants (Records) API
+- [Castoredc Authentication](https://apis.io/security/castoredc/castoredc-authentication/)
+- [Castoredc Domain Security](https://apis.io/security/castoredc/castoredc-domain-security/)
+- [Castoredc Vulnerability Disclosure](https://apis.io/security/castoredc/castoredc-vulnerability-disclosure/)
 
-Create, list, and retrieve participants (records / subjects) enrolled in a study, including their institute assignment, randomization status, progress, and lifecycle. Participants are the entities that data points are collected against.
+#### OAuth scopes (1)
 
-- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
-- **Base URL:** `https://data.castoredc.com/api`
+The permissions the API asks for.
 
-#### Tags
+- [Castoredc Scopes](https://apis.io/scopes/castoredc/castoredc-scopes/)
 
-- Participants
-- Records
-- Subjects
+#### Plans and pricing (1)
 
-#### Properties
+Published plans, tiers and prices.
 
-- [API Reference](https://data.castoredc.com/api)
-- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Castoredc Plans Pricing](https://apis.io/plans/castoredc/castoredc-plans-pricing/)
 
-### Castor Institutes API
+#### Rate limits (1)
 
-List and retrieve the institutes (sites / centers) participating in a study, and create new institutes. Institutes group participants for multi-center trials and drive site-level access control and reporting.
+Published request limits.
 
-- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
-- **Base URL:** `https://data.castoredc.com/api`
+- [Castoredc Rate Limits](https://apis.io/rate-limits/castoredc/castoredc-rate-limits/)
 
-#### Tags
+#### FinOps (1)
 
-- Institutes
-- Sites
-- Multi-Center
+What the API costs to run, by operation.
 
-#### Properties
+- [Castoredc Finops](https://apis.io/finops/castoredc/castoredc-finops/)
 
-- [API Reference](https://data.castoredc.com/api)
-- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+## Where to find this API
 
-### Castor Users API
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-List the users the authenticated account can see, retrieve a single user, and list the users who are members of a given study. Used to reconcile study membership and site staff with external identity and CTMS systems.
-
-- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
-- **Base URL:** `https://data.castoredc.com/api`
-
-#### Tags
-
-- Users
-- Access
-- Membership
-
-#### Properties
-
-- [API Reference](https://data.castoredc.com/api)
-- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Castor Fields API
-
-Retrieve the data-capture fields that define a study's forms, plus their supporting metadata - field dependencies (conditional logic), option groups (answer choices), and field validations. This is the schema you need to interpret and write study data points correctly.
-
-- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
-- **Base URL:** `https://data.castoredc.com/api`
-
-#### Tags
-
-- Fields
-- Field Metadata
-- Option Groups
-
-#### Properties
-
-- [API Reference](https://data.castoredc.com/api)
-- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Castor Study Data Points API
-
-Read and write the actual collected values (data points) for the study forms of a participant - retrieve all study data points for a study or a single participant, and create or update participant study data points programmatically.
-
-- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
-- **Base URL:** `https://data.castoredc.com/api`
-
-#### Tags
-
-- Data Points
-- Data Entry
-- Data Extraction
-
-#### Properties
-
-- [API Reference](https://data.castoredc.com/api)
-- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Castor Reports (Repeating Data) API
-
-Work with reports (now called repeating data) - unscheduled or repeatable forms such as adverse events or medications. List report definitions, list and create repeating-data instances for a participant, and read or write their data points.
-
-- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
-- **Base URL:** `https://data.castoredc.com/api`
-
-#### Tags
-
-- Reports
-- Repeating Data
-- Instances
-
-#### Properties
-
-- [API Reference](https://data.castoredc.com/api)
-- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Castor Surveys API
-
-Manage surveys and electronic patient-reported outcomes (ePRO) - list survey definitions, send survey packages to participants (creating survey-package instances), check survey compliance, and read survey data points and instances.
-
-- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
-- **Base URL:** `https://data.castoredc.com/api`
-
-#### Tags
-
-- Surveys
-- ePRO
-- Survey Packages
-
-#### Properties
-
-- [API Reference](https://data.castoredc.com/api)
-- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Castor Audit Trail API
-
-Retrieve the immutable audit trail for a study - the who, what, and when of every data and configuration change - to support GCP / 21 CFR Part 11 compliance, monitoring, and reconciliation with external quality systems.
-
-- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
-- **Base URL:** `https://data.castoredc.com/api`
-
-#### Tags
-
-- Audit Trail
-- Compliance
-- GCP
-
-#### Properties
-
-- [API Reference](https://data.castoredc.com/api)
-- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Castor Data Export API
-
-Request and download bulk exports of a study - the collected data, the study structure, and the option groups - for downstream statistical analysis, archiving, and data warehousing.
-
-- **Human URL:** [https://data.castoredc.com/api](https://data.castoredc.com/api)
-- **Base URL:** `https://data.castoredc.com/api`
-
-#### Tags
-
-- Export
-- Bulk Data
-- Structure
-
-#### Properties
-
-- [API Reference](https://data.castoredc.com/api)
-- [OpenAPI](openapi/castoredc-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/castoredc.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/castoredc.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [LinkedIn](https://www.linkedin.com/company/castoredc)
 - [Website](https://www.castoredc.com)
 - [Documentation](https://helpdesk.castoredc.com/application-programming-interface-api)
-- [Plans](plans/castoredc-plans-pricing.yml)
-- [Rate Limits](rate-limits/castoredc-rate-limits.yml)
-- [Fin Ops](finops/castoredc-finops.yml)
 - [Blog](https://www.castoredc.com/blog/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 29.1** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 46.3 |
+| Contract governance | 0.0 |
+| Operational transparency | 7.9 |
+| Developer ergonomics | 22.6 |
+| Access clarity | 7.9 |
+
+**Agent readiness 23.3** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | negotiable (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 27.3** — Health
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/castoredc/](https://apis.io/providers/castoredc/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Castor: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/castoredc/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
